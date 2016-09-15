@@ -20,7 +20,7 @@ import com.jogamp.opengl.glu.GLU;
 
 
 public class InternalCombustionEngine implements GLEventListener {
-
+	private final float mMatrixValues[] = { 0 ,0 , 0}; 
 	private GLU glu = new GLU();
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -34,6 +34,9 @@ public class InternalCombustionEngine implements GLEventListener {
 		drawSparkPlug(gl);
 		drawCrankshaft(gl);
 		drawConnectingRod(gl);
+		drawPiston(gl);
+		gl.glTranslatef(0.10f, 0.50f,0);// изменяет вид http://www.java-gaming.org/index.php?;topic=12186.0
+		//gl.glLoadMatrixf(mMatrixValues, 0);	
 		drawPiston(gl);
 	}
 
@@ -184,34 +187,6 @@ public class InternalCombustionEngine implements GLEventListener {
 	@Override
 	public void init(GLAutoDrawable gLDrawable) {
 		// TODO Auto-generated method stub
-		if (gLDrawable.getGL().isGL4bc()) {
-		    final GL4bc gl4bc = gLDrawable.getGL().getGL4bc();
-		    gLDrawable.setGL((GL) new DebugGL4bc(gl4bc));
-		} 
-		else {
-		    if (gLDrawable.getGL().isGL4()) {
-		        final GL4 gl4 = gLDrawable.getGL().getGL4();
-		        gLDrawable.setGL((GL) new DebugGL4(gl4));
-		    }
-		    else {
-		          if (gLDrawable.getGL().isGL3bc()) {
-		              final GL3bc gl3bc = gLDrawable.getGL().getGL3bc();
-		              gLDrawable.setGL(new DebugGL3bc(gl3bc));
-		          }
-		          else {
-		              if (gLDrawable.getGL().isGL3()) {
-		                  final GL3 gl3 = gLDrawable.getGL().getGL3();
-		                  gLDrawable.setGL(new DebugGL3(gl3));
-		              }
-		              else {
-		                  if (gLDrawable.getGL().isGL2()) {
-		                      final GL2 gl2 = gLDrawable.getGL().getGL2();
-		                      gLDrawable.setGL(new DebugGL2(gl2));
-		                  }
-		              }
-		          }
-		     }
-		}
 	}
 
 	@Override
