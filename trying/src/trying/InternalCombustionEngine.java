@@ -79,7 +79,7 @@ public class InternalCombustionEngine {
 		drawCircle(gl, 0.04f,  0, 0.29f + dY, ConstColors.BLACK);
 	}
 	
-	public void  drawValveSpring(GL2 gl, float dy, int mirror) {
+	public void  drawValveSpring(GL2 gl, float dy,float mirror) {
 		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
 		gl.glLineWidth(10);
 		gl.glBegin(GL2.GL_LINES);

@@ -6,7 +6,8 @@ public enum ConstICE {
 	PISTOL_DELTA_Y(.0019f),
 	SPEED_ROTATION_CRANKSHAGT(1.8f), 
 	SPEED_ROD(140f),
-	SPEED_VALVESPRING(0.00073f);//(0.00073f);
+	SPEED_VALVESPRING(0.013f),//(0.00073f);
+	TIME(0.001f);
 	private final float value;
 	ConstICE(float value) {
         this.value = value;

@@ -10,7 +10,6 @@ import com.jogamp.opengl.glu.gl2.GLUgl2;
 
 
 public class DialDisplay implements GLEventListener {
-	private GLUgl2 glu = new GLUgl2();
 	private float pistolY = 0;
 	private boolean isPistonMovedDown = true;
 	private InternalCombustionEngine internalCombustionEngine = new InternalCombustionEngine();
@@ -18,7 +17,6 @@ public class DialDisplay implements GLEventListener {
 	private float dx, dy = 0f;
 	private float beginAngle = 250f;
 	private boolean isSpringLeftStay = false;
-	private boolean  isSpringRightStay = true;
 	private float springUP = 0;
 	private float springDOWN = 0;
 	
@@ -31,7 +29,14 @@ public class DialDisplay implements GLEventListener {
 	    internalCombustionEngine.drawBaseBody(gl);
 	    internalCombustionEngine.drawSparkPlug(gl);
 	    updatePiston(gl);
-	    updateDrawValveSpringL(gl);
+	    if(isSpringLeftStay) {
+	    	internalCombustionEngine.drawValveSpring(gl, 0, -1);
+	    	updateDrawValveSpring(gl, 1);
+	    }
+	    else {
+	    	internalCombustionEngine.drawValveSpring(gl, 0, 1);
+	    	updateDrawValveSpring(gl,-1);
+	    }
 	    updateConnectingRod(gl);
 	    updateCrankshaft(gl);
 	    
@@ -76,53 +81,25 @@ public class DialDisplay implements GLEventListener {
 		}
 	}
 	
-	
-	private void updateDrawValveSpringL(GL2 gl) {
-		if(!isSpringLeftStay) {
-			if(springUP > -0.075 && springUP < 0.075f)
-			{
-				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpring(gl, springUP, -1);
-				internalCombustionEngine.drawValveSpring(gl, 0, 1);
-				springDOWN = springUP;
-				System.out.println(springDOWN);
-			}
-			else if(springUP < -0.075 && springDOWN < 0.001) {
-				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpring(gl, springDOWN, -1);
-				internalCombustionEngine.drawValveSpring(gl, 0, 1);
-				System.out.println(springDOWN);
-			}
-			else {
-				isSpringLeftStay = true;
-				springDOWN = 0;
-				springUP = 0;
-				internalCombustionEngine.drawValveSpring(gl, 0, -1);
-				internalCombustionEngine.drawValveSpring(gl, 0, 1);
-			}
-		}
-		else 
+	private void updateDrawValveSpring(GL2 gl, int mirror) {
+		if(springUP > -0.075 && springUP < 0.075f)
 		{
-			if(springUP > -0.075 && springUP < 0.075f)
-			{
-				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpring(gl, springUP, 1);
-				internalCombustionEngine.drawValveSpring(gl, 0, -1);
-				springDOWN = springUP;
-			}
-			else if(springUP < -0.075 && springDOWN < 0.001) {
-				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpring(gl, springDOWN, 1);
-				internalCombustionEngine.drawValveSpring(gl, 0, -1);
-				System.out.println(springDOWN);
-			}
-			else {
-				isSpringLeftStay = false;
-				springDOWN = 0;
-				springUP = 0;
-				internalCombustionEngine.drawValveSpring(gl, 0, 1);
-				internalCombustionEngine.drawValveSpring(gl, 0, -1);
-			}
+			springUP -= ConstICE.SPEED_VALVESPRING.getValue();
+			internalCombustionEngine.drawValveSpring(gl, springUP, mirror);
+			springDOWN = springUP;
+			System.out.println(springDOWN);
+		}
+		else if(springUP < -0.075 && springDOWN < 0.001) {
+			springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
+			internalCombustionEngine.drawValveSpring(gl, springDOWN, mirror);
+			System.out.println(springDOWN);
+		}
+		else {
+			isSpringLeftStay = !isSpringLeftStay;
+			springDOWN = 0;
+			springUP = 0;
+			internalCombustionEngine.drawValveSpring(gl, 0, mirror);
+			internalCombustionEngine.drawValveSpring(gl, 0, mirror);
 		}
 	}
 	
