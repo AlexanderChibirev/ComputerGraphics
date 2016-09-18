@@ -16,12 +16,16 @@ import com.jogamp.opengl.GLES1;
 import com.jogamp.opengl.GLES2;
 import com.jogamp.opengl.GLES3;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 
 
 public class InternalCombustionEngine implements GLEventListener {
-	private final float mMatrixValues[] = { 0 ,0 , 0}; 
 	private GLU glu = new GLU();
+	private float pistolY = 0;
+	private float pistolDeltaY = .0001f;
+	GLCanvas glCanvas;
+
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
@@ -34,12 +38,22 @@ public class InternalCombustionEngine implements GLEventListener {
 		drawSparkPlug(gl);
 		drawCrankshaft(gl);
 		drawConnectingRod(gl);
-		drawPiston(gl);
-		gl.glTranslatef(0.10f, 0.50f,0);// изменяет вид http://www.java-gaming.org/index.php?;topic=12186.0
-		//gl.glLoadMatrixf(mMatrixValues, 0);	
-		drawPiston(gl);
+		//drawPiston(gl);
+		// изменяет вид http://www.java-gaming.org/index.php?;topic=12186.0
+		//update(gl,gLDrawable);
+		
 	}
-
+	
+	private void update(GL2 gl, GLAutoDrawable gLDrawable)
+	{
+		while(pistolY < 1)
+		{
+			//gl.glTranslatef(0, pistolY, 0);
+			drawPiston(gl);
+			pistolY += pistolDeltaY;
+		}
+	}
+	
 	private void drawSparkPlug(GL2 gl) {
 		gl.glColor3f(1, 1, 0);
 		gl.glLineWidth(3);
@@ -192,6 +206,16 @@ public class InternalCombustionEngine implements GLEventListener {
 	@Override
 	public void reshape(GLAutoDrawable gLDrawable,  int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
+		final GL2 gl = gLDrawable.getGL().getGL2();
+		
+		if(pistolY<1){
+			gl.glTranslatef(0, pistolY, 0);
+			drawPiston(gl);
+			pistolY += pistolDeltaY;
+			System.out.println(pistolY);
+			
+		}
+		
 	}
 
 }

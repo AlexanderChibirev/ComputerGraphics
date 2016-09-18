@@ -56,7 +56,6 @@ public class Main {
 	private static void parseJson() {
 		JSONParser parser = new JSONParser(); 
 		/*	try {  
-  
 			Object obj = parser.parse(new FileReader("input.json"));  
 			JSONObject jsonObject = (JSONObject) obj;   
 			String nameOfCountry = (String) jsonObject.get("Name");  
