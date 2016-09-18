@@ -31,65 +31,12 @@ public class DialDisplay implements GLEventListener {
 	    internalCombustionEngine.drawBaseBody(gl);
 	    internalCombustionEngine.drawSparkPlug(gl);
 	    updatePiston(gl);
-	   
 	    updateDrawValveSpringL(gl);
-	    
 	    updateConnectingRod(gl);
 	    updateCrankshaft(gl);
 	    
 	}
 	
-	
-	private void updateDrawValveSpringL(GL2 gl) {
-		if(!isSpringLeftStay) {
-			if(springDOWN > -0.075 && springDOWN < 0.075f)
-			{
-				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpringL(gl, springDOWN);
-				internalCombustionEngine.drawValveSpringR(gl, 0);
-				springUP = springDOWN;
-				
-			}
-			else if(springUP > 0.001) {
-				
-				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpringL(gl, springUP);
-				internalCombustionEngine.drawValveSpringR(gl, 0);
-			}
-			else {
-				isSpringLeftStay = true;
-				springDOWN = 0;
-				springUP = 0;
-				internalCombustionEngine.drawValveSpringR(gl, 0);
-				internalCombustionEngine.drawValveSpringL(gl, 0);
-			}
-		}
-		else 
-		{
-			if(springUP > -0.075 && springUP < 0.075f)
-			{
-				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpringR(gl, springUP);
-				internalCombustionEngine.drawValveSpringL(gl, 0);
-				springDOWN = springUP;
-			}
-			else if(springUP < -0.075 && springDOWN < 0.001) {
-				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
-				internalCombustionEngine.drawValveSpringR(gl, springDOWN);
-				internalCombustionEngine.drawValveSpringL(gl, 0);
-				System.out.println(springDOWN);
-			}
-			else {
-				isSpringLeftStay = false;
-				springDOWN = 0;
-				springUP = 0;
-				internalCombustionEngine.drawValveSpringR(gl, 0);
-				internalCombustionEngine.drawValveSpringL(gl, 0);
-			}
-		}
-	}
-
-
 	private void updateConnectingRod(GL2 gl) {
 		float radius = 0.15f;
 		float a = (float) (beginAngle / ConstICE.SPEED_ROD.getValue() * Math.PI * 1.4f);
@@ -125,6 +72,56 @@ public class DialDisplay implements GLEventListener {
 			internalCombustionEngine.drawPiston(gl,pistolY);
 			if(pistolY < ConstICE.LOWER_SCREEN_PISTOL_THRESHOLD.getValue()) {
 				isPistonMovedDown = false;
+			}
+		}
+	}
+	
+	
+	private void updateDrawValveSpringL(GL2 gl) {
+		if(!isSpringLeftStay) {
+			if(springUP > -0.075 && springUP < 0.075f)
+			{
+				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
+				internalCombustionEngine.drawValveSpring(gl, springUP, -1);
+				internalCombustionEngine.drawValveSpring(gl, 0, 1);
+				springDOWN = springUP;
+				System.out.println(springDOWN);
+			}
+			else if(springUP < -0.075 && springDOWN < 0.001) {
+				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
+				internalCombustionEngine.drawValveSpring(gl, springDOWN, -1);
+				internalCombustionEngine.drawValveSpring(gl, 0, 1);
+				System.out.println(springDOWN);
+			}
+			else {
+				isSpringLeftStay = true;
+				springDOWN = 0;
+				springUP = 0;
+				internalCombustionEngine.drawValveSpring(gl, 0, -1);
+				internalCombustionEngine.drawValveSpring(gl, 0, 1);
+			}
+		}
+		else 
+		{
+			if(springUP > -0.075 && springUP < 0.075f)
+			{
+				springUP -= ConstICE.SPEED_VALVESPRING.getValue();
+				internalCombustionEngine.drawValveSpring(gl, springUP, 1);
+				internalCombustionEngine.drawValveSpring(gl, 0, -1);
+				springDOWN = springUP;
+			}
+			else if(springUP < -0.075 && springDOWN < 0.001) {
+				springDOWN += ConstICE.SPEED_VALVESPRING.getValue();
+				internalCombustionEngine.drawValveSpring(gl, springDOWN, 1);
+				internalCombustionEngine.drawValveSpring(gl, 0, -1);
+				System.out.println(springDOWN);
+			}
+			else {
+				isSpringLeftStay = false;
+				springDOWN = 0;
+				springUP = 0;
+				internalCombustionEngine.drawValveSpring(gl, 0, 1);
+				internalCombustionEngine.drawValveSpring(gl, 0, -1);
 			}
 		}
 	}

@@ -79,27 +79,15 @@ public class InternalCombustionEngine {
 		drawCircle(gl, 0.04f,  0, 0.29f + dY, ConstColors.BLACK);
 	}
 	
-	public void  drawValveSpringL(GL2 gl, float dy) {
+	public void  drawValveSpring(GL2 gl, float dy, int mirror) {
 		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
 		gl.glLineWidth(10);
-		
 		gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3f(-0.08f, 0.60f+ dy, 0);
-			gl.glVertex3f(-0.08f, 0.40f+ dy, 0);
-			gl.glVertex3f(-0.129f, 0.40f+ dy, 0);
-			gl.glVertex3f(-0.03f, 0.40f + dy, 0);
+			gl.glVertex3f(0.08f * mirror, 0.675f + dy, 0);
+			gl.glVertex3f(0.08f * mirror, 0.475f + dy, 0);
+			gl.glVertex3f(0.129f * mirror, 0.475f + dy, 0);
+			gl.glVertex3f(0.03f * mirror, 0.475f + dy, 0);
 		gl.glEnd();
-	}	
-	
-	public void  drawValveSpringR(GL2 gl, float dy) {
-		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
-		gl.glLineWidth(10);
-		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex3f(0.08f, 0.675f + dy, 0);
-		gl.glVertex3f(0.08f, 0.475f + dy, 0);
-		gl.glVertex3f(0.129f, 0.475f + dy, 0);
-		gl.glVertex3f(0.03f, 0.475f + dy, 0);
-	gl.glEnd();
 	}	
 	
 	public void  drawBaseBody(GL2 gl) {
