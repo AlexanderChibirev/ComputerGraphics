@@ -1,10 +1,12 @@
 package trying;
 
 public enum ConstICE {
-	UPPER_SCREEN_PISTOL_THRESHOLD(.03f),
-	LOWER_SCREEN_PISTOL_THRESHOLD(-.01f),
-	PISTOL_DELTA_Y(.001f);
-	
+	UPPER_SCREEN_PISTOL_THRESHOLD(0f),
+	LOWER_SCREEN_PISTOL_THRESHOLD(-.190f),
+	PISTOL_DELTA_Y(.0019f),
+	SPEED_ROTATION_CRANKSHAGT(1.8f), 
+	SPEED_ROD(140f),
+	SPEED_VALVESPRING(0.0009f);//(0.00073f);
 	private final float value;
 	ConstICE(float value) {
         this.value = value;

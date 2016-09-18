@@ -1,17 +1,16 @@
 package trying;
 
 import java.awt.*;
-import java.awt.event.*;
+
 import javax.swing.*;
 
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLDrawableFactory;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.*;
 
 
 public class Main extends JFrame {
-    public static Animator animator = null;
+	private static final long serialVersionUID = -2687152741472560149L;
+	public static Animator animator = null;
     public static void main(String[] args) {
         final Main app = new Main();
         // запуск асинхронной операции

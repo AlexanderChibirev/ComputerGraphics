@@ -37,7 +37,7 @@ public class InternalCombustionEngine {
 		gl.glColor3f(color.R(), color.G(), color.B());
 		gl.glTranslatef(x,  y, 0.0f);
 		gl.glBegin(GL2.GL_TRIANGLE_FAN );
-		gl.glVertex2f( 0,  0 ); // вершина в центре круга
+			gl.glVertex2f( 0,  0 ); // вершина в центре круга
 	       for(int i = 0; i <= 50; i++ ) {
 	           float a = (float)i / 50.0f * 3.1415f * 2.0f;
 	           gl.glVertex2d( Math.cos( a ) * radius, Math.sin( a ) * radius );
@@ -48,55 +48,58 @@ public class InternalCombustionEngine {
 	
 	public void drawCrankshaft(GL2 gl) {
 		drawCircle(gl, 0.15f,  0f, -0.25f,  ConstColors.DARK_GRAY);
-		drawCircle(gl, 0.05f,  0f,-0.25f, ConstColors.BLACK);
+		drawCircle(gl, 0.05f,  0f, -0.25f, ConstColors.BLACK);
+		gl.glLineWidth(10);
 		gl.glBegin(GL2.GL_QUAD_STRIP);
-			gl.glVertex3f( -0.05f, -0.25f, 0); //нижн€€ слева
-			gl.glVertex3f(  0.05f, -0.25f, 0);//нижн€€ справа
-			gl.glVertex3f(  0.05f, -0.07f, 0);//верхн€€ слева
-			gl.glVertex3f(  0.1f, -0.10f, 0);//верхн€€ справа
+		gl.glVertex3f( -0.05f, -0.25f, 0); //нижн€€ слева
+		gl.glVertex3f(  0.05f, -0.25f, 0);//нижн€€ справа
+		gl.glVertex3f(  -0.05f, -0.07f, 0);//верхн€€ слева
+		gl.glVertex3f(  0.05f, -0.10f, 0);//верхн€€ справа
 		gl.glEnd();
+		drawCircle(gl, 0.06f, 0, -0.10f, ConstColors.BLACK );
 	}
 		
-	public void drawConnectingRod(GL2 gl) {
-		drawCircle(gl, 0.06f,   0.07f, -0.10f, ConstColors.BLACK );
-		gl.glLineWidth(10);
-		gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3f(0.07f, -0.10f,0);
-			gl.glVertex3f(0, 0.25f, 0);
-		gl.glEnd();
-	}
-	
-	public void drawPiston(GL2 gl) {
-		gl.glColor3f(ConstColors.GRAY.R(), ConstColors.DARK_GRAY.G(), ConstColors.DARK_GRAY.B());
-		gl.glBegin(GL2.GL_QUAD_STRIP);
-			gl.glVertex3f(-0.14f, 0.15f, 0);
-			gl.glVertex3f(-0.14f, 0.35f, 0);
-			gl.glVertex3f(0.14f, 0.15f, 0);
-			gl.glVertex3f(0.14f, 0.35f, 0);
-		gl.glEnd();
-		drawCircle(gl, 0.04f,  0, 0.25f, ConstColors.BLACK);
-	}
-	
-	public void  drawValveSpringL(GL2 gl) {
+	public void drawConnectingRod(GL2 gl, float PistolY, float dx,float dy) {
 		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
 		gl.glLineWidth(10);
 		gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3f(0.08f, 0.675f, 0);
-			gl.glVertex3f(0.08f, 0.475f, 0);
-			gl.glVertex3f(0.129f, 0.475f, 0);
-			gl.glVertex3f(0.03f, 0.475f, 0);
+			gl.glVertex3f(0 ,  0.29f + PistolY, 0);
+			gl.glVertex3f(0 + dx, -0.25f + dy, 0);
+		gl.glEnd();
+	}
+	
+	public void drawPiston(GL2 gl, float dY) {
+		gl.glColor3f(ConstColors.GRAY.R(), ConstColors.DARK_GRAY.G(), ConstColors.DARK_GRAY.B());
+		gl.glBegin(GL2.GL_QUAD_STRIP);
+			gl.glVertex3f(-0.14f, 0.19f + dY, 0);
+			gl.glVertex3f(-0.14f, 0.39f + dY, 0);
+			gl.glVertex3f(0.14f, 0.19f + dY, 0);
+			gl.glVertex3f(0.14f, 0.39f + dY, 0);
+		gl.glEnd();
+		drawCircle(gl, 0.04f,  0, 0.29f + dY, ConstColors.BLACK);
+	}
+	
+	public void  drawValveSpringL(GL2 gl, float dy) {
+		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
+		gl.glLineWidth(10);
+		
+		gl.glBegin(GL2.GL_LINES);
+			gl.glVertex3f(-0.08f, 0.60f+ dy, 0);
+			gl.glVertex3f(-0.08f, 0.40f+ dy, 0);
+			gl.glVertex3f(-0.129f, 0.40f+ dy, 0);
+			gl.glVertex3f(-0.03f, 0.40f + dy, 0);
 		gl.glEnd();
 	}	
 	
-	public void  drawValveSpringR(GL2 gl) {
+	public void  drawValveSpringR(GL2 gl, float dy) {
 		gl.glColor3f(ConstColors.BLACK.R(), ConstColors.BLACK.G(), ConstColors.BLACK.B());
 		gl.glLineWidth(10);
 		gl.glBegin(GL2.GL_LINES);
-			gl.glVertex3f(-0.08f, 0.60f, 0);
-			gl.glVertex3f(-0.08f, 0.40f, 0);
-			gl.glVertex3f(-0.129f, 0.40f, 0);
-			gl.glVertex3f(-0.03f, 0.40f, 0);
-		gl.glEnd();
+		gl.glVertex3f(0.08f, 0.675f + dy, 0);
+		gl.glVertex3f(0.08f, 0.475f + dy, 0);
+		gl.glVertex3f(0.129f, 0.475f + dy, 0);
+		gl.glVertex3f(0.03f, 0.475f + dy, 0);
+	gl.glEnd();
 	}	
 	
 	public void  drawBaseBody(GL2 gl) {
