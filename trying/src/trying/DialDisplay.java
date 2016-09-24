@@ -7,8 +7,6 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.gl2.GLUgl2;
 
 
-
-
 public class DialDisplay implements GLEventListener {
 	private float pistolY = 0;
 	private boolean isPistonMovedDown = true;
@@ -38,8 +36,7 @@ public class DialDisplay implements GLEventListener {
 	    	updateDrawValveSpring(gl,-1);
 	    }
 	    updateConnectingRod(gl);
-	    updateCrankshaft(gl);
-	    
+	    updateCrankshaft(gl);   
 	}
 	
 	private void updateConnectingRod(GL2 gl) {
@@ -118,6 +115,4 @@ public class DialDisplay implements GLEventListener {
 		// TODO Auto-generated method stub	
 		
 	}
-	
-	
 }

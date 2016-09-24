@@ -10,6 +10,7 @@ public enum ConstColors {
 	private final float R;
 	private final float G;
 	private final float B;
+	
 	ConstColors(float R, float G, float B) {
         this.R = R;
         this.G = G;

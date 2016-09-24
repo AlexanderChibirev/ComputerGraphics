@@ -8,9 +8,12 @@ public enum ConstICE {
 	SPEED_ROD(140f),
 	SPEED_VALVESPRING(0.013f),//(0.00073f);
 	TIME(0.001f);
+	
 	private final float value;
+	
 	ConstICE(float value) {
         this.value = value;
     }
+	
 	public float getValue()   { return value; }
 }
