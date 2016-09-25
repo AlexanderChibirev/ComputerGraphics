@@ -7,14 +7,14 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public class GameObject extends Body {
+public class GLObject extends Body {
 		/** The color of the object */
 		protected float[] color = new float[4];
 		
 		/**
 		 * Default constructor.
 		 */
-		public GameObject() {
+		public GLObject() {
 			// randomly generate the color
 			this.color[0] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[1] = (float)Math.random() * 0.5f + 0.5f;

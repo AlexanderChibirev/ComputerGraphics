@@ -20,8 +20,8 @@ import com.jogamp.opengl.awt.GLCanvas;
 
 
 public class Main {
-	private static final int WINDOW_HIGHT = 800;
-	private static final int WINDOW_WIGHT = 800;
+	private static final int WINDOW_HEIGHT = 800;
+	private static final int WINDOW_WIDTH = 800;
 	private static GraphicsEnvironment graphicsEnviorment;
 	
 	public static void main(String[] args){ 
@@ -29,7 +29,7 @@ public class Main {
 		GLCapabilities capabilities = new GLCapabilities(profile);//Задает набор возможностей OpenGL.  
 		final GLCanvas glcanvas = new GLCanvas(capabilities);
 		glcanvas.addGLEventListener(new Renderer());
-    	glcanvas.setSize( WINDOW_WIGHT, WINDOW_HIGHT );
+    	glcanvas.setSize( WINDOW_WIDTH, WINDOW_HEIGHT );
         JFrame frame = new JFrame( "TwoProject" );
         
         frame.getContentPane().add(glcanvas);
