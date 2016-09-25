@@ -21,29 +21,29 @@ import com.jogamp.opengl.GLProfile;
 
 
 public class Renderer extends JFrame implements GLEventListener {
-	private float[] bodyImpulse = new float[50];
-	private static final long serialVersionUID = 6057447011902836594L;
 	protected GLCanvas canvas;
 	protected Animator animator;
-	public static  World world;
 	protected long last;
+	
+	private static final long serialVersionUID = 6057447011902836594L;
 	private DYN4JBasePlatform objectsMassInfinity = new DYN4JBasePlatform() ;
 	private DYN4JCannon cannon = new DYN4JCannon();
+	
+	public static  World world;
 	public static double mouseX = 0;
 	public static double mouseY = 0;
 	private static float rotationAngle = 0f;
 	public static boolean mouseClicked = false;
-	//private float impulse = 0.1f;
+	
 	public Renderer(int width, int height) {
 		
 		super("JOGL Example");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(width, height);
-		// setup OpenGL capabilities
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2));
 		caps.setDoubleBuffered(true);
 		caps.setHardwareAccelerated(true);
-		// create a canvas to paint to 
+		
 		this.canvas = new GLCanvas(caps);
 		this.canvas.setPreferredSize(size);
 		this.canvas.setMinimumSize(size);
@@ -55,14 +55,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		this.setResizable(false);
 		this.pack();
 		this.initializeWorld();
-		initImpulse();
 		this.canvas.addMouseListener(new CustomListener());
-	}
-	
-	private void initImpulse(){
-		for(int i = 0; i < bodyImpulse.length; ++i){
-			bodyImpulse[i] = 0.1f;
-		}
 	}
 	protected void initializeWorld() {
 		Renderer.world = new World();
@@ -135,20 +128,11 @@ public class Renderer extends JFrame implements GLEventListener {
 		for (double ballID = Const.RANGE_END_FOR_CANNON.getValue(); ballID < Renderer.world.getBodyCount(); ballID++) {
 			GLObject glObjects = (GLObject) Renderer.world.getBody((int) ballID);
 			glObjects.render(gl);
-			for (int platformID = 0; platformID < Const.RANGE_END_FOR_CANNON.getValue(); platformID++) {
-				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody(platformID))) {
-					int it = (int) (ballID -  Const.RANGE_END_FOR_CANNON.getValue());
-					if(bodyImpulse[it] <= 0) { 
-						bodyImpulse[it] = 0;
-					}
-					else {
-						bodyImpulse[it] -= 0.0001f;
-					}
-					System.out.println(bodyImpulse[it]);
-					Renderer.world.getBody((int) ballID).applyImpulse(bodyImpulse[it]);
+			for (double platformID = Const.RANGE_BEGIN_FOR_BASE_PLATFORM.getValue(); platformID < Const.RANGE_END_FOR_CANNON.getValue(); platformID++) {
+				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) platformID))) {
+					Renderer.world.getBody((int) ballID).applyImpulse(0.05f);
 				}
-				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody(8))){
-					bodyImpulse[(int) (ballID -  Const.RANGE_END_FOR_CANNON.getValue())] = 0.1f;
+				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) Const.ID_FLOOR.getValue()))){
 					Renderer.world.removeBody(((int) ballID));
 					if(Const.RANGE_END_FOR_CANNON.getValue() == Const.RANGE_END_FOR_CANNON.getValue())
 					{
@@ -183,7 +167,6 @@ public class Renderer extends JFrame implements GLEventListener {
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
