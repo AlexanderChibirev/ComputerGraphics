@@ -6,14 +6,14 @@ import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
 public class DYN4JBasePlatform {
-	private Vector<GLBasePlatform> basePlatform = new Vector<GLBasePlatform>();
+	private Vector<GLObject> basePlatform = new Vector<GLObject>();
 	
 	public DYN4JBasePlatform() {
 		createBasePlatform();
 	}
 	private void createRect(final Vector2 size, final double angle, Vector2 translate)
 	{
-		GLBasePlatform rect = new GLBasePlatform();
+		GLObject rect = new GLObject();
 		rect.addFixture(new BodyFixture(new Rectangle(size.x, size.y)));
 		rect.setMass(MassType.INFINITE);
 		rect.rotate(angle);
@@ -32,7 +32,7 @@ public class DYN4JBasePlatform {
 		createRect(new Vector2(2.5,1.5), 0, new Vector2(6,3)); //7
 	}
 	
-	public Vector<GLBasePlatform> getBasePlatform() {
+	public Vector<GLObject> getBasePlatform() {
 		return basePlatform;
 	}
 }

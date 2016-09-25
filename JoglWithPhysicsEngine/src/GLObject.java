@@ -7,27 +7,15 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public class GLBasePlatform extends Body {
-		/** The color of the object */
+public class GLObject extends Body {
 		protected float[] color = new float[4];
-		
-		/**
-		 * Default constructor.
-		 */
-		public GLBasePlatform() {
+		public GLObject() {
 			// randomly generate the color
 			this.color[0] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[1] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[2] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[3] = 1.0f;
 		}
-		
-		/**
-		 * Draws the body.
-		 * <p>
-		 * Only coded for polygons.
-		 * @param gl the OpenGL graphics context
-		 */
 		public void render(GL2 gl) {
 			// save the original transform
 			gl.glPushMatrix();
@@ -48,7 +36,6 @@ public class GLBasePlatform extends Body {
 					
 					// set the color
 					gl.glColor4fv(this.color, 0);
-					
 					// fill the shape
 					gl.glBegin(GL2.GL_POLYGON);
 					for (Vector2 v : p.getVertices()) {

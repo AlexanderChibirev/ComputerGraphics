@@ -1,9 +1,6 @@
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,9 +25,8 @@ public class Main   {
 		window.setVisible(true);
 		centerWindow(window);
 		window.start();
-		
 	}
-	
+
 	public static void centerWindow(Component frame) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowX = Math.max(0,(screenSize.width - frame.getWidth()) / 2);
