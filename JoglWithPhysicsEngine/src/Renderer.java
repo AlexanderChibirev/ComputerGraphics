@@ -1,9 +1,12 @@
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 import org.dyn4j.dynamics.World;
 
 
@@ -31,6 +34,7 @@ public class Renderer extends JFrame implements GLEventListener {
 	private float rotationAngle = 0f;
 	
 	public Renderer(int width, int height) {
+		
 		super("JOGL Example");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(width, height);
@@ -45,6 +49,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		this.canvas.setMaximumSize(size);
 		this.canvas.setIgnoreRepaint(true);
 		this.canvas.addGLEventListener(this);
+		this.canvas.addMouseListener(new CustomListener());	
 		
 		this.add(this.canvas);
 		this.setResizable(false);
@@ -70,7 +75,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		this.last = System.nanoTime();
 		Animator animator = new Animator(this.canvas);
 		animator.setRunAsFastAsPossible(true);
-		animator.start();
+		animator.start();	
 	}
 	
 	@Override
@@ -121,6 +126,7 @@ public class Renderer extends JFrame implements GLEventListener {
 			glObjects.render(gl);
 		}
 		updateCannon(gl);
+		
 	}
 	
 	private void updateCannon(GL2 gl) {
@@ -132,6 +138,7 @@ public class Renderer extends JFrame implements GLEventListener {
 			glObjects.render(gl);
 		}
 		Point location = MouseInfo.getPointerInfo().getLocation();
+		
 	    double x = location.getX() - 959;
 	    double y = location.getY() - 445;
 		if(x  < 0) {
@@ -141,12 +148,13 @@ public class Renderer extends JFrame implements GLEventListener {
 		else {
 			rotationAngle = (float) (Math.atan2(x, y) * 180 / 3.14159265) - 90;
 		}
-		
 	}
 
+	
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

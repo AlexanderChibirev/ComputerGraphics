@@ -1,11 +1,14 @@
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class Main {
+public class Main   {
+
 	private static final int WINDOW_HEIGHT = 700;
 	private static final int WINDOW_WIDTH = 800;
 	
@@ -25,6 +28,7 @@ public class Main {
 		window.setVisible(true);
 		centerWindow(window);
 		window.start();
+		
 	}
 	
 	public static void centerWindow(Component frame) {
