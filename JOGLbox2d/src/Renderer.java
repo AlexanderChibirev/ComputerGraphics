@@ -1,20 +1,12 @@
 import java.awt.Dimension;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import org.dyn4j.dynamics.World;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.geometry.Convex;
-import org.dyn4j.geometry.Geometry;
-import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Polygon;
-import org.dyn4j.geometry.Rectangle;
-import org.dyn4j.geometry.Triangle;
-import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -25,17 +17,18 @@ import com.jogamp.opengl.GLProfile;
 
 
 
-public class GunJOGL extends JFrame implements GLEventListener {
+public class Renderer extends JFrame implements GLEventListener {
 	
 	private static final long serialVersionUID = 6057447011902836594L;
-	public static final double SCALE = 45.0;
-	public static final double NANO_TO_BASE = 1.0e9;
 	protected GLCanvas canvas;
 	protected Animator animator;
 	protected World world;
 	protected long last;
-	private ObjectWithMassInfiniti objects = new ObjectWithMassInfiniti() ;
-	public GunJOGL(int width, int height) {
+	private DYN4JBasePlatform objectsMassInfinity = new DYN4JBasePlatform() ;
+	private DYN4JCannon cannon = new DYN4JCannon();
+	private float rotationAngle = 0f;
+	
+	public Renderer(int width, int height) {
 		super("JOGL Example");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(width, height);
@@ -57,28 +50,20 @@ public class GunJOGL extends JFrame implements GLEventListener {
 		this.initializeWorld();
 	}
 	
-	/**
-	 * Creates game objects and adds them to the world.
-	 * <p>
-	 * Basically the same shapes from the Shapes test in
-	 * the TestBed.
-	 */
 	protected void initializeWorld() {
 		// create the world
 		this.world = new World();
-
-		// create all your bodies/joints
-		// create the floor
-		for(int i = 0; i < objects.getBasePlatform().size(); ++i){
-			this.world.addBody(objects.getBasePlatform().get(i));		
+		// create the bodies with  Mass Infinity
+		for(int i = 0; i < objectsMassInfinity.getBasePlatform().size(); ++i) {
+			this.world.addBody(objectsMassInfinity.getBasePlatform().get(i));	
 		}
+		for(int i = 0; i < cannon.getCannon().size(); ++i) {
+			this.world.addBody(cannon.getCannon().get(i));	
+		}
+		
+		//this.world.removeBody(this.world.getBody(0));
 	}
 	
-	/**
-	 * Start active rendering the example.
-	 * <p>
-	 * This should be called after the JFrame has been shown.
-	 */
 	public void start() {
 		this.last = System.nanoTime();
 		Animator animator = new Animator(this.canvas);
@@ -105,12 +90,9 @@ public class GunJOGL extends JFrame implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		this.render(gl);
+		this.render(gl);// тут будем удалять объекты
 		this.update();
 	}
-	
-
-	
 	
 	protected void update() {
         long time = System.nanoTime();
@@ -119,23 +101,44 @@ public class GunJOGL extends JFrame implements GLEventListener {
         // set the last time
         this.last = time;
     	// convert from nanoseconds to seconds
-    	double elapsedTime = diff / NANO_TO_BASE;
+    	double elapsedTime = diff / Const.NANO_TO_BASE.getValue();
         // update the world with the elapsed time
         this.world.update(elapsedTime);
 	}
 	
 	protected void render(GL2 gl) {
 		// apply a scaling transformation
-		gl.glScaled(SCALE, SCALE, SCALE);
+		gl.glScaled(Const.SCALE.getValue(), Const.SCALE.getValue(), Const.SCALE.getValue());
 		// lets move the view up some
 		gl.glTranslated(0.0, -1.0, 0.0);
 		// draw all the objects in the world
-		for (int i = 0; i < this.world.getBodyCount(); i++) {
+		for (int i = 0; i < this.world.getBodyCount() - 2; i++) {
 			// get the object
-			GLObject go = (GLObject) this.world.getBody(i);
+			GLBasePlatform glObjects = (GLBasePlatform) this.world.getBody(i);
 			// draw the object
-			go.render(gl);
+			glObjects.render(gl);
 		}
+		updateCannon(gl);
+
+	}
+	
+	private void updateCannon(GL2 gl) {
+		gl.glTranslated(Const.GUN_TURRET_TRANSLATE_X.getValue(), Const.GUN_TURRET_TRANSLATE_Y.getValue(), 0);
+		gl.glRotatef(rotationAngle, 0f, 0f, 1f);
+		gl.glTranslated(-1 * Const.GUN_TURRET_TRANSLATE_X.getValue(), -1 * Const.GUN_TURRET_TRANSLATE_Y.getValue(), 0);
+		for (int i = this.world.getBodyCount() - 2; i < this.world.getBodyCount(); i++) {
+			GLCannon glObjects = (GLCannon) this.world.getBody(i);
+			glObjects.render(gl);
+		}
+		rotationAngle += Const.SPEED_ROTATION_CANNON.getValue();
+		Point location = MouseInfo.getPointerInfo().getLocation();
+	    double x = location.getX();
+	    double y = location.getY();
+		System.out.println(x);
+		System.out.println(y);
+	    if (rotationAngle >= 360f) {
+	       rotationAngle %= 360f;
+	    }
 	}
 
 	@Override

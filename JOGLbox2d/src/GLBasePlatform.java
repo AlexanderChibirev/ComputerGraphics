@@ -7,14 +7,14 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public class GLObject extends Body {
+public class GLBasePlatform extends Body {
 		/** The color of the object */
 		protected float[] color = new float[4];
 		
 		/**
 		 * Default constructor.
 		 */
-		public GLObject() {
+		public GLBasePlatform() {
 			// randomly generate the color
 			this.color[0] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[1] = (float)Math.random() * 0.5f + 0.5f;
@@ -31,7 +31,6 @@ public class GLObject extends Body {
 		public void render(GL2 gl) {
 			// save the original transform
 			gl.glPushMatrix();
-			
 			// transform the coordinate system from world coordinates to local coordinates	
 			gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 			// rotate about the z-axis

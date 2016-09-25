@@ -8,6 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main {
 	private static final int WINDOW_HEIGHT = 700;
 	private static final int WINDOW_WIDTH = 800;
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -20,7 +21,7 @@ public class Main {
 		} catch (UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		GunJOGL window = new GunJOGL(WINDOW_WIDTH, WINDOW_HEIGHT);
+		Renderer window = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		window.setVisible(true);
 		centerWindow(window);
 		window.start();
