@@ -1,13 +1,8 @@
-import java.util.Vector;
-
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
-import com.jogamp.opengl.GLProfile;
 
 public class DYN4JBall extends Body {
 	private GLObject ball = new GLObject();
@@ -22,7 +17,7 @@ public class DYN4JBall extends Body {
 		ball.addFixture(Geometry.createUnitCirclePolygon(precision, radius));
 		ball.setMass(MassType.NORMAL);
 		ball.setLinearVelocity(velocity.x, velocity.y);
-		//ball.app(12);
+		ball.applyImpulse(0.1);
 		ball.translate(pos.x,pos.y);
 	}
 	

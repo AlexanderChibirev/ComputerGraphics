@@ -1,11 +1,9 @@
 import java.awt.event.MouseListener;
-
-import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Vector2;
 
 
 
-public class CustomListener implements MouseListener {
+public class CustomListener  implements MouseListener {
 	
 	@Override
 	public void mouseClicked(java.awt.event.MouseEvent e) {

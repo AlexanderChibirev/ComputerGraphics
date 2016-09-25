@@ -1,10 +1,12 @@
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.util.Vector;
+
 import javax.swing.JFrame;
 
 import org.dyn4j.dynamics.World;
-import org.dyn4j.geometry.Vector2;
+
 
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
@@ -19,11 +21,11 @@ import com.jogamp.opengl.GLProfile;
 
 
 public class Renderer extends JFrame implements GLEventListener {
-	
+	private float[] bodyImpulse = new float[50];
 	private static final long serialVersionUID = 6057447011902836594L;
 	protected GLCanvas canvas;
 	protected Animator animator;
-	protected static World world;
+	public static  World world;
 	protected long last;
 	private DYN4JBasePlatform objectsMassInfinity = new DYN4JBasePlatform() ;
 	private DYN4JCannon cannon = new DYN4JCannon();
@@ -31,6 +33,7 @@ public class Renderer extends JFrame implements GLEventListener {
 	public static double mouseY = 0;
 	private static float rotationAngle = 0f;
 	public static boolean mouseClicked = false;
+	//private float impulse = 0.1f;
 	public Renderer(int width, int height) {
 		
 		super("JOGL Example");
@@ -52,23 +55,24 @@ public class Renderer extends JFrame implements GLEventListener {
 		this.setResizable(false);
 		this.pack();
 		this.initializeWorld();
-		Point location = MouseInfo.getPointerInfo().getLocation();
+		initImpulse();
 		this.canvas.addMouseListener(new CustomListener());
 	}
 	
+	private void initImpulse(){
+		for(int i = 0; i < bodyImpulse.length; ++i){
+			bodyImpulse[i] = 0.1f;
+		}
+	}
 	protected void initializeWorld() {
-		// create the world
-		this.world = new World();
-		
-		//this.world.
-		// create the bodies with  Mass Infinity
+		Renderer.world = new World();
 		for(int i = 0; i < objectsMassInfinity.getBasePlatform().size(); ++i) {
-			this.world.addBody(objectsMassInfinity.getBasePlatform().get(i));	
+			Renderer.world.addBody(objectsMassInfinity.getBasePlatform().get(i));	
 		}
 		for(int i = 0; i < cannon.getCannon().size(); ++i) {
-			this.world.addBody(cannon.getCannon().get(i));	
+			Renderer.world.addBody(cannon.getCannon().get(i));	
 		}
-		//this.world.removeBody(this.world.getBody(0));
+
 	}
 	
 	public void start() {
@@ -92,7 +96,6 @@ public class Renderer extends JFrame implements GLEventListener {
 	
 	@Override
 	public void display(GLAutoDrawable glDrawable) {
-		//тут update-им
 		GL2 gl = glDrawable.getGL().getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -100,7 +103,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		if(mouseClicked) {
 			System.out.println(mouseClicked);
 		}
-		this.render(gl);// тут будем удалять объекты	
+		this.render(gl);
 		this.update();
 	}
 	
@@ -113,36 +116,45 @@ public class Renderer extends JFrame implements GLEventListener {
     	// convert from nanoseconds to seconds
     	double elapsedTime = diff / Const.NANO_TO_BASE.getValue();
         // update the world with the elapsed time
-        this.world.update(elapsedTime);
+    	Renderer.world.update(elapsedTime);
 	}
 	
 	protected void render(GL2 gl) {
-		// apply a scaling transformation
 		gl.glScaled(Const.SCALE.getValue(), Const.SCALE.getValue(), Const.SCALE.getValue());
-		// lets move the view up some
 		gl.glTranslated(0.0, -1.0, 0.0);
-		// draw all the objects in the world
-		for (double i = Const.RANGE_BEGIN_FOR_BASE_PLATFORM.getValue(); 
-				i < Const.RANGE_END_FOR_BASE_PLATFORM.getValue(); ++i) {
-			// get the object
-			GLObject glObjects = (GLObject) this.world.getBody((int) i);
-			// draw the object
+		for (double i = Const.RANGE_BEGIN_FOR_BASE_PLATFORM.getValue();
+				i < Const.RANGE_END_FOR_BASE_PLATFORM.getValue(); ++i){
+			GLObject glObjects = (GLObject) Renderer.world.getBody((int) i);
 			glObjects.render(gl);
 		}
-		updateBall(gl);//10 
+		updateBall(gl);//11 
 		updateCannon(gl);
 	}
 	
 	private void updateBall(GL2 gl) {
-		for (int ballID = 10; ballID < this.world.getBodyCount(); ballID++) {
-			GLObject glObjects = (GLObject) this.world.getBody(ballID);
+		for (double ballID = Const.RANGE_END_FOR_CANNON.getValue(); ballID < Renderer.world.getBodyCount(); ballID++) {
+			GLObject glObjects = (GLObject) Renderer.world.getBody((int) ballID);
 			glObjects.render(gl);
-			for (int platformID = 0; platformID < 10; platformID++) {
-				if(this.world.getBody(ballID).isInContact(this.world.getBody(platformID))) {
-					//System.out.println("COLLISION");
-					//this.world.getBody(ballID).applyImpulse(0.1);
-					//this.world.getBody(ballID).setLinearVelocity(this.world.getBody(ballID).getLinearVelocity().x, this.world.getBody(ballID).getLinearVelocity().y);
-				}	 
+			for (int platformID = 0; platformID < Const.RANGE_END_FOR_CANNON.getValue(); platformID++) {
+				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody(platformID))) {
+					int it = (int) (ballID -  Const.RANGE_END_FOR_CANNON.getValue());
+					if(bodyImpulse[it] <= 0) { 
+						bodyImpulse[it] = 0;
+					}
+					else {
+						bodyImpulse[it] -= 0.0001f;
+					}
+					System.out.println(bodyImpulse[it]);
+					Renderer.world.getBody((int) ballID).applyImpulse(bodyImpulse[it]);
+				}
+				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody(8))){
+					bodyImpulse[(int) (ballID -  Const.RANGE_END_FOR_CANNON.getValue())] = 0.1f;
+					Renderer.world.removeBody(((int) ballID));
+					if(Const.RANGE_END_FOR_CANNON.getValue() == Const.RANGE_END_FOR_CANNON.getValue())
+					{
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -153,7 +165,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		gl.glTranslated(-1 * Const.GUN_TURRET_TRANSLATE_X.getValue(), -1 * Const.GUN_TURRET_TRANSLATE_Y.getValue(), 0);
 		for (double i = Const.RANGE_BEGIN_FOR_CANNON.getValue(); 
 				i < Const.RANGE_END_FOR_CANNON.getValue(); ++i) {
-			GLCannon glObjects = (GLCannon) this.world.getBody((int) i);
+			GLCannon glObjects = (GLCannon) Renderer.world.getBody((int) i);
 			glObjects.render(gl);
 		}
 		Point location = MouseInfo.getPointerInfo().getLocation();
