@@ -4,7 +4,6 @@ import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Polygon;
 import org.dyn4j.geometry.Vector2;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 public class GLCannon extends Body {

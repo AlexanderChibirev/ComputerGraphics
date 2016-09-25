@@ -1,11 +1,11 @@
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
+
 
 import javax.swing.JFrame;
 import org.dyn4j.dynamics.World;
-import org.lwjgl.input.Mouse;
+
 
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
@@ -121,12 +121,6 @@ public class Renderer extends JFrame implements GLEventListener {
 			glObjects.render(gl);
 		}
 		updateCannon(gl);
-
-		
-		 if (Mouse.isButtonDown(1) ) {
-			 System.out.print("angle:   ");
-				System.out.println(rotationAngle);
-         }
 	}
 	
 	private void updateCannon(GL2 gl) {
@@ -147,6 +141,7 @@ public class Renderer extends JFrame implements GLEventListener {
 		else {
 			rotationAngle = (float) (Math.atan2(x, y) * 180 / 3.14159265) - 90;
 		}
+		
 	}
 
 	@Override
