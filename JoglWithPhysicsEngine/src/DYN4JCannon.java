@@ -8,7 +8,6 @@ import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
-import com.jogamp.opengl.GL2;
 
 public class DYN4JCannon {
 	public static float rotationAngle = 0f;//убрать 
@@ -60,8 +59,7 @@ public class DYN4JCannon {
 		Point location = MouseInfo.getPointerInfo().getLocation();
 		mouseX = location.getX() - 959;
 		mouseY = location.getY() - 603;
-		rotationAngle = getCelsiusAngle();//убрать 
-		//System.out.println(getRadianAngle());
+		rotationAngle = getCelsiusAngle();
 		Renderer.world.getBody((int) Const.NUMBER_CANNON.getValue()).rotate(-rotationAngleOld);
 		rotationAngleOld =  getRadianAngle();
 		Renderer.world.getBody((int) Const.NUMBER_CANNON.getValue()).rotate(getRadianAngle());

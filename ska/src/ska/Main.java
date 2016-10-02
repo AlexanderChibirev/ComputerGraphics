@@ -1,20 +1,12 @@
 package ska;
 
 import java.awt.Dimension;
-import java.awt.DisplayMode;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.awt.GLCanvas;
 
@@ -22,11 +14,11 @@ import com.jogamp.opengl.awt.GLCanvas;
 public class Main {
 	private static final int WINDOW_HEIGHT = 800;
 	private static final int WINDOW_WIDTH = 800;
-	private static GraphicsEnvironment graphicsEnviorment;
+
 	
 	public static void main(String[] args){ 
-		final GLProfile profile = GLProfile.get(GLProfile.GL2);	/*GLProfile класс статической инициализации синглетон запрашивает		 * наличие всех профилей OpenGL и конкретизирует одноплодна€ объекты GLProfile		 *  дл€ каждого доступного профил€. задаем версию GL2*/		
-		GLCapabilities capabilities = new GLCapabilities(profile);//«адает набор возможностей OpenGL.  
+		final GLProfile profile = GLProfile.get(GLProfile.GL2);	
+		GLCapabilities capabilities = new GLCapabilities(profile);
 		final GLCanvas glcanvas = new GLCanvas(capabilities);
 		glcanvas.addGLEventListener(new Renderer());
     	glcanvas.setSize( WINDOW_WIDTH, WINDOW_HEIGHT );

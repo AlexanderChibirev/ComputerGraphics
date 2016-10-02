@@ -1,6 +1,4 @@
 import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import javax.swing.JFrame;
 import org.dyn4j.dynamics.World;
 import com.jogamp.opengl.awt.GLCanvas;

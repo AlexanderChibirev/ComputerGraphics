@@ -3,14 +3,10 @@ package ska;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.glu.GLU;
-import com.jogamp.opengl.util.av.GLMediaPlayer;
-import com.jogamp.opengl.util.av.GLMediaPlayer.GLMediaEventListener;
-import com.jogamp.opengl.util.texture.TextureSequence.TextureFrame;
+
 
 class Renderer implements GLEventListener
 {
-	private GLU glu = new GLU();
 	
 	public void display(GLAutoDrawable gLDrawable) {
 	 	final GL2 gl = gLDrawable.getGL().getGL2();

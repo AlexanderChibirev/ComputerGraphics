@@ -30,7 +30,7 @@ public class DYN4JBasePlatform {
 		createRect(new Vector2(3,1.5),1.2, new Vector2(-5,1));//boxes 5
 		createRect(new Vector2(2,1.5), -0.6, new Vector2(-5, 5));//6
 		createRect(new Vector2(2.5,1.5), 0, new Vector2(6,3)); //7
-		createRect(new Vector2(19,0.1), 0, new Vector2(0,-5.8));//floor for delete ball
+		createRect(new Vector2(19,0.1), 0, new Vector2(0,-5.8));//floor for delete ball 8
 	}
 	
 	public Vector<GLObject> getBasePlatform() {

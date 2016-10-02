@@ -4,7 +4,6 @@ package trying;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.glu.gl2.GLUgl2;
 
 
 public class DialDisplay implements GLEventListener {
