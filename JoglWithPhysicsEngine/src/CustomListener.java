@@ -7,7 +7,6 @@ public class CustomListener  implements MouseListener {
 	
 	@Override
 	public void mouseClicked(java.awt.event.MouseEvent e) {
-		Renderer.mouseClicked = false;
 	}
 	@Override
 	public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -19,8 +18,7 @@ public class CustomListener  implements MouseListener {
 	}
 	@Override
 	public void mousePressed(java.awt.event.MouseEvent e) {
-		Renderer.mouseClicked = false;
-		DYN4JBall ball = new DYN4JBall(new Vector2(Renderer.mouseX, -1 * Renderer.mouseY));
+		DYN4JBall ball = new DYN4JBall(new Vector2(DYN4JCannon.mouseX, -1 * DYN4JCannon.mouseY));
 		Renderer.world.addBody(ball.getBall());
 	}
 	@Override

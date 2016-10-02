@@ -8,7 +8,7 @@ public class Main   {
 
 	private static final int WINDOW_HEIGHT = 700;
 	private static final int WINDOW_WIDTH = 800;
-	
+
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -26,7 +26,7 @@ public class Main   {
 		centerWindow(window);
 		window.start();
 	}
-
+	
 	public static void centerWindow(Component frame) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowX = Math.max(0,(screenSize.width - frame.getWidth()) / 2);
