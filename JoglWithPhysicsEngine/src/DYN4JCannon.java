@@ -41,7 +41,7 @@ public class DYN4JCannon {
 	}
 	
 	private  void createGun() {
-		createCannon(new Vector2(2, .6), 1.57, new Vector2(0, 2));//left floor 0 1.55
+		createCannon(new Vector2(3.45, .6), 1.57, new Vector2(0, 2));//left floor 0 1.55
 		createGunTurret(100, 1.1);
 	}
 	
