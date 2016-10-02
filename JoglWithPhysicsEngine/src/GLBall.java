@@ -7,9 +7,9 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
-public class GLObject extends Body {
+public class GLBall extends Body {
 		protected float[] color = new float[4];
-		public GLObject() {
+		public GLBall() {
 			this.color[0] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[1] = (float)Math.random() * 0.5f + 0.5f;
 			this.color[2] = (float)Math.random() * 0.5f + 0.5f;

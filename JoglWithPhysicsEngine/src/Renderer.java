@@ -20,7 +20,8 @@ public class Renderer extends JFrame implements GLEventListener {
 	private static final long serialVersionUID = 6057447011902836594L;
 	private DYN4JBasePlatform objectsMassInfinity = new DYN4JBasePlatform() ;
 	private DYN4JCannon cannon = new DYN4JCannon();
-	
+	private GLCannon glCannon = new GLCannon();
+
 	public static  World world;
 	
 	
@@ -83,7 +84,6 @@ public class Renderer extends JFrame implements GLEventListener {
 		gl.glLoadIdentity();
 		this.update();
 		this.render(gl);
-		
 	}
 	
 	protected void update() {
@@ -106,31 +106,12 @@ public class Renderer extends JFrame implements GLEventListener {
 	}
 	
 	private void updateBall(GL2 gl) {
-		for (double ballID = Const.RANGE_END_FOR_CANNON.getValue(); ballID < Renderer.world.getBodyCount(); ballID++) {
-			GLObject glObjects = (GLObject) Renderer.world.getBody((int) ballID);
-			glObjects.render(gl);
-			for (double platformID = Const.RANGE_BEGIN_FOR_BASE_PLATFORM.getValue(); platformID < Const.RANGE_END_FOR_CANNON.getValue(); platformID++) {
-				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) platformID))) {
-					Renderer.world.getBody((int) ballID).applyImpulse(0.05f);
-				}
-				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) Const.ID_FLOOR.getValue()))){
-					Renderer.world.removeBody(((int) ballID));
-					if(Const.RANGE_END_FOR_CANNON.getValue() == Const.RANGE_END_FOR_CANNON.getValue())
-					{
-						break;
-					}
-				}
-			}
-		}
+		DYN4JBall.update(gl);
 	}
 
 	private void updateCannon(GL2 gl) {
-		for (double i = Const.RANGE_BEGIN_FOR_CANNON.getValue(); 
-				i < Const.RANGE_END_FOR_CANNON.getValue(); ++i) {
-			GLCannon glObjects = (GLCannon) Renderer.world.getBody((int) i);
-			glObjects.render(gl);
-			cannon.updatePhysicsCannon();
-		}
+		glCannon.updateCannon(gl);
+		cannon.updatePhysicsCannon();
 	}
 	
 	@Override

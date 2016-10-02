@@ -7,7 +7,7 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.GL2;
 
 public class GLCannon extends Body {
-	public void render(GL2 gl) {
+	private void render(GL2 gl) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);
@@ -24,5 +24,12 @@ public class GLCannon extends Body {
 			}
 		}
 		gl.glPopMatrix();
+	}
+	public void updateCannon(GL2 gl) {
+		for (double i = Const.RANGE_BEGIN_FOR_CANNON.getValue(); 
+				i < Const.RANGE_END_FOR_CANNON.getValue(); ++i) {
+			GLCannon glObjects = (GLCannon) Renderer.world.getBody((int) i);
+			glObjects.render(gl);
+		}
 	}
 }

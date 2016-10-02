@@ -10,7 +10,7 @@ public enum Const {
 	RANGE_BEGIN_FOR_CANNON(9),
 	NUMBER_CANNON(9),
 	RANGE_END_FOR_CANNON(11),
-	ID_FLOOR(8);
+	ID_FLOOR(8), DELTA_IMPULSE(0.0001), IMPULSE(0.05);
 	private final double value;
 	
 	Const(double value) {
