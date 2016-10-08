@@ -33,9 +33,9 @@ public class DYN4JCannon {
 	private void createGunTurret(final int precision, final double radius)//круг 
 	{
 		GLCannon gunTurret = new GLCannon();
-		gunTurret.addFixture(Geometry.createUnitCirclePolygon(precision, radius));
-		gunTurret.setMass(MassType.INFINITE);
-		gunTurret.translate(Const.GUN_TURRET_TRANSLATE_X.getValue(),Const.GUN_TURRET_TRANSLATE_Y.getValue());
+		//gunTurret.addFixture(Geometry.createUnitCirclePolygon(precision, radius));
+		//gunTurret.setMass(MassType.INFINITE);
+		//gunTurret.translate(Const.GUN_TURRET_TRANSLATE_X.getValue(),Const.GUN_TURRET_TRANSLATE_Y.getValue());
 		gun.add(gunTurret);
 	}
 	

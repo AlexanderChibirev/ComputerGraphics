@@ -37,8 +37,8 @@ public class DYN4JBall extends Body {
 				if(Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) platformID))) {
 					if(Renderer.world.getBody((int) ballID).getAngularDamping() > 0.001) {
 						System.out.println(Renderer.world.getBody((int) ballID).getAngularDamping());
-						Renderer.world.getBody((int) ballID).setAngularDamping(Renderer.world.getBody((int) ballID).getAngularDamping() -  impulse);
-						Renderer.world.getBody((int) ballID).applyImpulse(Renderer.world.getBody((int) ballID).getAngularDamping()  -   impulse);	
+						Renderer.world.getBody((int) ballID).setAngularDamping(Renderer.world.getBody((int) ballID).getAngularDamping() - impulse);
+						Renderer.world.getBody((int) ballID).applyImpulse(Renderer.world.getBody((int) ballID).getAngularDamping() -  impulse);	
 					}	
 				}
 				if (Renderer.world.getBody((int) ballID).isInContact(Renderer.world.getBody((int) Const.ID_FLOOR.getValue()))) {
