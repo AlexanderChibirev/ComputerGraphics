@@ -3,13 +3,13 @@ import java.awt.DisplayMode;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
 	 
 	private GLU glu = new GLU();
 	private float rquad=0.0f;
-	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
