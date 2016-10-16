@@ -39,7 +39,7 @@ public class Rhombicuboctahedron {
 			new Vector3f( 0.5f, 1.2f, -0.5f ),
 			new Vector3f( -0.5f, 1.2f, -0.5f )
 	};
-	private final TriangleFace[] CUBE_FACES = {
+	private final TriangleFace[] SHAPE_FACES = {
 		new TriangleFace((short)0, (short)3, (short)2, (short)ColorsShape.Pink.ordinal()),
 		new TriangleFace((short)0,  (short)2, (short)1,  (short)ColorsShape.Pink.ordinal()), 
 
@@ -106,7 +106,7 @@ public class Rhombicuboctahedron {
 	
 	public void outputFaces(GL2 gl) {
 		gl.glBegin(GL2.GL_TRIANGLES);
-		for (final TriangleFace face : CUBE_FACES)
+		for (final TriangleFace face : SHAPE_FACES)
 		{
 			final Vector3f v1 = CUBE_VERTICIES[face.vertexIndex1];
 			final Vector3f v2 = CUBE_VERTICIES[face.vertexIndex2];
