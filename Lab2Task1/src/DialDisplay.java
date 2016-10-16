@@ -1,27 +1,27 @@
+import java.awt.MouseInfo;
+import java.awt.Point;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
 
 
 public class DialDisplay implements GLEventListener  {
-	private float m_rquad = 0.0f;
+	private Camera m_camera = new Camera();
 	@Override
-	public void display(GLAutoDrawable gLDrawable) {		
+	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
-		// включаем механизмы трёхмерного мира.
 		includeMechanisms3DWorld(gl);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-	    gl.glLoadIdentity();
-	    gl.glRotatef(m_rquad, 1.0f, 1.0f, 1.0f ); // Rotate The Cube On X, Y & Z
-	    m_rquad -=0.55f;
+		final GLU glu = GLU.createGLU(gl);
+		m_camera.update(glu);
 		drawRhombicuboctahedron(gl);
 	}
+
 	private void drawRhombicuboctahedron(GL2 gl){
 		RhombicuboctahedronView pentakis = new RhombicuboctahedronView();
 		gl.glOrtho(-4, 4, -4, 4, -4, 4);
-		enableBlending(gl);
-	    pentakis.drawRhombicuboctahedron(gl);
-	    disableBlending(gl);
+		pentakis.drawRhombicuboctahedron(gl);
 	}
 
 	private void includeMechanisms3DWorld(GL2 gl) {
@@ -31,18 +31,8 @@ public class DialDisplay implements GLEventListener  {
 		gl.glCullFace(GL2.GL_BACK);
 		gl.glEnable(GL2.GL_COLOR_MATERIAL);
 		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
-		
-	}
-	
-	private void disableBlending(GL2 gl) {
-		gl.glDepthMask(true);
-		gl.glDisable(GL2.GL_BLEND);
-	}
-	
-	private void enableBlending(GL2 gl) {
-		gl.glDepthMask(false);
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+	    gl.glLoadIdentity();
 	}
 	
 	@Override

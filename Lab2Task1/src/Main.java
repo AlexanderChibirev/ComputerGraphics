@@ -35,6 +35,7 @@ public class Main extends JFrame {
         DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
+        glcanvas.addMouseListener(new CustomListener());
         animator = new Animator(glcanvas);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         setSize(800, 800);
