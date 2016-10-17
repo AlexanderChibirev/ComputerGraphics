@@ -30,7 +30,7 @@ public class Main extends JFrame {
     }
   
     public Main() {
-        super("3D shapes");
+        super("Rhombicuboctahedron");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();

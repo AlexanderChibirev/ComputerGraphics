@@ -1,5 +1,3 @@
-import java.awt.MouseInfo;
-import java.awt.Point;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -9,6 +7,7 @@ import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
 	private Camera m_camera = new Camera();
+	private Light m_light = new Light();
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
@@ -16,6 +15,7 @@ public class DialDisplay implements GLEventListener  {
 		final GLU glu = GLU.createGLU(gl);
 		m_camera.update(glu);
 		drawRhombicuboctahedron(gl);
+		m_light.setLight(gl);
 	}
 
 	private void drawRhombicuboctahedron(GL2 gl){
@@ -29,6 +29,7 @@ public class DialDisplay implements GLEventListener  {
 		gl.glEnable(GL2.GL_CULL_FACE);
 		gl.glFrontFace(GL2.GL_CCW);
 		gl.glCullFace(GL2.GL_BACK);
+		gl.glEnable(GL2.GL_LIGHTING);
 		gl.glEnable(GL2.GL_COLOR_MATERIAL);
 		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);

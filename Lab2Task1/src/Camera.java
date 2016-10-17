@@ -17,12 +17,15 @@ public class Camera {
 				angleY += 1.50f;
 			}
 			if(mouseX < 50) {
-				angleX -= 1.50f;
+				angleX -= 2.50f;
 			}
 			if(mouseX > 50) {
-				angleX += 1.50f;
+				angleX += 2.50f;
 			}
+			if (angleY < -89.0){angleY= -89.0f;}
+			if (angleY > 89.0){angleY= 89.0f;}
 		}
+		System.out.println(angleY);
 		glu.gluLookAt(0, 0, 0, 0-Math.sin(angleX/180*Math.PI),0 +(Math.tan(angleY/180*Math.PI)), 0-Math.cos(angleX/180*Math.PI), 0, 1, 0);
 	}	
 }
