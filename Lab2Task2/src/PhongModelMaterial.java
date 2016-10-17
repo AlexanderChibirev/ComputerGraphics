@@ -9,7 +9,7 @@ public class PhongModelMaterial {
 	private FloatBuffer m_specular;
 	private float m_shininess = 10.f;
 	public void setup(GL2 gl) {
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, m_emission);
+		//gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_EMISSION, m_emission);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, m_ambient);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, m_diffuse);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, m_specular);
