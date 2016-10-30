@@ -2,6 +2,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -13,27 +14,18 @@ public class DialDisplay implements GLEventListener  {
 	private Camera m_camera = new Camera();
 	private Light m_light = new Light();
 	private Material m_material = new Material();
-	private FooFunctional xMobiusStrip = new FooFunctional() {
+	private final Vector2f m_rangeZ =  new Vector2f(-1, 1);
+	private final Vector2f m_rangeX =  new Vector2f(0.f, (float)(2 * Math.PI) + 0.1f);
+	private FooFunctional pointOfMobiusStripFromXY = new FooFunctional() {
 		@Override
-		public float invoke(float U, float V) {
-			//System.out.println(((1.f + (V / 2.f * Math.cos(U / 2.f))) * Math.cos(U)));
-			return (float) ((1.f + (V / 2.f * Math.cos(U / 2.f))) * Math.cos(U));
+		public Vector3f invoke(float u, float v) {
+			float x = (float) ((1.f + (v / 2.f * Math.cos(u / 2.f))) * Math.cos(u));
+			float y = (float) ((1.f + (v / 2.f * Math.cos(u / 2.f))) * Math.sin(u));
+			float z = (float) (v / 2.f * Math.sin(u / 2.f));
+			return new Vector3f(x, y, z);
 		}
 	};
-	private FooFunctional yMobiusStrip = new FooFunctional() {
-		@Override
-		public float invoke(float U, float V) {
-			return (float) ((1.f + (V / 2.f * Math.cos(U / 2.f))) * Math.sin(U));
-		}
-	};
-	private FooFunctional zMobiusStrip =  new FooFunctional() {
-		
-		@Override
-		public float invoke(float U, float V) {
-			return (float) (V / 2.f * Math.sin(U / 2.f));
-		}
-	};
-	private Function3D m_funtion = new Function3D(xMobiusStrip, yMobiusStrip, zMobiusStrip);
+	private Function3D m_funtion = new Function3D(pointOfMobiusStripFromXY);
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -48,8 +40,7 @@ public class DialDisplay implements GLEventListener  {
 	}
 
 	private void drawFunction3D(GL2 gl) {
-		m_funtion.tesselate(new Vector2f(0.f, (float)(2 * Math.PI) + 0.1f), new Vector2f(-1, 1), 0.05f);
-		
+		m_funtion.tesselate(m_rangeZ, m_rangeX, 0.05f);
 		//gl.glOrtho(-40, 40, -40, 40, -40, 40);
 		m_funtion.draw(gl);
 	}

@@ -1,5 +1,7 @@
+import javax.vecmath.Vector3f;
+
 @FunctionalInterface
 public interface FooFunctional
 {
-   float invoke(float U, float V);
+   Vector3f invoke(float U, float V);
 }
