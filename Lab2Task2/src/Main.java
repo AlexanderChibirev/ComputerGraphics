@@ -42,7 +42,7 @@ public class Main extends JFrame {
         centerWindow(this);
     }
     
-    public void centerWindow(Component frame) {
+    private void centerWindow(Component frame) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowX = Math.max(0,(screenSize.width - frame.getWidth()) / 2);
 		int windowY = Math.max(0,(screenSize.height - frame.getHeight()) / 2);

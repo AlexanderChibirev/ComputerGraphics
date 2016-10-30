@@ -14,8 +14,6 @@ public class DialDisplay implements GLEventListener  {
 	private Camera m_camera = new Camera();
 	private Light m_light = new Light();
 	private Material m_material = new Material();
-	private final Vector2f m_rangeZ =  new Vector2f(-1, 1);
-	private final Vector2f m_rangeX =  new Vector2f(0.f, (float)(2 * Math.PI) + 0.1f);
 	private FooFunctional pointOfMobiusStripFromXY = new FooFunctional() {
 		@Override
 		public Vector3f invoke(float u, float v) {
@@ -33,15 +31,13 @@ public class DialDisplay implements GLEventListener  {
 		includeMechanisms3DWorld(gl);
 		final GLU glu = GLU.createGLU(gl);
 		m_camera.update(glu);
-		m_material.setLight(gl);
+		m_material.setMaterial(gl);
 		m_light.setLight(gl);
 		drawFunction3D(gl);
-		
 	}
 
 	private void drawFunction3D(GL2 gl) {
-		m_funtion.tesselate(m_rangeZ, m_rangeX, 0.05f);
-		//gl.glOrtho(-40, 40, -40, 40, -40, 40);
+		gl.glOrtho(-5, 5, -5, 5, -5, 5);
 		m_funtion.draw(gl);
 	}
 
@@ -54,7 +50,6 @@ public class DialDisplay implements GLEventListener  {
 		gl.glEnable(GL2.GL_COLOR_MATERIAL);
 		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		//gl.glClearColor(1, 1, 1, 1);
 	    gl.glLoadIdentity();
 	}
 	

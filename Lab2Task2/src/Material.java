@@ -22,7 +22,8 @@ public class Material {
 		return floatBuffer;
 	}
 	
-	public void setLight(GL2 gl) {
+	public void setMaterial(GL2 gl) {
+		
 		m_material.setAmbient(colorToFloatBuffer(YELLOW_RGBA));
 		m_material.setDiffuse(colorToFloatBuffer(YELLOW_RGBA));
 		m_material.setSpecular(colorToFloatBuffer(FADED_WHITE_RGBA));

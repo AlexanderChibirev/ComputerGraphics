@@ -22,6 +22,8 @@ public class Camera {
 			if(mouseX > 50) {
 				angleX += 1.50f;
 			}
+			if (angleY < -89.0){angleY= -89.0f;}
+			if (angleY > 89.0){angleY= 89.0f;}
 		}
 		glu.gluLookAt(0, 0, 0, 0-Math.sin(angleX/180*Math.PI),0 +(Math.tan(angleY/180*Math.PI)), 0-Math.cos(angleX/180*Math.PI), 0, 1, 0);
 	}	

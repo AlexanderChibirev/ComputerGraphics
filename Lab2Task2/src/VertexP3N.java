@@ -7,9 +7,6 @@ public class VertexP3N {
 	public VertexP3N(final Vector3f position) {
 		this.setPosition(position);
 	}
-	public VertexP3N() {
-		
-	}
 
 	public Vector3f getPosition() {
 		return m_position;
