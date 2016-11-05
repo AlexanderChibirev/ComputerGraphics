@@ -7,6 +7,9 @@ import org.dyn4j.geometry.Vector2;
 
 public class DYN4JMovingPlatform {
 	private GLMovingPlatform basePlatform = new GLMovingPlatform();
+	private float x = 0;
+	private boolean stepL = true;
+	private boolean stepR = true;
 	
 	public DYN4JMovingPlatform() {
 		createMovingPlatform();
@@ -30,13 +33,35 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public void updatePossitionMovingPlatform() {
+		final float shiftPlatform = 0.20f;
+		final float leftPartBorder = -6.6f;
+		final float rightPartBorder = 7.3f;
 		float dx = 0;
-		if(InputHandler.sKeyPressedA == true) {
-			dx -= 0.20f;
+		if(InputHandler.sKeyPressedA == true && stepL) {
+			dx -= shiftPlatform;
+			x += dx;
+			System.out.println(x);
+			stepR = true;
 		}
-		else if(InputHandler.sKeyPressedD == true) {
-			dx += 0.20f;
+		else if(InputHandler.sKeyPressedD == true && stepR) {
+			dx += shiftPlatform;
+			x += dx;
+			System.out.println(x);
+			stepL = true;
 		}
-		DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(dx, 0);
+		
+		if(x > rightPartBorder) {
+			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(-1 * dx, 0);
+			x += dx;
+			stepR = false;
+		}
+		else if(x < leftPartBorder) {
+			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(-1 * dx, 0);
+			x += dx;
+			stepL = false;
+		}
+		else {
+			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(dx, 0);
+		}
 	}
 }
