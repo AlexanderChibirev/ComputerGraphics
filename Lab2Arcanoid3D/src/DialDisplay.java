@@ -3,6 +3,8 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.Vector2;
+
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.GL;
@@ -31,6 +33,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private DYN4JBox mPhysicsBox = new DYN4JBox();
 	private GLBox mGlBox = new GLBox();
 	private InputHandler inputHandler;
+	private DYN4JBall mBall = new DYN4JBall(new Vector2(0,0));
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -121,17 +124,19 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 
 	
 	protected void initializeWorld() {//initial bodyes
-		DialDisplay.sWorld = new World();
-		DialDisplay.sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
+		sWorld = new World();
+		sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
 		for(GLBox boxPart: mPhysicsBox.getBox()) {
-			DialDisplay.sWorld.addBody(boxPart);
+			sWorld.addBody(boxPart);
 		}
+		sWorld.addBody(mBall.getBall());
 	}
 	
 	protected void render(GL2 gl) {//update bodyes 
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
 		updateMovingPlatform(gl);
 		mGlBox.updateBox(gl);
+		mBall.update(gl);
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {
