@@ -8,9 +8,9 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 
 
-public class GLObject extends Body {
+public class GLBlock extends Body {
 	protected float[] color = new float[4];
-	public GLObject() {
+	public GLBlock() {
 		this.color[0] = (float)Math.random() * 0.5f + 0.5f;
 		this.color[1] = (float)Math.random() * 0.5f + 0.5f;
 		this.color[2] = (float)Math.random() * 0.5f + 0.5f;
@@ -40,4 +40,13 @@ public class GLObject extends Body {
 		}
 		gl.glPopMatrix();
 	}	
+	
+	public void updateBlocks(GL2 gl) {
+		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue();
+				i < DialDisplay.sWorld.getBodyCount();
+				++i) {
+			GLBlock glBlocks = (GLBlock) DialDisplay.sWorld.getBody((int) i);
+			glBlocks.render(gl);
+		}
+	}
 }

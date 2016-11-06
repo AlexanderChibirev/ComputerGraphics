@@ -6,6 +6,7 @@ import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -24,16 +25,14 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private static final long serialVersionUID = 6530460753888462810L;
 	private Light mLight = new Light();
 	protected GLCanvas mCanvas;
-	protected Animator mAnimator;
 	public static  World sWorld;
 	protected long mLast;
-
 	private DYN4JMovingPlatform mPhysicsMovingPlatform = new DYN4JMovingPlatform();
 	private GLMovingPlatform mGlMovingPlatform = new GLMovingPlatform();
-	private DYN4JBox mPhysicsBox = new DYN4JBox();
 	private GLBox mGlBox = new GLBox();
-	private InputHandler inputHandler;
-	private DYN4JBall mBall = new DYN4JBall(new Vector2(-10,10));
+	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
+	private GLBlock mGlBlock = new GLBlock();
+	private File image;
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -72,11 +71,13 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		this.mCanvas.setMaximumSize(size);
 		this.mCanvas.setIgnoreRepaint(true);
 		this.mCanvas.addGLEventListener(this);
-		this.inputHandler = new InputHandler();
-		this.addKeyListener(this.inputHandler);
+		InputHandler inputHandler;
+		inputHandler = new InputHandler();
+		this.addKeyListener(inputHandler);
 		this.add(this.mCanvas);
 		this.setResizable(false);
 		this.pack();
+		this.image = new File("src/images/background.jpg");
 		this.initializeWorld();
 	}
 	
@@ -100,9 +101,9 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);	
 		try{
-			File im2 = new File("src/images/background.jpg"); //JPG!!!
-			Texture t2 = TextureIO.newTexture(im2,true);
-			textureId = t2.getTextureObject(gl);			
+			 //JPG!!!
+			Texture texture = TextureIO.newTexture(image,true);
+			textureId = texture.getTextureObject(gl);
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -120,17 +121,27 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glPopMatrix();
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glDisable(GL2.GL_TEXTURE_2D);
+		gl.glPopMatrix();
 	}
 
 	
 	protected void initializeWorld() {//initial bodyes
 		sWorld = new World();
-		sWorld.setGravity(new Vector2(0,0));
+		//sWorld.setGravity(new Vector2(0,0));
+		//addPlat
 		sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
+		//addBox
+		DYN4JBox mPhysicsBox = new DYN4JBox();
 		for(GLBox boxPart: mPhysicsBox.getBox()) {
 			sWorld.addBody(boxPart);
 		}
+		//addBall
 		sWorld.addBody(mBall.getBall());
+		//addBlocks
+		DYN4JBlock mPhysicsBlock = new DYN4JBlock();
+		for(GLBlock boxPart: mPhysicsBlock.getBlock()) {
+			sWorld.addBody(boxPart);
+		}
 	}
 	
 	protected void render(GL2 gl) {//update bodyes 
@@ -138,6 +149,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		updateMovingPlatform(gl);
 		mGlBox.updateBox(gl);
 		mBall.update(gl);
+		mGlBlock.updateBlocks(gl);
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {

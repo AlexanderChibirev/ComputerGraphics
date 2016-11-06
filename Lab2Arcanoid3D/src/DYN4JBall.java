@@ -30,6 +30,17 @@ public class DYN4JBall extends Body {
 		int ballID = (int) WorldConsts.POSSITION_BALL.getValue();
 		GLBall ball = (GLBall) DialDisplay.sWorld.getBody(ballID);
 		ball.render(gl);
-		ball.applyImpulse(5);	
+		ball.applyImpulse(5);
+		for(int i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue();
+				i < DialDisplay.sWorld.getBodyCount();
+				i++) {
+			if(ball.isInContact(DialDisplay.sWorld.getBody(i))) {
+				this.velocity.y = this.velocity.y * -1;
+				ball.setLinearVelocity(this.velocity.x,this.velocity.y);
+				DialDisplay.sWorld.removeBody((i));
+				break;
+			}
+		}
+			
 	}
 }

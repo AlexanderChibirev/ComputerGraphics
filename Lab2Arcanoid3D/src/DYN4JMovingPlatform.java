@@ -33,7 +33,7 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public void updatePossitionMovingPlatform() {
-		final float shiftPlatform = 0.30f;
+		final float shiftPlatform = 0.40f;
 		final float leftPartBorder = -6.6f;
 		final float rightPartBorder = 7.3f;
 		float dx = 0;
