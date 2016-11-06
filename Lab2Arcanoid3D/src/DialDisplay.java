@@ -125,6 +125,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	
 	protected void initializeWorld() {//initial bodyes
 		sWorld = new World();
+		sWorld.setGravity(new Vector2(0,0));
 		sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
 		for(GLBox boxPart: mPhysicsBox.getBox()) {
 			sWorld.addBody(boxPart);

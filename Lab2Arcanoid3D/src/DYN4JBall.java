@@ -10,7 +10,7 @@ public class DYN4JBall extends Body {
 	private Vector2 velocity = new Vector2();
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
-		createBall(100, 0.28, new  Vector2(0, 0), this.velocity);
+		createBall(100, 0.20, new  Vector2(0, 0), this.velocity);
 	}
 	
 	private void createBall(final int precision, final double radius, Vector2 pos, Vector2 velocity)
@@ -19,7 +19,6 @@ public class DYN4JBall extends Body {
 		ball.setMass(MassType.NORMAL);
 		ball.setLinearVelocity(velocity.x, velocity.y);
 		ball.translate(pos.x,pos.y);
-		//ball.setAngularDamping(15f);
 		ball.applyImpulse(155f);
 	}
 	
@@ -31,6 +30,6 @@ public class DYN4JBall extends Body {
 		int ballID = (int) WorldConsts.POSSITION_BALL.getValue();
 		GLBall ball = (GLBall) DialDisplay.sWorld.getBody(ballID);
 		ball.render(gl);
-		ball.applyImpulse(15);		
+		ball.applyImpulse(5);	
 	}
 }
