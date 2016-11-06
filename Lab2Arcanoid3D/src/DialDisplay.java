@@ -33,7 +33,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private DYN4JBox mPhysicsBox = new DYN4JBox();
 	private GLBox mGlBox = new GLBox();
 	private InputHandler inputHandler;
-	private DYN4JBall mBall = new DYN4JBall(new Vector2(0,0));
+	private DYN4JBall mBall = new DYN4JBall(new Vector2(-10,10));
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {

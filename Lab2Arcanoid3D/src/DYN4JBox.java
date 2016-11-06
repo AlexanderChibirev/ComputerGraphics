@@ -25,7 +25,7 @@ public class DYN4JBox {
 		createRect(new Vector2(11.0, .5), -0.95, new Vector2(7, -2));//right
 		createRect(new Vector2(11.0, .5), 0.99, new Vector2(-6.5, -2));//left
 		createRect(new Vector2(11.0, .5), 0, new Vector2(0, 2)); //up
-		createRect(new Vector2(18.0, .5), 0, new Vector2(0, -6)); //up
+		createRect(new Vector2(18.0, .5), 0, new Vector2(0, -6)); //floor for died ball
 	}
 	
 	public Vector<GLBox> getBox() {

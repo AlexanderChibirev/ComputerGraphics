@@ -2,7 +2,6 @@ public enum RangesConst {
 	RANGE_BEGIN_FOR_MOVING_PLATFORM(0),
 	RANGE_END_FOR_MOVING_PLATFORM(1),
 	RANGE_BEGIN_FOR_BOX(1),
-	RANGE_BEGIN_FOR_BALL(5),
 	RANGE_END_FOR_BOX(5);
 	
 	private final int value;

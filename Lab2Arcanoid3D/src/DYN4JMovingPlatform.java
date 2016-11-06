@@ -33,20 +33,18 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public void updatePossitionMovingPlatform() {
-		final float shiftPlatform = 0.20f;
+		final float shiftPlatform = 0.30f;
 		final float leftPartBorder = -6.6f;
 		final float rightPartBorder = 7.3f;
 		float dx = 0;
 		if(InputHandler.sKeyPressedA == true && stepL) {
 			dx -= shiftPlatform;
 			x += dx;
-			System.out.println(x);
 			stepR = true;
 		}
 		else if(InputHandler.sKeyPressedD == true && stepR) {
 			dx += shiftPlatform;
 			x += dx;
-			System.out.println(x);
 			stepL = true;
 		}
 		
