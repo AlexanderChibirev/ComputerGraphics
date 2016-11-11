@@ -27,9 +27,11 @@ public class GLBlock extends Body {
 				gl.glColor4fv(this.color, 0);
 				gl.glBegin(GL2.GL_POLYGON);
 				for (Vector2 v : p.getVertices()) {
+					//System.out.println(v.x);
 					gl.glVertex3d(v.x, v.y, 0.0);
 				}
 				gl.glEnd();
+				//System.out.println("===============");
 				gl.glColor4f(this.color[0] * 0.8f, this.color[1] * 0.8f, this.color[2] * 0.8f, 1.0f);
 				gl.glBegin(GL.GL_LINE_LOOP);
 				for (Vector2 v : p.getVertices()) {

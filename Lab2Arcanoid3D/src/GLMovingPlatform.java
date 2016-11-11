@@ -16,7 +16,7 @@ public class GLMovingPlatform  extends Body {
 			if (convex instanceof Polygon) {
 				Polygon p = (Polygon) convex;
 				gl.glColor3f(1, 0, 0);
-				gl.glBegin(GL2.GL_POLYGON);
+				gl.glBegin(GL2.GL_QUADS);
 				for (Vector2 v : p.getVertices()) {
 					gl.glVertex3d(v.x, v.y, 0.0);
 				}

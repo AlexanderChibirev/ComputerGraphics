@@ -38,7 +38,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		drawBackground(gl);
+		//drawBackground(gl);
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
@@ -127,7 +127,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	
 	protected void initializeWorld() {//initial bodyes
 		sWorld = new World();
-		//sWorld.setGravity(new Vector2(0,0));
+		sWorld.setGravity(new Vector2(0,0));
+		sWorld.getSettings().setRestitutionVelocity(0);
 		//addPlat
 		sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
 		//addBox
@@ -139,8 +140,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		sWorld.addBody(mBall.getBall());
 		//addBlocks
 		DYN4JBlock mPhysicsBlock = new DYN4JBlock();
-		for(GLBlock boxPart: mPhysicsBlock.getBlock()) {
-			sWorld.addBody(boxPart);
+		for(GLBlock block: mPhysicsBlock.getBlock()) {
+			sWorld.addBody(block);
 		}
 	}
 	

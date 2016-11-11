@@ -1,4 +1,3 @@
-import java.util.Vector;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -33,9 +32,9 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public void updatePossitionMovingPlatform() {
-		final float shiftPlatform = 0.40f;
-		final float leftPartBorder = -6.6f;
-		final float rightPartBorder = 7.3f;
+		final float shiftPlatform = 0.004f;
+		final float leftPartBorder = -6.8f;
+		final float rightPartBorder = 6.8f;
 		float dx = 0;
 		if(InputHandler.sKeyPressedA == true && stepL) {
 			dx -= shiftPlatform;
