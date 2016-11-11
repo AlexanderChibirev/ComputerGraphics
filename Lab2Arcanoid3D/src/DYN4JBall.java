@@ -8,9 +8,10 @@ import com.jogamp.opengl.GL2;
 public class DYN4JBall extends Body {
 	private GLBall mBall = new GLBall();
 	private int isHit = 0;
+	private int mQuantityOfDestroyedBlocks = 0;
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
-		createBall(100, 0.20, new  Vector2(0, 0), this.velocity);
+		createBall(100, 0.20, new  Vector2(0, -4), this.velocity);
 	}
 	
 	private void createBall(final int precision, final double radius, Vector2 pos, Vector2 velocity)
@@ -25,8 +26,12 @@ public class DYN4JBall extends Body {
 	public GLBall getBall() {
 		return mBall;
 	}
+	public int getQuantityOfDestroyedBlocks() {
+		return mQuantityOfDestroyedBlocks;		
+	}
 	
-	private void checkCollisionWithBlock() {
+	
+	private void checkCollisionWithBlock(GL2 gl) {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); i++) {
 			if(isHit != 5) {
 				if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
@@ -34,6 +39,7 @@ public class DYN4JBall extends Body {
 					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
 					DialDisplay.sWorld.removeBody((i));
 					isHit = 5;
+					mQuantityOfDestroyedBlocks++;
 					break;
 				}
 			}
@@ -87,6 +93,6 @@ public class DYN4JBall extends Body {
 		mBall.render(gl);		
 		checkCollisionWithMovingPlatform();
 		checkCollisionWithMovingBox();
-		checkCollisionWithBlock();			
+		checkCollisionWithBlock(gl);
 	}
 }
