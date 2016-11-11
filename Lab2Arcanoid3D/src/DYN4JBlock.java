@@ -8,9 +8,9 @@ import org.dyn4j.geometry.Vector2;
 
 public class DYN4JBlock extends Body {
 private Vector<GLBlock> mBox = new Vector<GLBlock>();
-	
+	private Vector2 mPositionBlock = new Vector2(-7.0f, -0.3f);
 	public DYN4JBlock() {
-		createBlock();
+		createBlocks();
 	}
 	
 	private void createRect(final Vector2 size, final double angle, Vector2 translate)
@@ -23,17 +23,22 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 		mBox.add(rect);
 	}
 	
-	private  void createBlock() {
-		float x = -3.95f;
-		float y = -0.3f;
-		float shiftX = 0.70f;
-		for(int i = 0; i < 13; ++i) {
-			createRect(new Vector2(0.5, 0.5), 0, new Vector2(x, y));
-			x += shiftX;
+	private void createNewColumnBlocks() {
+		float shiftY = 1.1f;
+		float shiftX = 2.00f;
+		float startPositionX = -7.0f;
+		for(int i = 0; i < 8; ++i) {
+			createRect(new Vector2(2, 1), 0, new Vector2(mPositionBlock.x, mPositionBlock.y));
+			mPositionBlock.x += shiftX;
 		}
-		//createRect(new Vector2(0.6, 0.6), 0, new Vector2(x, y));//6
-		//createRect(new Vector2(0.6, 0.6), 0, new Vector2(x + shiftX, y));//7
-		//createRect(new Vector2(0.6, 0.6), 0, new Vector2(-3.25, -0.3));//7
+		mPositionBlock.y += shiftY;
+		mPositionBlock.x = startPositionX;
+	}
+	
+	private  void createBlocks() {
+		createNewColumnBlocks();
+		createNewColumnBlocks();
+		createNewColumnBlocks();
 	}
 	
 	public Vector<GLBlock> getBlock() {
