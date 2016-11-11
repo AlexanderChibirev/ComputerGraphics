@@ -8,6 +8,7 @@ import org.dyn4j.geometry.Vector2;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -32,7 +33,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private GLBox mGlBox = new GLBox();
 	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
 	private GLBlock mGlBlock = new GLBlock();
-	private File image;
+	private File mImage;
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -77,7 +78,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		this.add(this.mCanvas);
 		this.setResizable(false);
 		this.pack();
-		this.image = new File("src/images/background.jpg");
+		this.mImage = new File("src/images/background.jpg");
 		this.initializeWorld();
 	}
 	
@@ -102,7 +103,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);	
 		try{
 			 //JPG!!!
-			Texture texture = TextureIO.newTexture(image,true);
+			Texture texture = TextureIO.newTexture(mImage,true);
 			textureId = texture.getTextureObject(gl);
 		}
 		catch(IOException e){
