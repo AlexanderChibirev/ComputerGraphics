@@ -7,14 +7,14 @@ public class TextForGame {
 	private  Vector2f mPosition;
 	private  String mText;
 	
-	public TextForGame(final String text, final Vector2f position) {
-		this.mText = text;
+	public TextForGame(final Vector2f position) {
 		this.mPosition = position;
 	}
-	public void update(GL2 gl, String text) {
+	public void setText(GL2 gl, String text) {
 	    gl.glMatrixMode (GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 		gl.glRasterPos2f(mPosition.x,mPosition.y); // set position
+		mText = text;
 		mGlut.glutBitmapString(2, mText);
 		//mPosition.y += 20;
 	}

@@ -2,6 +2,8 @@ import java.awt.Dimension;
 
 
 import javax.swing.JFrame;
+import javax.vecmath.Vector2f;
+
 import org.dyn4j.dynamics.World;
 import org.dyn4j.geometry.Vector2;
 
@@ -34,6 +36,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
 	private GLBlock mGlBlock = new GLBlock();
 	private File mImage;
+	public static TextForGame sScore = new TextForGame(new Vector2f(-360f, 250f));
+	public static TextForGame sLevel = new TextForGame(new Vector2f(300f, 250f));
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -43,6 +47,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
+		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
+		sLevel.setText(gl,"Level: " + 1);
 	}
 
 	protected void update() {
