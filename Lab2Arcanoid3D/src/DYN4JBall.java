@@ -33,15 +33,13 @@ public class DYN4JBall extends Body {
 	
 	private void checkCollisionWithBlock(GL2 gl) {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); i++) {
-			if(isHit != 5) {
-				if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
-					this.velocity.y = this.velocity.y * -1;
-					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-					DialDisplay.sWorld.removeBody((i));
-					isHit = 5;
-					mQuantityOfDestroyedBlocks++;
-					break;
-				}
+			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
+				this.velocity.y = this.velocity.y * -1;
+				mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
+				DialDisplay.sWorld.removeBody((i));
+				isHit = 5;
+				mQuantityOfDestroyedBlocks++;
+				break;
 			}
 		}
 	}
