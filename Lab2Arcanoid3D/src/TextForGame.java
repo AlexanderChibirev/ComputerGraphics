@@ -13,9 +13,8 @@ public class TextForGame {
 	public void setText(GL2 gl, String text) {
 	    gl.glMatrixMode (GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
-		gl.glRasterPos2f(mPosition.x,mPosition.y); // set position
+		gl.glRasterPos2f(mPosition.x,mPosition.y);
 		mText = text;
-		mGlut.glutBitmapString(2, mText);
-		//mPosition.y += 20;
+		mGlut.glutBitmapString(3, mText);
 	}
 }
