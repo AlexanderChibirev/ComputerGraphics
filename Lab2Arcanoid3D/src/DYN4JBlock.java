@@ -24,15 +24,16 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 	}
 	
 	private void createNewColumnBlocks() {
-		float shiftY = 1.1f;
-		float shiftX = 2.00f;
-		float startPositionX = -7.0f;
-		for(int i = 0; i < 8; ++i) {
-			createRect(new Vector2(2, 1), 0, new Vector2(mPositionBlock.x, mPositionBlock.y));
+		float shiftY = 1.6f;
+		float shiftX = 1.60f;
+		float startPositionX = -7.2f;
+		mPositionBlock.x = startPositionX;
+		for(int i = 0; i < 10; ++i) {
+			createRect(new Vector2(1.5, 1.5), 0, new Vector2(mPositionBlock.x, mPositionBlock.y));
 			mPositionBlock.x += shiftX;
 		}
 		mPositionBlock.y += shiftY;
-		mPositionBlock.x = startPositionX;
+		
 	}
 	
 	private  void createBlocks() {
