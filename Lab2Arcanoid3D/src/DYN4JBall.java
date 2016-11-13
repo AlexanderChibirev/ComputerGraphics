@@ -5,16 +5,18 @@ import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.GL2;
 
+enum TypeHit {
+	NORMAL_BOX,
+	INVERTE_BOX,
+	MOVING_PLATFORM,
+	BLOCK
+}
+
 public class DYN4JBall extends Body {
 	private GLBall mBall = new GLBall();
-	private mTypeHit isHit;
+	private TypeHit mTypeHit;
 	private int mQuantityOfDestroyedBlocks = 0;
-	private enum mTypeHit {
-		NORMAL_BOX,
-		INVERTE_BOX,
-		MOVING_PLATFORM,
-		BLOCK
-	}
+	
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
 		createBall(100, 0.20, new  Vector2(0, -4), this.velocity);
@@ -45,12 +47,12 @@ public class DYN4JBall extends Body {
 				if(Math.abs(posCenterBall.x - posCenterBlock.x) > limitValue) {
 					this.velocity.x *= -1;
 					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-					isHit = mTypeHit.BLOCK;
+					mTypeHit = TypeHit.BLOCK;
 				}
 				else if(Math.abs(posCenterBall.y - posCenterBlock.y) > limitValue) {
 					this.velocity.y *= -1;
 					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-					isHit = mTypeHit.BLOCK;
+					mTypeHit = TypeHit.BLOCK;
 				}
 				DialDisplay.sWorld.removeBody((i));
 				mQuantityOfDestroyedBlocks++;
@@ -62,10 +64,10 @@ public class DYN4JBall extends Body {
 	private void checkCollisionWithMovingPlatform() {
 		int movingPlatformPossition = 0;
 		if(mBall.isInContact(DialDisplay.sWorld.getBody(movingPlatformPossition))) {
-			if(isHit != mTypeHit.MOVING_PLATFORM) {
+			if(mTypeHit != TypeHit.MOVING_PLATFORM) {
 				this.velocity.y = this.velocity.y * -1;
 				mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-				isHit = mTypeHit.MOVING_PLATFORM;
+				mTypeHit = TypeHit.MOVING_PLATFORM;
 			}
 		}
 	}
@@ -74,17 +76,17 @@ public class DYN4JBall extends Body {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BOX.getValue(); i <  RangesConst.RANGE_END_FOR_BOX.getValue(); i++) {
 			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
 					if(i % 2 == 0) {
-						if(isHit != mTypeHit.NORMAL_BOX) {
+						if(mTypeHit != TypeHit.NORMAL_BOX) {
 							this.velocity.y = this.velocity.y * -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-							isHit = mTypeHit.NORMAL_BOX;
+							mTypeHit = TypeHit.NORMAL_BOX;
 						}
 					}
 					else {
-						if(isHit !=  mTypeHit.INVERTE_BOX) {
+						if(mTypeHit !=  TypeHit.INVERTE_BOX) {
 							this.velocity.x = this.velocity.x * -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-							isHit =  mTypeHit.INVERTE_BOX;
+							mTypeHit =  TypeHit.INVERTE_BOX;
 						}
 				}
 			}
