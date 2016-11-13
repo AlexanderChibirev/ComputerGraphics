@@ -7,8 +7,14 @@ import com.jogamp.opengl.GL2;
 
 public class DYN4JBall extends Body {
 	private GLBall mBall = new GLBall();
-	private int isHit = 0;
+	private mTypeHit isHit;
 	private int mQuantityOfDestroyedBlocks = 0;
+	private enum mTypeHit {
+		NORMAL_BOX,
+		INVERTE_BOX,
+		MOVING_PLATFORM,
+		BLOCK
+	}
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
 		createBall(100, 0.20, new  Vector2(0, -4), this.velocity);
@@ -20,7 +26,6 @@ public class DYN4JBall extends Body {
 		mBall.setMass(MassType.NORMAL);
 		mBall.setLinearVelocity(velocity.x, velocity.y);
 		mBall.translate(pos.x,pos.y);
-		
 	}
 	
 	public GLBall getBall() {
@@ -34,10 +39,20 @@ public class DYN4JBall extends Body {
 	private void checkCollisionWithBlock(GL2 gl) {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); i++) {
 			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
-				this.velocity.y = this.velocity.y * -1;
-				mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
+				Vector2 posCenterBlock = DialDisplay.sWorld.getBody(i).getWorldCenter();
+				Vector2 posCenterBall = mBall.getWorldCenter();
+				float limitValue = 0.9f;
+				if(Math.abs(posCenterBall.x - posCenterBlock.x) > limitValue) {
+					this.velocity.x *= -1;
+					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
+					isHit = mTypeHit.BLOCK;
+				}
+				else if(Math.abs(posCenterBall.y - posCenterBlock.y) > limitValue) {
+					this.velocity.y *= -1;
+					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
+					isHit = mTypeHit.BLOCK;
+				}
 				DialDisplay.sWorld.removeBody((i));
-				isHit = 5;
 				mQuantityOfDestroyedBlocks++;
 				break;
 			}
@@ -47,19 +62,10 @@ public class DYN4JBall extends Body {
 	private void checkCollisionWithMovingPlatform() {
 		int movingPlatformPossition = 0;
 		if(mBall.isInContact(DialDisplay.sWorld.getBody(movingPlatformPossition))) {
-			if(this.velocity.x > 0) {
-				if(isHit != 1) {
-					this.velocity.y = this.velocity.y * -1;
-					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-					isHit = 1;
-				}
-			}
-			else {
-				if(isHit != 2) {
-					this.velocity.y = this.velocity.y * -1;
-					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-					isHit = 2;
-				}
+			if(isHit != mTypeHit.MOVING_PLATFORM) {
+				this.velocity.y = this.velocity.y * -1;
+				mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
+				isHit = mTypeHit.MOVING_PLATFORM;
 			}
 		}
 	}
@@ -68,23 +74,23 @@ public class DYN4JBall extends Body {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BOX.getValue(); i <  RangesConst.RANGE_END_FOR_BOX.getValue(); i++) {
 			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
 					if(i % 2 == 0) {
-						if(isHit != 3) {
+						if(isHit != mTypeHit.NORMAL_BOX) {
 							this.velocity.y = this.velocity.y * -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-							isHit = 3;
+							isHit = mTypeHit.NORMAL_BOX;
 						}
 					}
 					else {
-						if(isHit != 4) {
+						if(isHit !=  mTypeHit.INVERTE_BOX) {
 							this.velocity.x = this.velocity.x * -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
-							isHit = 4;
+							isHit =  mTypeHit.INVERTE_BOX;
 						}
 				}
 			}
 		}
 	}
-	
+
 	public void update(GL2 gl) {
 		int ballID = (int) WorldConsts.POSSITION_BALL.getValue();
 		mBall = (GLBall) DialDisplay.sWorld.getBody(ballID);
