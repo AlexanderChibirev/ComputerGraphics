@@ -38,19 +38,20 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	public static TextForGame sScore = new TextForGame(new Vector2f(-360f, 250f));
 	public static TextForGame sLevel = new TextForGame(new Vector2f(300f, 250f));
 	private GLU glu = new GLU();
+	private Camera mCamera = new Camera();
+	Cube mCube = new Cube();
+	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
 		//drawBackground(gl);
+		mCamera.update(glu);
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
-		Cube c = new Cube();
-		c.draw(gl,glu);
 		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
-		sLevel.setText(gl,"Level: " + 1);
-		
+		sLevel.setText(gl,"Level: " + 1);		
 	}
 
 	protected void update() {
@@ -83,7 +84,9 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		InputHandler inputHandler;
 		inputHandler = new InputHandler();
 		this.addKeyListener(inputHandler);
+		this.mCanvas.addMouseListener(new CustomListener());
 		this.add(this.mCanvas);
+		
 		this.setResizable(false);
 		this.pack();
 		this.mImage = new File("src/images/background.jpg");
@@ -156,10 +159,12 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	
 	protected void render(GL2 gl) {//update bodyes 
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
+		
 		updateMovingPlatform(gl);
+		
 		mGlBox.updateBox(gl);
 		mBall.update(gl);
-		mGlBlock.updateBlocks(gl);
+		mGlBlock.updateBlocks(gl, glu);
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {
@@ -188,7 +193,6 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glOrtho(-400, 400, -300, 300, 0, 1);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		gl.setSwapInterval(0);
 	}
 

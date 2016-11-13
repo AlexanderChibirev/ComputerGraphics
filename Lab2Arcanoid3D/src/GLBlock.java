@@ -4,8 +4,8 @@ import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Polygon;
 import org.dyn4j.geometry.Vector2;
 
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
 
 
 public class GLBlock extends Body {
@@ -16,7 +16,7 @@ public class GLBlock extends Body {
 		this.color[2] = (float)Math.random() * 0.5f + 0.5f;
 		this.color[3] = 1.0f;
 	}
-	public void render(GL2 gl) {
+	public void render(GL2 gl, GLU glu) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);
@@ -31,24 +31,17 @@ public class GLBlock extends Body {
 					gl.glVertex3d(v.x, v.y, 0.0);
 				}
 				gl.glEnd();
-				//System.out.println("===============");
-				gl.glColor4f(this.color[0] * 0.8f, this.color[1] * 0.8f, this.color[2] * 0.8f, 1.0f);
-				gl.glBegin(GL.GL_LINE_LOOP);
-				for (Vector2 v : p.getVertices()) {
-					gl.glVertex3d(v.x, v.y, 0.0);
-				}
-				gl.glEnd();
 			}
 		}
 		gl.glPopMatrix();
 	}	
 	
-	public void updateBlocks(GL2 gl) {
+	public void updateBlocks(GL2 gl, GLU glu) {
 		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue();
 				i < DialDisplay.sWorld.getBodyCount();
 				++i) {
 			GLBlock glBlocks = (GLBlock) DialDisplay.sWorld.getBody((int) i);
-			glBlocks.render(gl);
+			glBlocks.render(gl,glu);
 		}
 	}
 }
