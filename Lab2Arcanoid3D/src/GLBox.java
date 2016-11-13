@@ -43,8 +43,8 @@ public class GLBox extends Body {
 		for (double i = RangesConst.RANGE_BEGIN_FOR_BOX.getValue();
 				i < RangesConst.RANGE_END_FOR_BOX.getValue();
 				++i) {
-			GLBox glObjects = (GLBox) DialDisplay.sWorld.getBody((int) i);
-			glObjects.render(gl);
+			GLBox box = (GLBox) DialDisplay.sWorld.getBody((int) i);
+			box.render(gl);
 		}
 	}
 }
