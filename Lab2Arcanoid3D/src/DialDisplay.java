@@ -161,14 +161,16 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
 		
 		updateMovingPlatform(gl);
-		
 		mGlBox.updateBox(gl);
+		if(mBall.isDead()) {
+			System.exit(0);
+		}
 		mBall.update(gl);
 		mGlBlock.updateBlocks(gl, glu);
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {
-		mGlMovingPlatform.updateMovingPlatform(gl);
+		mGlMovingPlatformddd.updateMovingPlatform(gl);
 		mPhysicsMovingPlatform.updatePossitionMovingPlatform();
 	}
 	

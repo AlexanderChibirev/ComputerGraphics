@@ -16,6 +16,7 @@ public class DYN4JBall extends Body {
 	private GLBall mBall = new GLBall();
 	private TypeHit mTypeHit;
 	private int mQuantityOfDestroyedBlocks = 0;
+	private boolean mIsDead = false;
 	
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
@@ -65,7 +66,7 @@ public class DYN4JBall extends Body {
 		int movingPlatformPossition = 0;
 		if(mBall.isInContact(DialDisplay.sWorld.getBody(movingPlatformPossition))) {
 			if(mTypeHit != TypeHit.MOVING_PLATFORM) {
-				this.velocity.y = this.velocity.y * -1;
+				this.velocity.y *= -1;
 				mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
 				mTypeHit = TypeHit.MOVING_PLATFORM;
 			}
@@ -73,18 +74,23 @@ public class DYN4JBall extends Body {
 	}
 	
 	private void checkCollisionWithMovingBox() {
+		int posDownBox = 4;
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BOX.getValue(); i <  RangesConst.RANGE_END_FOR_BOX.getValue(); i++) {
 			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
 					if(i % 2 == 0) {
+						if(i == posDownBox) {
+							mIsDead = true;
+						}
 						if(mTypeHit != TypeHit.NORMAL_BOX) {
-							this.velocity.y = this.velocity.y * -1;
+							this.velocity.y *= -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
 							mTypeHit = TypeHit.NORMAL_BOX;
 						}
 					}
 					else {
+						
 						if(mTypeHit !=  TypeHit.INVERTE_BOX) {
-							this.velocity.x = this.velocity.x * -1;
+							this.velocity.x *= -1;
 							mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
 							mTypeHit =  TypeHit.INVERTE_BOX;
 						}
@@ -93,10 +99,14 @@ public class DYN4JBall extends Body {
 		}
 	}
 
+	public boolean isDead() {
+		return mIsDead;
+	}
+	
 	public void update(GL2 gl) {
 		int ballID = (int) WorldConsts.POSSITION_BALL.getValue();
 		mBall = (GLBall) DialDisplay.sWorld.getBody(ballID);
-		mBall.render(gl);		
+		mBall.render(gl);	
 		checkCollisionWithMovingPlatform();
 		checkCollisionWithMovingBox();
 		checkCollisionWithBlock(gl);
