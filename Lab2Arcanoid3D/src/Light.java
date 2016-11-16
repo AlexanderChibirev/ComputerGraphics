@@ -1,18 +1,17 @@
 import com.jogamp.opengl.GL2;
 
 public class Light {
-	private float[] WHITE_LIGHT = {1, 1, 1, 1};
-
-	private float[] WHITE_LIGHT1 = {0.3f, 0.3f, 0.8f, 0.8f};
-	private final  float[] SUNLIGHT_DIRECTION = { -1.f, 0.2f, 0.7f };
-	private DirectedLightSource m_sunlight = new DirectedLightSource(GL2.GL_LIGHT0);
+	private final float[] WHITE_LIGHT = {1, 1, 1, 1};
+	private final float[] WHITE_LIGHT1 = {0.3f, 0.3f, 0.8f, 0.8f};
+	private final float[] SUNLIGHT_DIRECTION = { -1.f, 0.2f, 0.7f };
+	private DirectedLightSource mSunlight = new DirectedLightSource(GL2.GL_LIGHT0);
 
 	public void setLight(GL2 gl) {
-		m_sunlight.setDirection(SUNLIGHT_DIRECTION);
-		m_sunlight.setDiffuse(WHITE_LIGHT);
-		m_sunlight.setAmbient(WHITE_LIGHT1);
-		m_sunlight.setSpecular(WHITE_LIGHT);
-		m_sunlight.setup(gl);
+		mSunlight.setDirection(SUNLIGHT_DIRECTION);
+		mSunlight.setDiffuse(WHITE_LIGHT);
+		mSunlight.setAmbient(WHITE_LIGHT1);
+		mSunlight.setSpecular(WHITE_LIGHT);
+		mSunlight.setup(gl);
 	}
 	
 /*	float ambient[] ={ 0.0f, 0.0f, 0.0f, 1.0f };

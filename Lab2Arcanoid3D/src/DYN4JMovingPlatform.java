@@ -1,3 +1,5 @@
+import javax.vecmath.Vector2f;
+
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
@@ -5,10 +7,10 @@ import org.dyn4j.geometry.Vector2;
 
 
 public class DYN4JMovingPlatform {
-	private GLMovingPlatform basePlatform = new GLMovingPlatform();
-	private float x = 0;
-	private boolean stepL = true;
-	private boolean stepR = true;
+	private GLMovingPlatform mBasePlatform = new GLMovingPlatform();
+	private Vector2f mMovingPlatformPossition = new Vector2f(0,0);
+	private boolean mStepL = true;
+	private boolean mStepR = true;
 	
 	public DYN4JMovingPlatform() {
 		createMovingPlatform();
@@ -20,7 +22,7 @@ public class DYN4JMovingPlatform {
 		rect.setMass(MassType.INFINITE);
 		rect.rotate(angle);
 		rect.translate(translate.x, translate.y);
-		basePlatform = rect;
+		mBasePlatform = rect;
 	}
 	
 	private  void createMovingPlatform() {
@@ -28,7 +30,7 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public GLMovingPlatform getMovingPlatform() {
-		return basePlatform;
+		return mBasePlatform;
 	}
 	
 	public void updatePossitionMovingPlatform() {
@@ -36,26 +38,26 @@ public class DYN4JMovingPlatform {
 		final float leftPartBorder = -6.8f;
 		final float rightPartBorder = 6.8f;
 		float dx = 0;
-		if(InputHandler.sKeyPressedA == true && stepL) {
+		if(InputHandler.sKeyPressedA == true && mStepL) {
 			dx -= shiftPlatform;
-			x += dx;
-			stepR = true;
+			mMovingPlatformPossition.x += dx;
+			mStepR = true;
 		}
-		else if(InputHandler.sKeyPressedD == true && stepR) {
+		else if(InputHandler.sKeyPressedD == true && mStepR) {
 			dx += shiftPlatform;
-			x += dx;
-			stepL = true;
+			mMovingPlatformPossition.x += dx;
+			mStepL = true;
 		}
 		
-		if(x > rightPartBorder) {
+		if(mMovingPlatformPossition.x > rightPartBorder) {
 			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(-1 * dx, 0);
-			x += dx;
-			stepR = false;
+			mMovingPlatformPossition.x += dx;
+			mStepR = false;
 		}
-		else if(x < leftPartBorder) {
+		else if(mMovingPlatformPossition.x < leftPartBorder) {
 			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(-1 * dx, 0);
-			x += dx;
-			stepL = false;
+			mMovingPlatformPossition.x += dx;
+			mStepL = false;
 		}
 		else {
 			DialDisplay.sWorld.getBody((int) WorldConsts.POSSITION_MOVING_PLATFORM.getValue()).translate(dx, 0);

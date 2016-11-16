@@ -3,30 +3,33 @@ import java.awt.Point;
 import com.jogamp.opengl.glu.GLU;
 
 public class Camera {
-	private float angleX; 
-	private float angleY; // ”глы поворота камеры
-	private float shiftX = -959;
-	private float shiftY = -553;
+	private float mAngleX; 
+	private float mAngleY; // ”глы поворота камеры
+	private float mShiftX = -959;
+	private float mShiftY = -553;
+	private float mShiftAngleY = 1.50f;
+	private float mShiftAngleX = 2.50f;
+	
 	public void update(GLU glu) {
 		Point location = MouseInfo.getPointerInfo().getLocation();
-		double mouseX = location.getX() + shiftX;
-		double mouseY = location.getY() + shiftY;
+		double mouseX = location.getX() + mShiftX;
+		double mouseY = location.getY() + mShiftY;
 		if(CustomListener.mousePressed == true) {
 			if(mouseY < 50) {
-				angleY -= 1.50f;
+				mAngleY -= mShiftAngleY;
 			}
 			if(mouseY > 50) {
-				angleY += 1.50f;
+				mAngleY += mShiftAngleY;
 			}
 			if(mouseX < 50) {
-				angleX -= 2.50f;
+				mAngleX -= mShiftAngleX;
 			}
 			if(mouseX > 50) {
-				angleX += 2.50f;
+				mAngleX += mShiftAngleX;
 			}
-			if (angleY < -89.0){angleY= -89.0f;}
-			if (angleY > 89.0){angleY= 89.0f;}
+			if (mAngleY < -89.0){mAngleY= -89.0f;}
+			if (mAngleY > 89.0){mAngleY= 89.0f;}
 		}
-		glu.gluLookAt(0, 0, 0, 0-Math.sin(angleX/180*Math.PI),0 +(Math.tan(angleY/180*Math.PI)), 0-Math.cos(angleX/180*Math.PI), 0, 1, 0);
+		glu.gluLookAt(0, 0, 0, 0 - Math.sin(mAngleX / 180 * Math.PI),0 + (Math.tan(mAngleY / 180 * Math.PI)), 0-Math.cos(mAngleX / 180 * Math.PI), 0, 1, 0);
 	}	
 }

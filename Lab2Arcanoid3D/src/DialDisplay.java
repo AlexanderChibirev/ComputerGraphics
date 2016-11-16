@@ -29,29 +29,31 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	protected GLCanvas mCanvas;
 	public static  World sWorld;
 	protected long mLast;
-	private DYN4JMovingPlatform mPhysicsMovingPlatform = new DYN4JMovingPlatform();
+	
 	private GLMovingPlatform mGlMovingPlatform = new GLMovingPlatform();
 	private GLBox mGlBox = new GLBox();
-	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
 	private GLBlock mGlBlock = new GLBlock();
-	private File mImage;
+	
+	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
+	private DYN4JMovingPlatform mPhysicsMovingPlatform = new DYN4JMovingPlatform();
+	
 	public static TextForGame sScore = new TextForGame(new Vector2f(-360f, 250f));
 	public static TextForGame sLevel = new TextForGame(new Vector2f(300f, 250f));
-	private GLU glu = new GLU();
+	
+	private final GLU mGlu = new GLU();
 	private Camera mCamera = new Camera();
-	Cube mCube = new Cube();
+	
+	private File mImage;
+	private int mTextureId = 0;
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		//drawBackground(gl);
-		mCamera.update(glu);
+		drawBackground(gl);
 		mLight.setLight(gl);
 		this.update();
-		this.render(gl);
-		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
-		sLevel.setText(gl,"Level: " + 1);		
+		this.render(gl);		
 	}
 
 	protected void update() {
@@ -69,32 +71,30 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 	
 	public DialDisplay(int width, int height) {
+		mImage = new File("src/images/background.jpg");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(width, height);
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2));
 		caps.setDoubleBuffered(true);
 		caps.setHardwareAccelerated(true);
-
-		this.mCanvas = new GLCanvas(caps);
-		this.mCanvas.setPreferredSize(size);
-		this.mCanvas.setMinimumSize(size);
-		this.mCanvas.setMaximumSize(size);
-		this.mCanvas.setIgnoreRepaint(true);
-		this.mCanvas.addGLEventListener(this);
+		mCanvas = new GLCanvas(caps);
+		mCanvas.setPreferredSize(size);
+		mCanvas.setMinimumSize(size);
+		mCanvas.setMaximumSize(size);
+		mCanvas.setIgnoreRepaint(true);
+		mCanvas.addGLEventListener(this);
 		InputHandler inputHandler;
 		inputHandler = new InputHandler();
-		this.addKeyListener(inputHandler);
-		this.mCanvas.addMouseListener(new CustomListener());
-		this.add(this.mCanvas);
-		
-		this.setResizable(false);
-		this.pack();
-		this.mImage = new File("src/images/background.jpg");
-		this.initializeWorld();
+		addKeyListener(inputHandler);
+		mCanvas.addMouseListener(new CustomListener());
+		add(this.mCanvas);
+		setResizable(false);
+		pack();
+		initializeWorld();
 	}
 	
 	private void drawBackground (GL2 gl) {
-		int textureId = 0;
+		
 		gl.glDisable(GL.GL_DEPTH_TEST); 
 		gl.glDisable(GL.GL_CULL_FACE); 
 		gl.glEnable(GL2.GL_TEXTURE_2D);	
@@ -111,22 +111,13 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureId);	
-		try{
-			 //JPG!!!
-			Texture texture = TextureIO.newTexture(mImage,true);
-			textureId = texture.getTextureObject(gl);
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}	
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTextureId);	
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
 			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
 			gl.glTexCoord2f(1f,1f); gl.glVertex2f(1,1);
 			gl.glTexCoord2f(1f,0f); gl.glVertex2f(1,0);
 		gl.glEnd();		
-
 		gl.glDepthMask(true);
 		gl.glPopMatrix();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -158,19 +149,21 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 	
 	protected void render(GL2 gl) {//update bodyes 
+		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
+		sLevel.setText(gl,"Level: " + 1);
+		mCamera.update(mGlu);
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
-		
 		updateMovingPlatform(gl);
 		mGlBox.updateBox(gl);
 		if(mBall.isDead()) {
-			System.exit(0);
+			//System.exit(0);
 		}
 		mBall.update(gl);
-		mGlBlock.updateBlocks(gl, glu);
+		mGlBlock.updateBlocks(gl, mGlu);
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {
-		mGlMovingPlatformddd.updateMovingPlatform(gl);
+		mGlMovingPlatform.updateMovingPlatform(gl);
 		mPhysicsMovingPlatform.updatePossitionMovingPlatform();
 	}
 	
@@ -196,6 +189,18 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.setSwapInterval(0);
+		initBackground(gl);
+	}
+	
+	private void initBackground(GL2 gl) {
+		try{
+			//JPG!!!
+			Texture texture = TextureIO.newTexture(mImage,true);
+			mTextureId = texture.getTextureObject(gl);
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}	
 	}
 
 	@Override

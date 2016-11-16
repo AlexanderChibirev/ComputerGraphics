@@ -10,45 +10,45 @@ import com.jogamp.opengl.GL2;
 */
 public abstract class AbstractLightSource implements ILightSource {
 	AbstractLightSource(int index) {
-		this.m_index = index;
+		this.mIndex = index;
 	}
 	
-	private float[] m_ambient;
-	private float[] m_diffuse;
-	private float[] m_specular;
-	private int m_index;
+	private float[] mAmbient;
+	private float[] mDiffuse;
+	private float[] mSpecular;
+	private int mIndex;
 	
 	protected void setupImpl(GL2 gl) {
-		gl.glEnable(m_index);
-		gl.glLightfv(m_index, GL2.GL_AMBIENT, m_ambient, 0);
-		gl.glLightfv(m_index, GL2.GL_DIFFUSE, m_diffuse, 0);
-		gl.glLightfv(m_index, GL2.GL_SPECULAR, m_specular, 0);
+		gl.glEnable(mIndex);
+		gl.glLightfv(mIndex, GL2.GL_AMBIENT, mAmbient, 0);
+		gl.glLightfv(mIndex, GL2.GL_DIFFUSE, mDiffuse, 0);
+		gl.glLightfv(mIndex, GL2.GL_SPECULAR, mSpecular, 0);
 	}
 	protected int getIndex() {
-		return m_index;	
+		return mIndex;	
 	}
 	 
 	public final void setAmbient(final float[] color) {
-		m_ambient = color;
+		mAmbient = color;
 	}
 	
 	public final void setDiffuse(final float[] color) {
-		m_diffuse = color;
+		mDiffuse = color;
 	}
 	
 	public final void setSpecular(final float[] color) {
-		m_specular = color;
+		mSpecular = color;
 	}
 	 
 	public final float[] getAmbient() {
-		return m_ambient;
+		return mAmbient;
 	}
 	
 	public final float[] getDiffuse() {
-		return m_diffuse;
+		return mDiffuse;
 	}
 	
 	public final float[] getSpecular() {
-		return m_specular;
+		return mSpecular;
 	}
 }
