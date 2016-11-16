@@ -2,7 +2,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-public class Main   {
+public class Arcanoid   {
 
 	private static final int WINDOW_HEIGHT = 600;
 	private static final int WINDOW_WIDTH = 800;

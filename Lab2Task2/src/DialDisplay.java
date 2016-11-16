@@ -1,7 +1,4 @@
-import java.awt.MouseInfo;
-import java.awt.Point;
 
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;

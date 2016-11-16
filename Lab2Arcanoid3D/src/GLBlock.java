@@ -21,16 +21,44 @@ public class GLBlock extends Body {
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);
 		for (BodyFixture fixture : this.fixtures) {
+			//System.out.println(fixture.);
 			Convex convex = fixture.getShape();
 			if (convex instanceof Polygon) {
 				Polygon p = (Polygon) convex;
 				gl.glColor4fv(this.color, 0);
-				gl.glBegin(GL2.GL_POLYGON);
+				gl.glBegin(GL2.GL_QUADS);
+				float sizeBlock = (float) Math.abs(p.getVertices()[0].x);
 				for (Vector2 v : p.getVertices()) {
-					//System.out.println(v.x);
+					
 					gl.glVertex3d(v.x, v.y, 0.0);
 				}
-				gl.glEnd();
+				//2
+				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock );
+				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock ); 
+				//3
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock );
+				gl.glVertex3f( -sizeBlock, sizeBlock, -sizeBlock );
+				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
+				//4
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock ); 
+				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
+				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
+				//5
+				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock );
+				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock );
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock );
+				//6
+				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( -sizeBlock, sizeBlock, -sizeBlock );
+			
+			    gl.glEnd();
 			}
 		}
 		gl.glPopMatrix();

@@ -17,10 +17,18 @@ public class GLMovingPlatform  extends Body {
 				Polygon p = (Polygon) convex;
 				gl.glColor3f(1, 0, 0);
 				gl.glBegin(GL2.GL_QUADS);
+				Vector2 sizeCube = new Vector2(/*Math.abs(p.getVertices()[0].x)*/0.2,Math.abs(p.getVertices()[0].y));
 				for (Vector2 v : p.getVertices()) {
-					gl.glVertex3d(v.x, v.y, 0.0);
+					gl.glVertex3d(v.x , v.y, 0);
 				}
+				//System.out.println(sizeCube);
+				/*gl.glVertex3d( 1.0, -1.0, 1.0 ); 
+			    gl.glVertex3d( -1.0, -1.0, 1.0 ); 
+			    gl.glVertex3d( -1.0, -1.0, -1.0 ); 
+			    gl.glVertex3d( 1.0, -1.0, -1.0 );*/
+			    
 				gl.glEnd();
+				//System.out.println("============");
 			}
 		}
 		gl.glPopMatrix();

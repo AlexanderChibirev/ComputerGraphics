@@ -2,7 +2,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
 

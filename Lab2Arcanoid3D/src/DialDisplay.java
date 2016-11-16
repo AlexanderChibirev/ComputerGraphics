@@ -53,7 +53,10 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		drawBackground(gl);
 		mLight.setLight(gl);
 		this.update();
-		this.render(gl);		
+		this.render(gl);
+		CubeMalova x = new CubeMalova();
+		x.draw(gl);
+		mCamera.update(mGlu);
 	}
 
 	protected void update() {

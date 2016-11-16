@@ -7,8 +7,8 @@ public class Camera {
 	private float mAngleY; // ”глы поворота камеры
 	private float mShiftX = -959;
 	private float mShiftY = -553;
-	private float mShiftAngleY = 1.50f;
-	private float mShiftAngleX = 2.50f;
+	private float mShiftAngleY = 0.00050f;
+	private float mShiftAngleX = 0.00050f;
 	
 	public void update(GLU glu) {
 		Point location = MouseInfo.getPointerInfo().getLocation();
