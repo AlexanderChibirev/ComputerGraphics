@@ -1,3 +1,5 @@
+import javax.vecmath.Vector3f;
+
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Convex;
@@ -16,47 +18,55 @@ public class GLBlock extends Body {
 		this.color[2] = (float)Math.random() * 0.5f + 0.5f;
 		this.color[3] = 1.0f;
 	}
+	final Vector3f DARK_GREEN = new Vector3f(0.05f, 0.45f, 0.1f);
+	final Vector3f LIGHT_GREEN = new Vector3f(0.1f, 0.8f, 0.15f);
 	public void render(GL2 gl, GLU glu) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
-		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);
+		//gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);		
 		for (BodyFixture fixture : this.fixtures) {
-			//System.out.println(fixture.);
 			Convex convex = fixture.getShape();
 			if (convex instanceof Polygon) {
 				Polygon p = (Polygon) convex;
-				gl.glColor4fv(this.color, 0);
+			
 				gl.glBegin(GL2.GL_QUADS);
 				float sizeBlock = (float) Math.abs(p.getVertices()[0].x);
-				for (Vector2 v : p.getVertices()) {
-					
-					gl.glVertex3d(v.x, v.y, 0.0);
-				}
-				//2
-				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock ); 
-				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock );
-				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
+				//1
+				gl.glColor4f(1,0,0,0);
+				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock );
 				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock ); 
-				//3
-				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock ); 
-				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock );
+				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
+				gl.glColor4f(0,1,0,0);
+				//2
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock ); 
 				gl.glVertex3f( -sizeBlock, sizeBlock, -sizeBlock );
 				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
-				//4
-				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock ); 
+				//3
+				gl.glColor4f(0,0,1,1);
 				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock ); 
 				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
-				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
-				//5
-				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock );
-				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock ); 
-				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock );
-				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock );
-				//6
-				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock ); 
-				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock ); 
-				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
 				gl.glVertex3f( -sizeBlock, sizeBlock, -sizeBlock );
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock ); 
+				//4
+				gl.glColor4f(1,1,0.01f,1);
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock );
+				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock );
+				//5
+				gl.glColor4f(0, 1, 1,1);
+				gl.glVertex3f( -sizeBlock, sizeBlock, sizeBlock );
+				gl.glVertex3f( sizeBlock, sizeBlock, sizeBlock ); 
+				gl.glVertex3f( sizeBlock, sizeBlock, -sizeBlock );
+				gl.glVertex3f( -sizeBlock, sizeBlock, -sizeBlock );
+				//6
+				gl.glColor4f(1, 0, 1, 1);
+				gl.glVertex3f( -sizeBlock, -sizeBlock, sizeBlock ); 
+				gl.glVertex3f( -sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, -sizeBlock ); 
+				gl.glVertex3f( sizeBlock, -sizeBlock, sizeBlock );
 			
 			    gl.glEnd();
 			}

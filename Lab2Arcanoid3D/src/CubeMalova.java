@@ -14,8 +14,6 @@ class Vertex
 };
 
 public class CubeMalova {
-	
-
 	final byte CUBE_INDICIES[] = {
 		    0, 1, 2,
 		    0, 2, 3,

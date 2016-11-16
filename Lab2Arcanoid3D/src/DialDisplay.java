@@ -54,8 +54,6 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
-		CubeMalova x = new CubeMalova();
-		x.draw(gl);
 		mCamera.update(mGlu);
 	}
 
@@ -162,7 +160,25 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 			//System.exit(0);
 		}
 		mBall.update(gl);
+		
+		
+		//set param for cube3d
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+		mGlu.gluPerspective(110.0f, 1.3f, 1.0f, 10.0f);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0, 0, -6.0f);
+		gl.glRotatef(-10, 1.0f, .0f, 0.0f);
+		
 		mGlBlock.updateBlocks(gl, mGlu);
+		
+		//set param for 2d object
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+		gl.glOrtho(-400, 400, -300, 300, 0, 1);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
 	}
 	
 	private void updateMovingPlatform(GL2 gl) {

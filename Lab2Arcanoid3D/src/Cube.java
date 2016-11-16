@@ -7,11 +7,11 @@ public class Cube {
 	{
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(55.0f, 1.3f, 1.0f, 20.0f);
+		//glu.gluPerspective(55.0f, 1.3f, 1.0f, 20.0f);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		gl.glTranslatef(-1.2f, -0.11f, -5.0f);
-		gl.glRotatef(26, 0.0f, 1.0f, 0.0f);
+		//gl.glTranslatef(-1.2f, -0.11f, -5.0f);
+		gl.glRotatef(26, 1.0f, .0f, 0.0f);
 	}
 	
 	private void setMatrixModeForGame(GL2 gl)
