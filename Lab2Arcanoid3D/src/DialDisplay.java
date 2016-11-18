@@ -54,7 +54,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
-		mCamera.update(mGlu);
+		
 	}
 
 	protected void update() {
@@ -91,7 +91,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		add(this.mCanvas);
 		setResizable(false);
 		pack();
-		initializeWorld();
+		initializeWorldPhysics();
 	}
 	
 	private void drawBackground (GL2 gl) {
@@ -129,7 +129,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 
 	
-	protected void initializeWorld() {//initial bodyes
+	protected void initializeWorldPhysics() {//initial bodyes
 		sWorld = new World();
 		sWorld.setGravity(new Vector2(0,0));
 		sWorld.getSettings().setRestitutionVelocity(0);
@@ -154,7 +154,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		sLevel.setText(gl,"Level: " + 1);
 		mCamera.update(mGlu);
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
-		updateMovingPlatform(gl);
+		
 		mGlBox.updateBox(gl);
 		if(mBall.isDead()) {
 			//System.exit(0);
@@ -165,21 +165,70 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		//set param for cube3d
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		mGlu.gluPerspective(110.0f, 1.3f, 1.0f, 10.0f);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glTranslatef(0, 0, -6.0f);
-		gl.glRotatef(-10, 1.0f, .0f, 0.0f);
-		
+		gl.glLoadIdentity();	
+		float mRZ = -1;
+		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+		mCamera.update(mGlu);
 		mGlBlock.updateBlocks(gl, mGlu);
-		
+		updateMovingPlatform(gl);		
 		//set param for 2d object
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrtho(-400, 400, -300, 300, 0, 1);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
+		
 	}
+	
+	public void gltDrawSphere(GL2 gl,float fRadius, int iSlices, int iStacks)  
+	  {  
+	  float drho = (float)(3.141592653589) / (float) iStacks;  
+	  float dtheta = 2.0f * (float)(3.141592653589) / (float) iSlices;  
+	  float ds = 1.0f / (float) iSlices;  
+	  float dt = 1.0f / (float) iStacks;  
+	  float t = 1.0f;      
+	  float s = 0.0f;  
+	  int i, j;     // Looping variables  
+
+	  for (i = 0; i < iStacks; i++)   
+	      {  
+	      float rho = (float)i * drho;  
+	      float srho = (float)(Math.sin(rho));  
+	      float crho = (float)(Math.cos(rho));  
+	      float srhodrho = (float)(Math.sin(rho + drho));  
+	      float crhodrho = (float)(Math.cos(rho + drho));  
+
+	      gl.glBegin(GL.GL_TRIANGLE_STRIP);  
+	      s = 0.0f;  
+	      for ( j = 0; j <= iSlices; j++)   
+	          {  
+	          float theta = (j == iSlices) ? 0.0f : j * dtheta;  
+	          float stheta = (float)(-Math.sin(theta));  
+	          float ctheta = (float)(Math.cos(theta));  
+
+	          float x = stheta * srho;  
+	          float y = ctheta * srho;  
+	          float z = crho;  
+	            
+	          gl.glTexCoord2f(s, t);  
+	          gl.glNormal3f(x, y, z);  
+	          gl.glVertex3f(x * fRadius, y * fRadius, z * fRadius);  
+
+	          x = stheta * srhodrho;  
+	          y = ctheta * srhodrho;  
+	          z = crhodrho;  
+	          gl.glTexCoord2f(s, t - dt);  
+	          s += ds;  
+	          gl.glNormal3f(x, y, z);  
+	          gl.glVertex3f(x * fRadius, y * fRadius, z * fRadius);  
+	          }  
+	      gl.glEnd();  
+
+	      t -= dt;  
+	      }  
+	  }  
+	
 	
 	private void updateMovingPlatform(GL2 gl) {
 		mGlMovingPlatform.updateMovingPlatform(gl);
@@ -202,11 +251,26 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	@Override
 	public void init(GLAutoDrawable gLDrawable) {
 		GL2 gl = gLDrawable.getGL().getGL2();
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(-400, 400, -300, 300, 0, 1);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
+	    float ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	    float diffuse[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
+	    float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	    float position[] ={ 0.0f, 3.0f, 2.0f, 0.0f };
+	    float lmodel_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
+	    float local_view[] ={ 0.0f };
+
+	    gl.glEnable(GL.GL_DEPTH_TEST);
+	    gl.glDepthFunc(GL.GL_LESS);
+	    
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambient, 0);
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuse, 0);
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, position, 0);
+	    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
+	    gl.glLightModelfv(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, local_view, 0);
+
+	    gl.glEnable(GL2.GL_LIGHTING);
+	    gl.glEnable(GL2.GL_LIGHT0);
+
+
 		gl.setSwapInterval(0);
 		initBackground(gl);
 	}
@@ -230,7 +294,19 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 	
 	@Override
-	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
+	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int w, int h) {
 		// TODO Auto-generated method stub
+		  final GL2 gl = gLDrawable.getGL().getGL2();
+		    gl.glViewport(0, 0, w, h);
+		    gl.glMatrixMode(GL2.GL_PROJECTION);
+		    gl.glLoadIdentity();
+		    if (w <= (h * 2)) //
+		    gl.glOrtho(-6.0, 6.0, -3.0 * ((float) h * 2) / (float) w, //
+		        3.0 * ((float) h * 2) / (float) w, -10.0, 10.0);
+		    else gl.glOrtho(-6.0 * (float) w / ((float) h * 2), //
+		        6.0 * (float) w / ((float) h * 2), -3.0, 3.0, -10.0, 10.0);
+		    gl.glMatrixMode(GL2.GL_MODELVIEW);
+		    gl.glLoadIdentity();
+		//mGlu.gluPerspective(75, width / height, 2, 10000); // FOV, AspectRatio, NearClip, FarClip
 	}
 }

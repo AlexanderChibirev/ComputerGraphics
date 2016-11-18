@@ -25,7 +25,7 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 	
 	private void createNewColumnBlocks() {
 		float shiftY = 1.6f;
-		float shiftX = 1.60f;
+		float shiftX = 1.6f;
 		float startPositionX = -7.2f;
 		mPositionBlock.x = startPositionX;
 		for(int i = 0; i < 10; ++i) {
