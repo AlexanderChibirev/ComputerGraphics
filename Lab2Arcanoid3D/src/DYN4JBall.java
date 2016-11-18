@@ -4,6 +4,8 @@ import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 
 enum TypeHit {
 	NORMAL_BOX,
@@ -103,10 +105,10 @@ public class DYN4JBall extends Body {
 		return mIsDead;
 	}
 	
-	public void update(GL2 gl) {
+	public void update(GL2 gl, GLU glu) {
 		int ballID = (int) WorldConsts.POSSITION_BALL.getValue();
 		mBall = (GLBall) DialDisplay.sWorld.getBody(ballID);
-		mBall.render(gl);	
+		mBall.render(gl, glu);	
 		checkCollisionWithMovingPlatform();
 		checkCollisionWithMovingBox();
 		checkCollisionWithBlock(gl);

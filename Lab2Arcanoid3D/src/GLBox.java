@@ -15,7 +15,7 @@ public class GLBox extends Body {
 		this.color[3] = 1.0f;
 	}
 	public void render(GL2 gl) {
-		gl.glPushMatrix();
+	/*	gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);
 		for (BodyFixture fixture : this.fixtures) {
@@ -28,15 +28,9 @@ public class GLBox extends Body {
 					gl.glVertex3d(v.x, v.y, 0.0);
 				}
 				gl.glEnd();
-				gl.glColor4f(this.color[0] * 0.8f, this.color[1] * 0.8f, this.color[2] * 0.8f, 1.0f);
-				gl.glBegin(GL.GL_LINE_LOOP);
-				for (Vector2 v : p.getVertices()) {
-					gl.glVertex3d(v.x, v.y, 0.0);
-				}
-				gl.glEnd();
 			}
 		}
-		gl.glPopMatrix();
+		gl.glPopMatrix();*/
 	}
 	
 	public void updateBox(GL2 gl) {

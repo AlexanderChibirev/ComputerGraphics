@@ -26,7 +26,7 @@ public class DYN4JMovingPlatform {
 	}
 	
 	private  void createMovingPlatform() {
-		createRect(new Vector2(3, 0.4), 0, new Vector2(0, -5));//left floor 0
+		createRect(new Vector2(3, 0.5), 0, new Vector2(0, -5));//left floor 0
 	}
 	
 	public GLMovingPlatform getMovingPlatform() {
@@ -34,7 +34,7 @@ public class DYN4JMovingPlatform {
 	}
 	
 	public void updatePossitionMovingPlatform() {
-		final float shiftPlatform = 0.004f;
+		final float shiftPlatform = 0.010f;
 		final float leftPartBorder = -6.8f;
 		final float rightPartBorder = 6.8f;
 		float dx = 0;

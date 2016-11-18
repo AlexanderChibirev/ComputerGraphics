@@ -9,6 +9,7 @@ import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -42,7 +43,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	
 	private final GLU mGlu = new GLU();
 	private Camera mCamera = new Camera();
-	
+	Cube mBox = new Cube();
 	private File mImage;
 	private int mTextureId = 0;
 	
@@ -50,7 +51,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		drawBackground(gl);
+		//drawBackground(gl);
 		mLight.setLight(gl);
 		this.update();
 		this.render(gl);
@@ -159,7 +160,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		if(mBall.isDead()) {
 			//System.exit(0);
 		}
-		mBall.update(gl);
+	
 		
 		
 		//set param for cube3d
@@ -167,12 +168,13 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glLoadIdentity();
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();	
-		float mRZ = -1;
+		float mRZ = 0;
 		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 		mCamera.update(mGlu);
+		mBox.draw(gl);
 		mGlBlock.updateBlocks(gl, mGlu);
-		updateMovingPlatform(gl);		
-		//set param for 2d object
+		updateMovingPlatform(gl);
+		mBall.update(gl, mGlu);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glOrtho(-400, 400, -300, 300, 0, 1);
