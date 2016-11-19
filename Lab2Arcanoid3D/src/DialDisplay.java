@@ -175,17 +175,19 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 	
 	protected void render(GL2 gl) {//update bodyes
-		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
-		sLevel.setText(gl,"Level: " + 1);
+		
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
 		if(mBall.isDead()) {
 			System.exit(0);
-		}
+		}			 
+		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
+		sLevel.setText(gl,"Level: " + 1);
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();	
+		gl.glMatrixMode (GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+		
 		mCamera.update(mGlu, gl);		
 		mGLBox.draw(gl, mTexturesID.get(PossitionID.BOX.getValue()));
 		updateGLBlocks(gl);
@@ -247,7 +249,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	    float position[] ={ 0.0f, 3.0f, 2.0f, 0.0f };
 	    float lmodel_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 	    float local_view[] = { 0.0f };
-
+	    
 	    gl.glEnable(GL.GL_DEPTH_TEST);
 	    gl.glDepthFunc(GL.GL_LESS);
 
