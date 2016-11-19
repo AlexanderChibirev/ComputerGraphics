@@ -9,8 +9,8 @@ import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
 public class DYN4JBlock extends Body {
-	private Map<GLBlock, Integer> mBox = new HashMap<GLBlock, Integer>();
-	//private Vector<GLBlock> mBox = new Vector<GLBlock>();
+	//private Map<GLBlock, Integer> mBox = new HashMap<GLBlock, Integer>();
+	private Vector<GLBlock> mBox = new Vector<GLBlock>();
 	private Vector2 mPositionBlock = new Vector2(-7.0, -0.3);
 	private Vector2 mSizeBlock = new Vector2(1.5, 1.5);
 	public DYN4JBlock() {
@@ -24,7 +24,7 @@ public class DYN4JBlock extends Body {
 		rect.setMass(MassType.INFINITE);
 		rect.rotate(angle);
 		rect.translate(translate.x, translate.y);
-		mBox.put(rect, 0);
+		mBox.add(rect);
 	}
 	
 	private void createNewColumnBlocks() {
@@ -46,7 +46,7 @@ public class DYN4JBlock extends Body {
 		createNewColumnBlocks();
 	}
 	
-	public Map<GLBlock, Integer> getBlock() {
+	public Vector<GLBlock> getBlock() {
 		return mBox;
 	}
 	

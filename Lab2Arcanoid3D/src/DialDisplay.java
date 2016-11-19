@@ -43,7 +43,6 @@ enum PossitionID {
 
 public class DialDisplay extends JFrame implements GLEventListener  {
 	private static final long serialVersionUID = 6530460753888462810L;
-	private Light mLight = new Light();
 	protected GLCanvas mCanvas;
 	public static  World sWorld;
 	protected long mLast;
@@ -170,8 +169,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		sWorld.addBody(mBall.getBall());
 		//addBlocks
 		
-		for(Map.Entry block: mPhysicsBlock.getBlock().entrySet()) {
-			sWorld.addBody((Body) block.getKey());
+		for(GLBlock block: mPhysicsBlock.getBlock()) {
+			sWorld.addBody(block);
 		}
 	}
 	
