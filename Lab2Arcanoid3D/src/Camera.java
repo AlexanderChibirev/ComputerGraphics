@@ -29,8 +29,8 @@ public class Camera {
 			mAngleX -= mShiftAngleX;
 		}
 		
-		//if (mAngleY < -89.0){mAngleY= -89.0f;}
-		//if (mAngleY > 89.0){mAngleY= 89.0f;}
+		if (mAngleY < -89.0){mAngleY= -89.0f;}
+		if (mAngleY > 89.0){mAngleY= 89.0f;}
 	
 		glu.gluLookAt(0, 0, 0, 0 - Math.sin(mAngleX / 180 * Math.PI),0 + (Math.tan(mAngleY / 180 * Math.PI)), 0-Math.cos(mAngleX / 180 * Math.PI), 0, 1, 0);
 		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);

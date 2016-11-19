@@ -44,7 +44,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private final GLU mGlu = new GLU();
 	private Camera mCamera = new Camera();
 	private float[] mColorBox = {1, 1, 1};
-	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, 0.1f), mColorBox);
+	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, -1.0f), mColorBox);
 	private File mImage;
 	private int mTextureId = 0;
 	
@@ -198,7 +198,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	    float lmodel_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
 	    float local_view[] ={ 0.0f };
 
-	  /*  gl.glEnable(GL.GL_DEPTH_TEST);
+	   gl.glEnable(GL.GL_DEPTH_TEST);
 	    gl.glDepthFunc(GL.GL_LESS);
 	    
 	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambient, 0);
@@ -209,7 +209,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 
 	    gl.glEnable(GL2.GL_LIGHTING);
 	    gl.glEnable(GL2.GL_LIGHT0);
-*/
+
 
 		gl.setSwapInterval(0);
 		initBackground(gl);

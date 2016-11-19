@@ -8,7 +8,8 @@ import org.dyn4j.geometry.Vector2;
 
 public class DYN4JBlock extends Body {
 private Vector<GLBlock> mBox = new Vector<GLBlock>();
-	private Vector2 mPositionBlock = new Vector2(-7.0f, -0.3f);
+	private Vector2 mPositionBlock = new Vector2(-7.0, -0.3);
+	private Vector2 mSizeBlock = new Vector2(1.5, 1.5);
 	public DYN4JBlock() {
 		createBlocks();
 	}
@@ -29,7 +30,7 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 		float startPositionX = -7.2f;
 		mPositionBlock.x = startPositionX;
 		for(int i = 0; i < 10; ++i) {
-			createRect(new Vector2(1.5, 1.5), 0, new Vector2(mPositionBlock.x, mPositionBlock.y));
+			createRect(new Vector2(mSizeBlock), 0, new Vector2(mPositionBlock));
 			mPositionBlock.x += shiftX;
 		}
 		mPositionBlock.y += shiftY;
