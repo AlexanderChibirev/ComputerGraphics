@@ -1,13 +1,5 @@
 import com.jogamp.opengl.GL2;
 
-/*
- * const method does not exist in java. 
- * final and const have different semantics,
- * except when applied to a variable of a primitive type.
- * The java solution typically involves creating immutable classes -
- * where objects are initialized in construction and provide
- * no accessors allowing change.
-*/
 public abstract class AbstractLightSource implements ILightSource {
 	AbstractLightSource(int index) {
 		this.mIndex = index;

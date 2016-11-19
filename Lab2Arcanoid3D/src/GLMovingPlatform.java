@@ -1,3 +1,5 @@
+import javax.vecmath.Vector3f;
+
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.BodyFixture;
 import org.dyn4j.geometry.Convex;
@@ -5,10 +7,11 @@ import org.dyn4j.geometry.Polygon;
 import org.dyn4j.geometry.Vector2;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLU;
 
 public class GLMovingPlatform  extends Body {
-	private float mElongationCoefficient = 7.0f;
+	private float[] mColorMovingPlatform = {1,0,0};
+	private RectangularPrism mMovingPlatform = new  RectangularPrism(new Vector3f(), mColorMovingPlatform);
+	private Vector3f mBlockSize = new Vector3f(1,1,1);
 	public void render(GL2 gl) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
@@ -16,45 +19,12 @@ public class GLMovingPlatform  extends Body {
 			Convex convex = fixture.getShape();
 			if (convex instanceof Polygon) {
 				Polygon p = (Polygon) convex;
-				float blockSize = (float) Math.abs(p.getVertices()[0].y);
-				gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
-					gl.glColor3f(1f ,0f,0f); //red color
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f * blockSize); // Top Right Of The Quad (Top)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f * blockSize); // Top Left Of The Quad (Top)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, 1.0f * blockSize); // Bottom Left Of The Quad (Top)
-					gl.glVertex3f(1.0f * mElongationCoefficient *blockSize, 1.0f * blockSize, 1.0f * blockSize); // Bottom Right Of The Quad (Top)
-					
-					gl.glColor3f( 0f,1f,0f ); //green color
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Top Right Of The Quad
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Top Left Of The Quad
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Left Of The Quad
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Right Of The Quad 
-					
-					gl.glColor3f( 0f,0f,1f ); //blue color
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, 1.0f * blockSize); // Top Right Of The Quad (Front)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, 1.0f * blockSize); // Top Left Of The Quad (Front)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Bottom Left Of The Quad
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Bottom Right Of The Quad 
-					
-					gl.glColor3f(1f,1f,0f ); //yellow (red + green)
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Left Of The Quad
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Right Of The Quad
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f * blockSize); // Top Right Of The Quad (Back)
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f  * blockSize); // Top Left Of The Quad (Back)
-					
-					gl.glColor3f(1f,0f,1f ); //purple (red + green)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, 1.0f * blockSize); // Top Right Of The Quad (Left)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f * blockSize); // Top Left Of The Quad (Left)
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Left Of The Quad
-					gl.glVertex3f(-1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Bottom Right Of The Quad 
-					
-					gl.glColor3f(0f,1f, 1f ); //sky blue (blue +green)
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, -1.0f * blockSize); // Top Right Of The Quad (Right)
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, 1.0f * blockSize, 1.0f * blockSize); // Top Left Of The Quad
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, 1.0f * blockSize); // Bottom Left Of The Quad
-					gl.glVertex3f(1.0f * mElongationCoefficient * blockSize, -1.0f * blockSize, -1.0f * blockSize); // Bottom Right Of The Quad
-				gl.glEnd(); // Done Drawing The Quad
-				gl.glFlush();
+				Vector2 v = p.getVertices()[0];
+				mBlockSize.x =  Math.abs((float) v.x);
+				mBlockSize.y =  Math.abs((float) v.y);
+				mMovingPlatform.setSize(mBlockSize);
+				mMovingPlatform.setColor(mColorMovingPlatform);
+				mMovingPlatform.draw(gl);
 			}
 		}
 		gl.glPopMatrix();
