@@ -20,6 +20,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Vector;
 
 import com.jogamp.opengl.util.texture.Texture;
@@ -42,7 +43,7 @@ enum PossitionID {
 
 public class DialDisplay extends JFrame implements GLEventListener  {
 	private static final long serialVersionUID = 6530460753888462810L;
-	/*private Light mLight = new Light();*/
+	private Light mLight = new Light();
 	protected GLCanvas mCanvas;
 	public static  World sWorld;
 	protected long mLast;
@@ -59,12 +60,12 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private final GLU mGlu = new GLU();
 	private Camera mCamera = new Camera();
 	private float[] mColorBox = {1, 1, 1};
-	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, -0.6f), mColorBox);
+	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, -0.1f), mColorBox);
 	
 	private Vector<Integer> mTexturesID = new Vector<Integer>();
 	private Vector<File> mTextures = new Vector<File>();
 
-	
+	DYN4JBlock mPhysicsBlock = new DYN4JBlock();
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
@@ -134,7 +135,6 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glDepthMask(false);
-		gl.glEnable(GL2.GL_TEXTURE_2D);	 
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
@@ -169,9 +169,9 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		//addBall
 		sWorld.addBody(mBall.getBall());
 		//addBlocks
-		DYN4JBlock mPhysicsBlock = new DYN4JBlock();
-		for(GLBlock block: mPhysicsBlock.getBlock()) {
-			sWorld.addBody(block);
+		
+		for(Map.Entry block: mPhysicsBlock.getBlock().entrySet()) {
+			sWorld.addBody((Body) block.getKey());
 		}
 	}
 	
@@ -180,8 +180,8 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		sLevel.setText(gl,"Level: " + 1);
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
 		if(mBall.isDead()) {
-			//System.exit(0);
-		}		//set param for cube3d
+			System.exit(0);
+		}
 		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -201,8 +201,17 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 				mTexturesID.get(PossitionID.BLOCK3.getValue()),
 				};		
 		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); ++i) {
-				mGlBlock = (GLBlock) DialDisplay.sWorld.getBody((int) i);
-				mGlBlock.render(gl, textures);
+			mGlBlock = (GLBlock) DialDisplay.sWorld.getBody((int) i);
+			//double type = DialDisplay.sWorld.getBody((int) i).getAngularDamping();
+			//if(type > 20 && type < 40){
+			//	mGlBlock.render(gl, textures[2]);
+			//}
+			//else if(type > 40) {
+			//	mGlBlock.render(gl, textures[0]);
+			//}
+			//else {
+				mGlBlock.render(gl, textures[1]);
+			//}
 		}
 	}
 	
@@ -224,6 +233,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glEnable(GL2.GL_TEXTURE_2D);	
 		gl.glLoadIdentity();
 	 }
 	
@@ -232,7 +242,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		GL2 gl = gLDrawable.getGL().getGL2();
 		gl.setSwapInterval(0);
 		
-/*		float ambient[] ={ 0.0f, 0.0f, 0.0f, 1.0f };
+		float ambient[] ={ 0.0f, 0.0f, 0.0f, 1.0f };
 	    float diffuse[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
 	    float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	    float position[] ={ 0.0f, 3.0f, 2.0f, 0.0f };
@@ -255,7 +265,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	    gl.glEnable(GL2.GL_DEPTH_TEST);         
 	    gl.glDepthFunc(GL2.GL_LEQUAL);          
 
-	    gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); */
+	    gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); 
 		initTexture(gl);
 	}
 	
@@ -270,6 +280,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 			}	
 		}
 	}
+	
 	@Override
 	public void dispose(GLAutoDrawable gLDrawable) {
 		GL2 gl = gLDrawable.getGL().getGL2();

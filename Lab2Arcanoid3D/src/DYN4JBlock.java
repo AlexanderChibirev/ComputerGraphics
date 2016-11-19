@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.dyn4j.dynamics.Body;
@@ -7,7 +9,8 @@ import org.dyn4j.geometry.Rectangle;
 import org.dyn4j.geometry.Vector2;
 
 public class DYN4JBlock extends Body {
-private Vector<GLBlock> mBox = new Vector<GLBlock>();
+	private Map<GLBlock, Integer> mBox = new HashMap<GLBlock, Integer>();
+	//private Vector<GLBlock> mBox = new Vector<GLBlock>();
 	private Vector2 mPositionBlock = new Vector2(-7.0, -0.3);
 	private Vector2 mSizeBlock = new Vector2(1.5, 1.5);
 	public DYN4JBlock() {
@@ -21,7 +24,7 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 		rect.setMass(MassType.INFINITE);
 		rect.rotate(angle);
 		rect.translate(translate.x, translate.y);
-		mBox.add(rect);
+		mBox.put(rect, 0);
 	}
 	
 	private void createNewColumnBlocks() {
@@ -43,7 +46,11 @@ private Vector<GLBlock> mBox = new Vector<GLBlock>();
 		createNewColumnBlocks();
 	}
 	
-	public Vector<GLBlock> getBlock() {
+	public Map<GLBlock, Integer> getBlock() {
 		return mBox;
+	}
+	
+	public void setHitAboutBlock() {
+		//mBox.set
 	}
 }

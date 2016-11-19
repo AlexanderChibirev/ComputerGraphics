@@ -11,7 +11,7 @@ enum TypeHit {
 	NORMAL_BOX,
 	INVERTE_BOX,
 	MOVING_PLATFORM,
-	BLOCK
+	BLOCK,
 }
 
 public class DYN4JBall extends Body {
@@ -19,6 +19,7 @@ public class DYN4JBall extends Body {
 	private TypeHit mTypeHit;
 	private int mQuantityOfDestroyedBlocks = 0;
 	private boolean mIsDead = false;
+	private int countHitWithBlock = 0;
 	
 	public DYN4JBall(Vector2 velocity) {
 		this.velocity = velocity;
@@ -44,6 +45,7 @@ public class DYN4JBall extends Body {
 	private void checkCollisionWithBlock(GL2 gl) {
 		for(int i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); i++) {
 			if(mBall.isInContact(DialDisplay.sWorld.getBody(i))) {
+				//DialDisplay.sWorld.getBody(i).setAngularDamping(DialDisplay.sWorld.getBody(i).getAngularDamping() + 1);
 				Vector2 posCenterBlock = DialDisplay.sWorld.getBody(i).getWorldCenter();
 				Vector2 posCenterBall = mBall.getWorldCenter();
 				float limitValue = 0.9f;
@@ -57,8 +59,13 @@ public class DYN4JBall extends Body {
 					mBall.setLinearVelocity(this.velocity.x,this.velocity.y);
 					mTypeHit = TypeHit.BLOCK;
 				}
-				DialDisplay.sWorld.removeBody((i));
+				
+				/*if(DialDisplay.sWorld.getBody(i).getAngularDamping() > 50) {
+					DialDisplay.sWorld.removeBody((i));
+					break;
+				}		*/		
 				mQuantityOfDestroyedBlocks++;
+				DialDisplay.sWorld.removeBody((i));
 				break;
 			}
 		}

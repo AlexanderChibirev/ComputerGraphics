@@ -14,7 +14,8 @@ public class GLMovingPlatform  extends Body {
 	private Vector3f mBlockSize = new Vector3f(1,1,1);
 	public void render(GL2 gl, int textureID) {
 		gl.glPushMatrix();
-		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
+		float shiftZ = 1.3f;
+		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(),shiftZ);
 		for (BodyFixture fixture : this.fixtures) {
 			Convex convex = fixture.getShape();
 			if (convex instanceof Polygon) {
