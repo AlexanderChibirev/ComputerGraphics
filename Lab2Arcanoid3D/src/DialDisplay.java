@@ -20,14 +20,29 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
+
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-
+enum PossitionID {
+	BACKGROUND(0),
+	BOX(1),
+	BLOCK1(2),
+	BLOCK2(3),
+	BLOCK3(4),
+	MOVING_PLATFORM(5);
+	private final Integer value;
+	
+	PossitionID(Integer value) {
+        this.value = value;
+    }
+	public Integer getValue()   { return value; }
+}
 
 public class DialDisplay extends JFrame implements GLEventListener  {
 	private static final long serialVersionUID = 6530460753888462810L;
-	private Light mLight = new Light();
+	/*private Light mLight = new Light();*/
 	protected GLCanvas mCanvas;
 	public static  World sWorld;
 	protected long mLast;
@@ -35,7 +50,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private GLMovingPlatform mGlMovingPlatform = new GLMovingPlatform();
 	private GLBlock mGlBlock = new GLBlock();
 	
-	private DYN4JBall mBall = new DYN4JBall(new Vector2(10,10));
+	private DYN4JBall mBall = new DYN4JBall(new Vector2(9, 9));
 	private DYN4JMovingPlatform mPhysicsMovingPlatform = new DYN4JMovingPlatform();
 	
 	public static TextForGame sScore = new TextForGame(new Vector2f(-360f, 250f));
@@ -44,19 +59,20 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	private final GLU mGlu = new GLU();
 	private Camera mCamera = new Camera();
 	private float[] mColorBox = {1, 1, 1};
-	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, -1.0f), mColorBox);
-	private File mImage;
-	private int mTextureId = 0;
+	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(8.5f, 6.3f, -0.6f), mColorBox);
+	
+	private Vector<Integer> mTexturesID = new Vector<Integer>();
+	private Vector<File> mTextures = new Vector<File>();
+
+	
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		//drawBackground(gl);
-		mLight.setLight(gl);
+		drawBackground(gl);
 		this.update();
 		this.render(gl);
-		
 	}
 
 	protected void update() {
@@ -64,7 +80,9 @@ public class DialDisplay extends JFrame implements GLEventListener  {
         long diff = time - this.mLast;
         this.mLast = time;
     	double elapsedTime = diff / WorldConsts.NANO_TO_BASE.getValue();
-    	DialDisplay.sWorld.update(elapsedTime);
+    	if(InputHandler.sKeyPressedEnter) {
+    		DialDisplay.sWorld.update(elapsedTime);
+    	}
 	}
 	public void start() {
 		this.mLast = System.nanoTime();
@@ -74,7 +92,6 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	}
 	
 	public DialDisplay(int width, int height) {
-		mImage = new File("src/images/background.jpg");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(width, height);
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2));
@@ -93,12 +110,21 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		setResizable(false);
 		pack();
 		initializeWorldPhysics();
+		initializeTexturesName();
 	}
 	
+	private void initializeTexturesName() {
+		mTextures.add(new File("src/images/background.jpg"));
+		mTextures.add(new File("src/images/boxPlatform.jpg"));
+		mTextures.add(new File("src/images/block1.jpg"));
+		mTextures.add(new File("src/images/block2.jpg"));
+		mTextures.add(new File("src/images/block3.jpg"));
+		mTextures.add(new File("src/images/movingPlatform.jpg"));
+	}
+
 	private void drawBackground (GL2 gl) {
 		gl.glDisable(GL.GL_DEPTH_TEST); 
 		gl.glDisable(GL.GL_CULL_FACE); 
-		gl.glEnable(GL2.GL_TEXTURE_2D);	
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
@@ -112,7 +138,7 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTextureId);	
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTexturesID.get(0));	
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
 			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
@@ -124,7 +150,6 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPopMatrix();
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glDisable(GL2.GL_TEXTURE_2D);
 		gl.glPopMatrix();
 	}
 
@@ -150,28 +175,42 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 		}
 	}
 	
-	protected void render(GL2 gl) {//update bodyes 
+	protected void render(GL2 gl) {//update bodyes
 		sScore.setText(gl,"Score: " + String.valueOf(mBall.getQuantityOfDestroyedBlocks()));
 		sLevel.setText(gl,"Level: " + 1);
 		gl.glScaled(WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue(), WorldConsts.SCALE.getValue());
 		if(mBall.isDead()) {
 			//System.exit(0);
-		}
-		//set param for cube3d
+		}		//set param for cube3d
+		
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();	
-		mCamera.update(mGlu, gl);
-		
-		mGLBox.draw(gl);
-		mGlBlock.updateBlocks(gl, mGlu);
-		updateMovingPlatform(gl);
+		mCamera.update(mGlu, gl);		
+		mGLBox.draw(gl, mTexturesID.get(PossitionID.BOX.getValue()));
+		updateGLBlocks(gl);
+		updateGLMovingPlatform(gl);
 		mBall.update(gl, mGlu);		
 	}
 	
-	private void updateMovingPlatform(GL2 gl) {
-		mGlMovingPlatform.updateMovingPlatform(gl);
+	private void updateGLBlocks(GL2 gl) {
+		int[] textures = {
+				mTexturesID.get(PossitionID.BLOCK1.getValue()),
+				mTexturesID.get(PossitionID.BLOCK2.getValue()),
+				mTexturesID.get(PossitionID.BLOCK3.getValue()),
+				};		
+		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < DialDisplay.sWorld.getBodyCount(); ++i) {
+				mGlBlock = (GLBlock) DialDisplay.sWorld.getBody((int) i);
+				mGlBlock.render(gl, textures);
+		}
+	}
+	
+	private void updateGLMovingPlatform(GL2 gl) {
+		for (double i = 0; i < RangesConst.RANGE_END_FOR_MOVING_PLATFORM.getValue(); ++i) {
+			mGlMovingPlatform = (GLMovingPlatform) DialDisplay.sWorld.getBody((int) i);
+			mGlMovingPlatform.render(gl, mTexturesID.get(PossitionID.MOVING_PLATFORM.getValue()));
+		}
 		mPhysicsMovingPlatform.updatePossitionMovingPlatform();
 	}
 	
@@ -191,16 +230,18 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	@Override
 	public void init(GLAutoDrawable gLDrawable) {
 		GL2 gl = gLDrawable.getGL().getGL2();
-	    float ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		gl.setSwapInterval(0);
+		
+/*		float ambient[] ={ 0.0f, 0.0f, 0.0f, 1.0f };
 	    float diffuse[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
 	    float specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	    float position[] ={ 0.0f, 3.0f, 2.0f, 0.0f };
 	    float lmodel_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
-	    float local_view[] ={ 0.0f };
+	    float local_view[] = { 0.0f };
 
-	   gl.glEnable(GL.GL_DEPTH_TEST);
+	    gl.glEnable(GL.GL_DEPTH_TEST);
 	    gl.glDepthFunc(GL.GL_LESS);
-	    
+
 	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, ambient, 0);
 	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, diffuse, 0);
 	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, position, 0);
@@ -210,22 +251,25 @@ public class DialDisplay extends JFrame implements GLEventListener  {
 	    gl.glEnable(GL2.GL_LIGHTING);
 	    gl.glEnable(GL2.GL_LIGHT0);
 
+	    gl.glClearDepth(1.0);                   
+	    gl.glEnable(GL2.GL_DEPTH_TEST);         
+	    gl.glDepthFunc(GL2.GL_LEQUAL);          
 
-		gl.setSwapInterval(0);
-		initBackground(gl);
+	    gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST); */
+		initTexture(gl);
 	}
 	
-	private void initBackground(GL2 gl) {
-		try{
-			//JPG!!!
-			Texture texture = TextureIO.newTexture(mImage,true);
-			mTextureId = texture.getTextureObject(gl);
+	private void initTexture(GL2 gl) {
+		for(File name : mTextures) {
+			try{
+				Texture texture = TextureIO.newTexture(name,true);
+				mTexturesID.add(texture.getTextureObject(gl));
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}	
 		}
-		catch(IOException e){
-			e.printStackTrace();
-		}	
 	}
-
 	@Override
 	public void dispose(GLAutoDrawable gLDrawable) {
 		GL2 gl = gLDrawable.getGL().getGL2();

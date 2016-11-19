@@ -14,7 +14,8 @@ public class GLBlock extends Body {
 	private float[] mColor = {0,1,1};
 	private RectangularPrism mBlock = new  RectangularPrism(new Vector3f(), mColor);
 	private Vector3f mBlockSize = new Vector3f(1,1,1);
-	public void render(GL2 gl, GLU glu) {
+	private int countHit = 1;
+	public void render(GL2 gl,  int[] textureID) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);	
 		gl.glRotated(Math.toDegrees(this.transform.getRotation()), 0.0, 0.0, 1.0);		
@@ -27,18 +28,19 @@ public class GLBlock extends Body {
 				mBlockSize.y =  Math.abs((float) v.y);
 				mBlock.setSize(mBlockSize);
 				mBlock.setColor(mColor);
-				mBlock.draw(gl);
+				switch(countHit) {
+					case 0:
+						mBlock.draw(gl, textureID[0]);
+						break;
+					case 1:
+						mBlock.draw(gl, textureID[1]);
+						break;
+					case 2:
+						mBlock.draw(gl, textureID[2]);
+						break;
+				}
 			}
 		}
 		gl.glPopMatrix();
 	}	
-	
-	public void updateBlocks(GL2 gl, GLU glu) {
-		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue();
-				i < DialDisplay.sWorld.getBodyCount();
-				++i) {
-			GLBlock glBlocks = (GLBlock) DialDisplay.sWorld.getBody((int) i);
-			glBlocks.render(gl,glu);
-		}
-	}
 }

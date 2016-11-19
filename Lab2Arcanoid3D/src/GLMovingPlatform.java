@@ -12,7 +12,7 @@ public class GLMovingPlatform  extends Body {
 	private float[] mColorMovingPlatform = {1,0,0};
 	private RectangularPrism mMovingPlatform = new  RectangularPrism(new Vector3f(), mColorMovingPlatform);
 	private Vector3f mBlockSize = new Vector3f(1,1,1);
-	public void render(GL2 gl) {
+	public void render(GL2 gl, int textureID) {
 		gl.glPushMatrix();
 		gl.glTranslated(this.transform.getTranslationX(), this.transform.getTranslationY(), 0.0);
 		for (BodyFixture fixture : this.fixtures) {
@@ -24,15 +24,10 @@ public class GLMovingPlatform  extends Body {
 				mBlockSize.y =  Math.abs((float) v.y);
 				mMovingPlatform.setSize(mBlockSize);
 				mMovingPlatform.setColor(mColorMovingPlatform);
-				mMovingPlatform.draw(gl);
+				mMovingPlatform.draw(gl, textureID);
 			}
 		}
 		gl.glPopMatrix();
 	}	
-	public void updateMovingPlatform(GL2 gl) {
-		for (double i = 0; i < RangesConst.RANGE_END_FOR_MOVING_PLATFORM.getValue(); ++i) {
-			GLMovingPlatform glObjects = (GLMovingPlatform) DialDisplay.sWorld.getBody((int) i);
-			glObjects.render(gl);
-		}
-	}
+	
 }
