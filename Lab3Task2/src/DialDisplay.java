@@ -20,15 +20,21 @@ public class DialDisplay implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glColor3f( 0.0f, 1.0f, 0.0f );
-		
-		gl.glFlush();
-		m_quadObj.draw(gl);
-		
+		setupOpenGLState(gl);
 		//mShaderManager.start(gl);
-		
+		m_quadObj.draw(gl);
 		//mShaderManager.stop(gl);
 	}
 
+	private void setupOpenGLState(GL2 gl)
+	{
+	    // включаем механизмы трёхмерного мира.
+		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glEnable(GL2.GL_CULL_FACE);
+		gl.glFrontFace(GL2.GL_CCW);
+		gl.glCullFace(GL2.GL_BACK);
+	}
+	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
