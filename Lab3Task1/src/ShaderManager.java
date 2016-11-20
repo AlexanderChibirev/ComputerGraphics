@@ -64,6 +64,15 @@ public class ShaderManager {
 			}
 			System.exit(1);
 		}
+	
+	}
+	
+	public void start(GL2 gl) {
 		gl.glUseProgram(shaderprogram);
 	}
+	
+	public void stop(GL2 gl) {
+		gl.glUseProgram(0);
+	}
+	
 }

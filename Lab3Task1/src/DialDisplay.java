@@ -8,6 +8,8 @@ public class DialDisplay implements GLEventListener  {
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
+		mShaderManager.start(gl);
+		mShaderManager.stop(gl);
 	}
 
 	
