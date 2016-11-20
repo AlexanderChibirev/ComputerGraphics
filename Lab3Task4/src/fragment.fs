@@ -25,7 +25,7 @@ const vec3 blue = vec3(0.0,0.0,1.0);
 const vec3 white = vec3(1.0,1.0,1.0);
 const vec3 yellow = vec3(1.0,1.0,0.0);
 const vec3 red = vec3(1.0,0.0,0.0);
-const float colorResolution = 10.0; // how many iterations the first color band should use (2nd use the double amount)
+const float colorResolution = 16.0; // how many iterations the first color band should use (2nd use the double amount)
 
 vec3 getColorByIndex(float index){
 	float i = mod(index,4.0);
