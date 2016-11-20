@@ -37,6 +37,9 @@ public class Mandelbrot extends JFrame  {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
+        InputHandler inputHandler;
+		inputHandler = new InputHandler();
+		addKeyListener(inputHandler);
         glcanvas.addGLEventListener(display);
         animator = new Animator(glcanvas);
         getContentPane().add(glcanvas, BorderLayout.CENTER);

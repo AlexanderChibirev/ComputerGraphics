@@ -4,13 +4,15 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import javax.vecmath.Vector2f;
+
 import com.jogamp.opengl.GL2;
 
 public class ShaderManager {
 	private int vertexShaderProgram;
 	private int fragmentShaderProgram;
 	private int shaderprogram;
-	private final MandelbrotSetting settings = new MandelbrotSetting();
+	private final MandelbrotSetting setting = new MandelbrotSetting();
 	
 	private String[] loadShaderSrc(String fileName) {
 		StringBuilder sb = new StringBuilder();
@@ -43,11 +45,11 @@ public class ShaderManager {
 		assert(mandel_height != -1);
 		assert(mandel_iterations!=-1);
         // set uniform shader variables
-		gl.glUniform1f(mandel_x, settings.getX());
-		gl.glUniform1f(mandel_y, settings.getY());
-		gl.glUniform1f(mandel_width, settings.getWidth());
-		gl.glUniform1f(mandel_height, settings.getHeight());
-		gl.glUniform1f(mandel_iterations, settings.getIterations());
+		gl.glUniform1f(mandel_x, setting.getX());
+		gl.glUniform1f(mandel_y, setting.getY());
+		gl.glUniform1f(mandel_width, setting.getWidth());
+		gl.glUniform1f(mandel_height, setting.getHeight());
+		gl.glUniform1f(mandel_iterations, setting.getIterations());
 
 	}
 	
@@ -86,6 +88,14 @@ public class ShaderManager {
 			System.exit(1);
 		}
 	
+	}
+	
+	public void interpolate(Vector2f size, Vector2f pos, int iterations) {
+		setting.setHeight(size.x);
+		setting.setWidth(size.y);
+		setting.setX(pos.x);
+		setting.setY(pos.y);
+		setting.setIterations(iterations);
 	}
 	
 	public void start(GL2 gl) {

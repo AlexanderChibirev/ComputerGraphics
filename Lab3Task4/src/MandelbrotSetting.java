@@ -1,9 +1,9 @@
 public class MandelbrotSetting {
 	private float x = -2;
 	private float y = -2;
-	private float height = 4;
-	private float width = 4;
-	private int iterations = 4096;//32,64, 128, 256, 512, 1024, 2048, 4096
+	private float height = 5;
+	private float width = 5;
+	private int iterations = 64;//32,64,.., 2048, 4096
 
 	public float getX() {
 		return x;
@@ -43,13 +43,5 @@ public class MandelbrotSetting {
 
 	public void setIterations(int iterations) {
 		this.iterations = iterations;
-	}
-
-	public void copyTo(MandelbrotSetting copy) {
-		copy.x = x;
-		copy.y = y;
-		copy.height = height;
-		copy.width = width;
-		copy.iterations = iterations;
 	}
 }
