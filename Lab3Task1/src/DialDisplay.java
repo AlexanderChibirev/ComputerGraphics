@@ -12,12 +12,12 @@ public class DialDisplay implements GLEventListener  {
 		gl.glClearColor (1, 1, 1, 1);
 	    gl.glLoadIdentity();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
-		//gl.glLoadIdentity();
+		gl.glLoadIdentity();
 		
 		gl.glBegin(GL2.GL_LINE_LOOP);		
 		gl.glColor3f( 0.0f, 1.0f, 0.0f );
 		float size = 0.1f;
-		for (float a = 0; a < 2 * Math.PI; a += 0.01) {
+		for (float a = 0; a < 2 * Math.PI; a += (Math.PI/1000) ) {
 			 double r = size * 
 					 (1 + Math.sin(a)) *
 					 (1 + 0.9 *  Math.cos(8 * a)) * 
@@ -32,8 +32,6 @@ public class DialDisplay implements GLEventListener  {
 		//mShaderManager.stop(gl);
 	}
 
-	
-	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub

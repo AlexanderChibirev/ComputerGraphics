@@ -1,11 +1,33 @@
-uniform float mandel_x;
-uniform float mandel_y;
-uniform float mandel_width;
-uniform float mandel_height; 
-uniform float mandel_iterations;
+uniform float TWIST;
 
 void main()
 {
-	gl_TexCoord[0] = gl_MultiTexCoord0;
-	gl_Position = ftransform();
+	float ANGLE = gl_Vertex.x;
+
+	float radius = (1.f + sin(ANGLE))
+					* (1.f + 0.9f * cos(8.f * ANGLE))
+					* (1.f + 0.1f * cos(24.f * ANGLE))
+					* (0.5f + 0.05f * cos(140.f * ANGLE));
+
+	float x = radius * cos(ANGLE);
+	float y = radius * sin(ANGLE);
+	float z = 0.f;
+	 /*
+      Rotate vertex around Y axis:
+      x' = x * cos(angle) - z * sin(angle)
+      y' = y;
+      z' = x * sin(angle) + z * cos(angle);
+      w' = w;
+    */
+    vec4 twistedCoord = vec4(
+		gl_Vertex.x + x * TWIST,
+        gl_Vertex.y + y * TWIST,
+        gl_Vertex.z,
+        gl_Vertex.w
+    );
+
+    vec4 position = gl_ModelViewProjectionMatrix * twistedCoord;
+    // Transform twisted coordinate
+    gl_Position = position;
+    gl_FrontColor = (position + vec4(1.0)) * 0.5;
 }
