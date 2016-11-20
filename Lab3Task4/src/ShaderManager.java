@@ -10,6 +10,7 @@ public class ShaderManager {
 	private int vertexShaderProgram;
 	private int fragmentShaderProgram;
 	private int shaderprogram;
+	private final MandelbrotSetting settings = new MandelbrotSetting();
 	
 	private String[] loadShaderSrc(String fileName) {
 		StringBuilder sb = new StringBuilder();
@@ -29,6 +30,26 @@ public class ShaderManager {
 		return new String[]{sb.toString()};
 	}
 	
+	public void updateUniformVars(GL2 gl) {
+        // get memory address of uniform shader variables
+		int mandel_x = gl.glGetUniformLocation(shaderprogram, "mandel_x");
+		int mandel_y = gl.glGetUniformLocation(shaderprogram, "mandel_y");
+		int mandel_width = gl.glGetUniformLocation(shaderprogram, "mandel_width");
+		int mandel_height = gl.glGetUniformLocation(shaderprogram, "mandel_height");
+		int mandel_iterations = gl.glGetUniformLocation(shaderprogram, "mandel_iterations");
+		assert(mandel_x != -1);
+		assert(mandel_y != -1);
+		assert(mandel_width != -1);
+		assert(mandel_height != -1);
+		assert(mandel_iterations!=-1);
+        // set uniform shader variables
+		gl.glUniform1f(mandel_x, settings.getX());
+		gl.glUniform1f(mandel_y, settings.getY());
+		gl.glUniform1f(mandel_width, settings.getWidth());
+		gl.glUniform1f(mandel_height, settings.getHeight());
+		gl.glUniform1f(mandel_iterations, settings.getIterations());
+
+	}
 	
 	public void attachShaders(GL2 gl) throws Exception {
 		vertexShaderProgram = gl.glCreateShader(GL2.GL_VERTEX_SHADER);

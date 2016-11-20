@@ -4,15 +4,41 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
+	private boolean updateUniformVars = true;
 	private ShaderManager mShaderManager = new ShaderManager();
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		mShaderManager.start(gl);
+		
+		if (updateUniformVars){
+			mShaderManager.updateUniformVars(gl);
+		}
+
+		// Reset the current matrix to the "identity"
+		gl.glLoadIdentity();
+
+        // Draw A Quad
+        gl.glBegin(GL2.GL_QUADS);
+		{
+			gl.glTexCoord2f(0.0f, 0.0f);
+			gl.glVertex3f(0.0f, 1.0f, 1.0f);
+			gl.glTexCoord2f(1.0f, 0.0f);
+			gl.glVertex3f(1.0f, 1.0f, 1.0f);
+			gl.glTexCoord2f(1.0f, 1.0f);
+			gl.glVertex3f(1.0f, 0.0f, 1.0f);
+			gl.glTexCoord2f(0.0f, 1.0f);
+			gl.glVertex3f(0.0f, 0.0f, 1.0f);
+		}
+		// Done Drawing The Quad
+        gl.glEnd();
+
+        // Flush all drawing operations to the graphics card
+        gl.glFlush();
+
 		mShaderManager.stop(gl);
 	}
 
-	
 	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
