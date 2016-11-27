@@ -7,23 +7,37 @@ public class TwistValueController  extends KeyAdapter {
 	public static boolean sKeyPressedMinus = false;	
 	
 	private float mCurrentTwistValue = 0;
-	private float mNextTwistValue = 0;
-	
 	private final float MIN_TWIST = -2.f;
 	private final float MAX_TWIST = 2.f;
-	private final float NEXT_TWIST_STEP = 0.2f;
-	private final float TWIST_CHANGE_SPEED = 1.f;
+	private final float NEXT_TWIST_STEP = 0.05f;
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-	  if (e.getKeyCode() == KeyEvent.VK_PLUS) {
+	  if (e.getKeyCode() == KeyEvent.VK_1) {
 		  sKeyPressedPlus = true;
-		  mNextTwistValue = Math.min(mNextTwistValue + NEXT_TWIST_STEP, MAX_TWIST);
+		  if(mCurrentTwistValue > MIN_TWIST) {
+			  mCurrentTwistValue -= NEXT_TWIST_STEP;
+		  }
+		  else
+		  {
+			  mCurrentTwistValue =  MIN_TWIST;
+		  } 
+		  
 	  }
-	  else if (e.getKeyCode() == KeyEvent.VK_MINUS) {
+	  else if (e.getKeyCode() == KeyEvent.VK_2) {
 		  sKeyPressedMinus = true;
-		  mNextTwistValue = Math.min(mNextTwistValue - NEXT_TWIST_STEP, MIN_TWIST);
-	  }	
+		  mCurrentTwistValue += NEXT_TWIST_STEP;
+		  System.out.println(mCurrentTwistValue);
+		 
+		  if(mCurrentTwistValue < MAX_TWIST) {
+			  mCurrentTwistValue += NEXT_TWIST_STEP;
+		  }
+		  else
+		  {
+			  mCurrentTwistValue = MAX_TWIST;
+		  }
+	}	
+	  System.out.println(mCurrentTwistValue);
 	}
 	
 	@Override
@@ -31,22 +45,7 @@ public class TwistValueController  extends KeyAdapter {
 		sKeyPressedPlus = false;
 		sKeyPressedMinus = false;
 	}
-	
-	
-	public void update(float deltaSeconds) {
-		 final float twistDiff = Math.abs(mNextTwistValue - mCurrentTwistValue);
-		 //double epsilon =  Math.pow(2, -52);
-		 if (twistDiff > Math.ulp(1.0)) {
-			 	final float sign = (mNextTwistValue > mCurrentTwistValue) ? 1.f : -1.f;
-			 	final float growth = deltaSeconds * TWIST_CHANGE_SPEED;
-		        if (growth > twistDiff) {
-		        	mCurrentTwistValue = mNextTwistValue;
-		        }
-		        else {
-		        	mCurrentTwistValue += sign * growth;
-		        }
-		    }
-	}
+
 	public float getCurrentValue() {
 		return mCurrentTwistValue;
 	}

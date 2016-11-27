@@ -8,7 +8,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 public class Line3D {
-	private Vector<SVertexP3N> mVertices;
+	private Vector<SVertexP3N> mVertices = new Vector<SVertexP3N>();
 	private IntBuffer mIndicies;
 
 	
@@ -17,26 +17,26 @@ public class Line3D {
 	}
 	
 	private void tesselate(float startX, float endX, float step) {
-		mVertices.clear();
-		
 		int steps = (int)(Math.abs(endX - startX) / step);
+		mIndicies = BufferUtil.newIntBuffer(3120);
+		int j = 1;
 		for (int i = 0; i <= steps; ++i)
 		{
 			SVertexP3N vertex = new SVertexP3N();
 			vertex.position = new Vector3f(startX + i * step, 0.f, 0.f );
 			vertex.normal = new Vector3f(0.f, 0.f, 1.f);
 			mVertices.add(vertex);
-			mIndicies.put(i, i);
+			mIndicies.put(i,i);
 		
 			vertex.position = new Vector3f(startX + i * step, 0.1f, 0.f);
 			vertex.normal =  new Vector3f(0.f, 0.f, 1.f);
 			mVertices.add(vertex);
-			mIndicies.put(i, i);
+			mIndicies.put(j, i);
+			j++;
 		}
 	}
 	private void drawElements(GL2 gl) {
-
-        gl.glDrawElements(GL2.GL_TRIANGLE_FAN, mIndicies.limit(), GL2.GL_INT, mIndicies);
+        gl.glDrawElements(GL2.GL_TRIANGLE_STRIP, mIndicies.limit(), GL2.GL_UNSIGNED_INT, mIndicies);
     }
 	
 	public void draw(GLAutoDrawable drawable) {

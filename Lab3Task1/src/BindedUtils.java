@@ -10,14 +10,10 @@ import com.jogamp.opengl.GLAutoDrawable;
 
 public class BindedUtils {
 	public static void doWithBindedArrays(final Vector<SVertexP3N> vertices, GLAutoDrawable drawable, Callable callable) {
-
         GL2 gl = drawable.getGL().getGL2();
 
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
-
-        // ¬ыполн€ем прив€зку vertex array и normal array
-        //final int stride = 24;
 
         FloatBuffer normals = fillNormalsArray(vertices);
         FloatBuffer positions = fillPositionsArray(vertices);
@@ -51,7 +47,6 @@ public class BindedUtils {
             positions.put(vertice.position.y);
             positions.put(vertice.position.z);
         }
-
         return positions;
     }
 
@@ -65,7 +60,6 @@ public class BindedUtils {
             normals.put(vertice.normal.y);
             normals.put(vertice.normal.z);
         }
-
         return normals;
     }
 	
@@ -79,30 +73,23 @@ public class BindedUtils {
 
 	public static void calculateTriangleStripIndicies(IntBuffer indiciesBuffer, int columnCount, int rowCount) {
 		indiciesBuffer.clear();
-        int x = 0;
         // вычисл€ем индексы вершин.
         for (int ci = 0; ci < columnCount - 1; ci++) {
-            //System.out.println("ci " + ci);
             if (ci % 2 == 0) {
                 for (int ri = 0; ri < rowCount; ri++) {
-                    //System.out.println("ri1 " + ri);
                     int index = ci * rowCount + ri;
                     indiciesBuffer.put(index + rowCount);
                     indiciesBuffer.put(index);
-                    x++;x++;
                 }
             }
             else {
                 for (int ri = rowCount - 1; ri >= 0; ri--) {
-                    //System.out.println("ri2 " + ri);
                     int index = ci * rowCount + ri;
                     indiciesBuffer.put(index);
                     indiciesBuffer.put(index + rowCount);
-                    x++;x++;
                 }
             }
         }
         indiciesBuffer.flip();
-        //System.out.println("x " + x);
 	}
 }

@@ -35,7 +35,9 @@ public class Cannabola extends JFrame  {
     public Cannabola() {
         super("Cannabola");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DialDisplay display = new DialDisplay();
+        TwistValueController inputHandler =  new TwistValueController();
+		addKeyListener(inputHandler);
+        DialDisplay display = new DialDisplay(inputHandler);
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
         animator = new Animator(glcanvas);

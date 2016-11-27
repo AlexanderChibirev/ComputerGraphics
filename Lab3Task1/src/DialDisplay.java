@@ -4,19 +4,33 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
-	private ShaderManager mShaderManager = new ShaderManager();
+	private ShaderManager mProgramTwist = new ShaderManager();
+	private Line3D mLineObj = new Line3D(0, 2.f * (float)Math.PI,  (float)Math.PI / 1000.f);
+	private TwistValueController mTwistController;
+	public DialDisplay(TwistValueController inputHandler) {
+		mTwistController = inputHandler;
+	}
+	
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glClearColor (1, 1, 1, 1);
+		gl.glClearColor (0, 0, 0, 0);
 	    gl.glLoadIdentity();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		//mShaderManager.start(gl);
-		
-		//mShaderManager.stop(gl);
+		mProgramTwist.start(gl);
+			int mRZ = 2;
+			float x = -0.15f;
+			gl.glTranslated(x, 0, 0);
+			gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+			mProgramTwist.updateUniformVars(gl, mTwistController.getCurrentValue());
+	        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+	        mLineObj.draw(drawable);
+	        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        mProgramTwist.stop(gl);
+
 	}
 
 	@Override
@@ -27,11 +41,10 @@ public class DialDisplay implements GLEventListener  {
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
-        // Enable VSync
         gl.setSwapInterval(1);
 		gl.glShadeModel(GL2.GL_FLAT);
 		try {
-			mShaderManager.attachShaders(gl);
+			mProgramTwist.attachShaders(gl);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

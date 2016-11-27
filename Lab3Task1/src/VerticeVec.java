@@ -1,6 +1,19 @@
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+class SVertexP3N{
+
+    Vector3f position;
+    Vector3f normal;
+
+    SVertexP3N() {};
+
+    SVertexP3N(Vector3f position) {
+
+        this.position = position;
+    }
+}
+
 public class VerticeVec {
     int x;
     int y;

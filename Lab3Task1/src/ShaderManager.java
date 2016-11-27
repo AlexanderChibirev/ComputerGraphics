@@ -8,7 +8,6 @@ import com.jogamp.opengl.GL2;
 
 public class ShaderManager {
 	private int vertexShaderProgram;
-	private int fragmentShaderProgram;
 	private int shaderprogram;
 	
 	private String[] loadShaderSrc(String fileName) {
@@ -32,19 +31,13 @@ public class ShaderManager {
 	
 	public void attachShaders(GL2 gl) throws Exception {
 		vertexShaderProgram = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
-		fragmentShaderProgram = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
 
 		String[] vsrc = loadShaderSrc("vertex.vs");
 		gl.glShaderSource(vertexShaderProgram, 1, vsrc, null, 0);
 		gl.glCompileShader(vertexShaderProgram);
 
-		String[] fsrc = loadShaderSrc("fragment.fs");
-		gl.glShaderSource(fragmentShaderProgram, 1, fsrc, null, 0);
-		gl.glCompileShader(fragmentShaderProgram);
-
 		shaderprogram = gl.glCreateProgram();
 		gl.glAttachShader(shaderprogram, vertexShaderProgram);
-		gl.glAttachShader(shaderprogram, fragmentShaderProgram);
 		gl.glLinkProgram(shaderprogram);
 		gl.glValidateProgram(shaderprogram);
 		IntBuffer intBuffer = IntBuffer.allocate(1);
@@ -65,6 +58,13 @@ public class ShaderManager {
 			System.exit(1);
 		}
 	
+	}
+	
+	public void updateUniformVars(GL2 gl, float cur) {
+		int mandel_iterations = gl.glGetUniformLocation(shaderprogram, "TWIST");
+		assert(mandel_iterations != -1);
+		gl.glUniform1f(mandel_iterations, cur);
+		
 	}
 	
 	public void start(GL2 gl) {

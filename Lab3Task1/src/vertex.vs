@@ -4,7 +4,7 @@ void main()
 {
 	float ANGLE = gl_Vertex.x;
 
-	float radius = (1.f + sin(ANGLE))
+	float radius = (4.f + sin(ANGLE))
 					* (1.f + 0.9f * cos(8.f * ANGLE))
 					* (1.f + 0.1f * cos(24.f * ANGLE))
 					* (0.5f + 0.05f * cos(140.f * ANGLE));
@@ -12,13 +12,6 @@ void main()
 	float x = radius * cos(ANGLE);
 	float y = radius * sin(ANGLE);
 	float z = 0.f;
-	 /*
-      Rotate vertex around Y axis:
-      x' = x * cos(angle) - z * sin(angle)
-      y' = y;
-      z' = x * sin(angle) + z * cos(angle);
-      w' = w;
-    */
     vec4 twistedCoord = vec4(
 		gl_Vertex.x + x * TWIST,
         gl_Vertex.y + y * TWIST,
@@ -29,5 +22,5 @@ void main()
     vec4 position = gl_ModelViewProjectionMatrix * twistedCoord;
     // Transform twisted coordinate
     gl_Position = position;
-    gl_FrontColor = (position + vec4(1.0)) * 0.5;
+    gl_FrontColor = (position + vec4(1.0)) * 1;
 }
