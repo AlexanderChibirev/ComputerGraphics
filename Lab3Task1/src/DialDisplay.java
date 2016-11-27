@@ -14,19 +14,6 @@ public class DialDisplay implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		gl.glBegin(GL2.GL_LINE_LOOP);		
-		gl.glColor3f( 0.0f, 1.0f, 0.0f );
-		float size = 0.1f;
-		for (float a = 0; a < 2 * Math.PI; a += (Math.PI/1000) ) {
-			 double r = size * 
-					 (1 + Math.sin(a)) *
-					 (1 + 0.9 *  Math.cos(8 * a)) * 
-					 (1 + 0.1 * Math.cos(24 * a));
-			 gl.glVertex2d(r * Math.cos(a), r * Math.sin(a));
-		}
-		gl.glEnd();
-		gl.glFlush();
-		
 		//mShaderManager.start(gl);
 		
 		//mShaderManager.stop(gl);
