@@ -1,5 +1,10 @@
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -8,9 +13,7 @@ import com.jogamp.opengl.glu.GLU;
 
 
 public class DialDisplay implements GLEventListener  {
-	private Camera m_camera = new Camera();
-	private Light m_light = new Light();
-	private Material m_material = new Material();
+
 	private FooFunctional pointOfMobiusStripFromXY = new FooFunctional() {
 		@Override
 		public Vector3f invoke(float u, float v) {
@@ -26,10 +29,10 @@ public class DialDisplay implements GLEventListener  {
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		final GLU glu = GLU.createGLU(gl);
-		m_camera.update(glu);
-		m_material.setMaterial(gl);
-		m_light.setLight(gl);
+		setMaterial(gl);
+	    setLight(gl);
+		gl.glRotatef(CustomListener.getDeltaX(), 0.0f, 1.0f, 0.0f);
+	    gl.glRotatef(CustomListener.getDeltaY(), 1.0f, 0.0f, 0.0f);
 		drawFunction3D(gl);
 	}
 
@@ -50,6 +53,45 @@ public class DialDisplay implements GLEventListener  {
 	    gl.glLoadIdentity();
 	}
 	
+	private void setLight(GL2 gl){
+
+        gl.glEnable(GL2.GL_LIGHT0);
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
+
+        final float[] AMBIENT = { 0.1f, 0.1f, 0.1f, 0.1f }; //0.1 * white
+        final float[] DIFFUSE = { 1, 1, 1, 1 };             //white
+        final float[] SPECULAR = { 1, 1, 1, 1 };            //white
+        final float[] LIGHT_POSITION = {-1.f, 0.2f, 0.7f};
+
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, LIGHT_POSITION, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, DIFFUSE, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, AMBIENT, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, SPECULAR, 0);
+    }
+
+    private void setMaterial(GL2 gl){
+
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, toBuffer(new Vector4f(1, 1, 0, 1)));
+        gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_DIFFUSE, toBuffer(new Vector4f(1, 1, 0, 1)));
+       //gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, toBuffer(new Vector4f(0.1f, 0.1f, 0.1f, 1.f)));
+        gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 30f);
+    }
+	
+    private FloatBuffer toBuffer(Vector4f v) {
+    	ByteBuffer buf= ByteBuffer.allocateDirect(4 * 4);
+		buf.order(ByteOrder.nativeOrder());
+		FloatBuffer floatBuf;
+		floatBuf = buf.asFloatBuffer();
+        FloatBuffer buffer = floatBuf;
+        buffer.put(v.x);
+        buffer.put(v.y);
+        buffer.put(v.z);
+        buffer.put(v.w);
+        return buffer;
+    }
+    
 	@Override
 	public void dispose(GLAutoDrawable gLDrawable) {
 		// TODO Auto-generated method stub
