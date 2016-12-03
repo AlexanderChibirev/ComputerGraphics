@@ -43,7 +43,7 @@ public class Quadrangle {
 	}
 	
 	private void drawElements(GL2 gl) {
-        gl.glDrawElements(GL2.GL_TRIANGLES, mIndicies.limit(), GL2.GL_UNSIGNED_INT, mIndicies);
+        gl.glDrawElements(GL2.GL_TRIANGLE_FAN, mIndicies.limit(), GL2.GL_UNSIGNED_INT, mIndicies);
     }
 	
 	public final void  draw(GLAutoDrawable drawable) {

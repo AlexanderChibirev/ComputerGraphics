@@ -21,10 +21,10 @@ public class DialDisplay implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		int mRZ = 2;
+		//int mRZ = 2;
 		//float x = -0.15f;
 		//gl.glTranslated(x, 0, 0);
-		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+		//gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 		mShaderManager.start(gl);
 			mQuadObj.draw(drawable);
 		mShaderManager.stop(gl);

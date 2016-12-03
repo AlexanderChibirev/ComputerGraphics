@@ -11,13 +11,10 @@ public class DialDisplay implements GLEventListener  {
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
 		includeMechanisms3DWorld(gl);
-		final GLU glu = GLU.createGLU(gl);
 		m_light.setLight(gl);
 		gl.glRotatef(CustomListener.getDeltaX(), 0.0f, 1.0f, 0.0f);
 	    gl.glRotatef(CustomListener.getDeltaY(), 1.0f, 0.0f, 0.0f);
 		drawRhombicuboctahedron(gl);
-		
-		
 	}
 
 	private void drawRhombicuboctahedron(GL2 gl){
