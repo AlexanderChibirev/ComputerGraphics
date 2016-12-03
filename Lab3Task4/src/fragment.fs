@@ -21,9 +21,9 @@ float calculateMandelbrotIterations(float x, float y) {
     return iter;
 }
 
-const vec3 blue = vec3(0.0,0.0,1.0);
+const vec3 blue = vec3(1.0,0.5,1.0);
 const vec3 white = vec3(1.0,1.0,1.0);
-const vec3 yellow = vec3(1.0,1.0,0.0);
+const vec3 yellow = vec3(1.0,0.5,0.0);
 const vec3 red = vec3(1.0,0.0,0.0);
 const float colorResolution = 16.0; // how many iterations the first color band should use (2nd use the double amount)
 
