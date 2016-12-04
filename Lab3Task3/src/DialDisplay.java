@@ -12,33 +12,7 @@ import com.jogamp.opengl.glu.GLU;
 public class DialDisplay implements GLEventListener  {
 	private ShaderManager mShaderManager = new ShaderManager();
 	private TransformationController mTransformationController;
-	private Function<Vector3f, Float> getMoebiusPoint = new Function<Vector3f, Float>() {
-			@Override
-			public Vector3f eval(Float... floats) {
-			    return getPoint(floats[0], floats[1]);
-		}
-	};
-	private Vector3f getPoint(float u, float v) {
-
-        final float r = 1f;
-
-        Vector3f point = new Vector3f();
-
-        if (u >= 0 && u <= Math.PI) {
-            point.x = 6 * (float) Math.cos(u) * (1 + (float) Math.sin(u)) + 4 * r * (1 - (float) Math.cos(u) / 2) * (float) Math.cos(u) * (float) Math.cos(v);
-            point.y = 16 * (float) Math.sin(u) + 4 * r * (1 - (float) Math.cos(u) / 2) * (float) Math.sin(u) * (float) Math.cos(v);
-            point.z = 4 * r * (1 - (float) Math.cos(u) / 2) * (float) Math.sin(v);
-        }
-        else{
-
-            point.x = 6 * (float) Math.cos(u) * (1 + (float) Math.sin(u)) - 4 * r * (1 - (float) Math.cos(u) / 2) * (float) Math.cos(v);
-            point.y = 16 * (float) Math.sin(u);
-            point.z = 4 * r * (1 - (float) Math.cos(u) / 2) * (float) Math.sin(v);
-        }
-
-        return MathVector3f.divideByInt(point, 10);
-   }
-	private SolidMoebiusStrips m_mobiusBand = new SolidMoebiusStrips(getMoebiusPoint);
+	private SolidMoebiusStrips m_mobiusBand = new SolidMoebiusStrips();
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
@@ -47,7 +21,7 @@ public class DialDisplay implements GLEventListener  {
 			//mShaderManager.updateUniformPositiveNormals(gl, mTransformationController.getCurrentValue());
 			gl.glCullFace(GL2.GL_BACK); 
 			m_mobiusBand.draw(gLDrawable);
-		
+		mShaderManager.stopPositiveNormals(gl);
 		mShaderManager.startNegativeNormals(gl);
 			//mShaderManager.updateUniformNegativeNormals(gl, mTransformationController.getCurrentValue());
 			gl.glCullFace(GL2.GL_FRONT);
@@ -80,7 +54,7 @@ public class DialDisplay implements GLEventListener  {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		m_mobiusBand.tesselate(new Vector2f(-10.f, 10.f), new Vector2f(-10.f, 10.f), 0.07f);
+		m_mobiusBand.tesselate(80,80);
 	}
 
 	@Override
