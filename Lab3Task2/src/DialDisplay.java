@@ -26,7 +26,7 @@ public class DialDisplay implements GLEventListener  {
 		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 		mShaderManager.start(gl);
 			mQuadObj.draw(drawable);
-	//	mShaderManager.stop(gl);
+		mShaderManager.stop(gl);
 	}
 
 	private void setupOpenGLState(GL2 gl)

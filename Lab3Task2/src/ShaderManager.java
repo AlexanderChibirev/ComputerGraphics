@@ -36,7 +36,7 @@ public class ShaderManager {
 	}
 	
 	public void attachShaders(GL2 gl) throws Exception {
-		mShaderprogram = gl.glCreateProgram();
+		
 		mVertexChina = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
 		mFragmentChina = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
 
@@ -49,6 +49,7 @@ public class ShaderManager {
 		gl.glShaderSource(mFragmentChina, 1, checkersShaderSrc, null, 0);
 		gl.glCompileShader(mFragmentChina);
 		getShaderiv(gl);
+		mShaderprogram = gl.glCreateProgram();
 
 		gl.glAttachShader(mShaderprogram, mVertexChina);
 		gl.glAttachShader(mShaderprogram, mFragmentChina);

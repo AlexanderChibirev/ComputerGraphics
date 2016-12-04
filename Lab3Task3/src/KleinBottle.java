@@ -149,10 +149,9 @@ class SolidMoebiusStrips {
     private Vector<SVertexP3N> vertices;
     private Function<Vector3f, Float> fn;
     private IntBuffer indiciesBuffer;
-    //private FloatBuffer verticiesBuffer;
-
-    SolidMoebiusStrips(final Function<Vector3f, Float> fn){
-
+    private float UV_DELTA = 0.05f;
+    
+    SolidMoebiusStrips(final Function<Vector3f, Float> fn) {
         vertices = new Vector<>();
         this.fn = fn;
     }
@@ -160,8 +159,7 @@ class SolidMoebiusStrips {
     private void calculateTriangleStripIndicies(int columnCount, int rowCount) {
 
         indiciesBuffer.clear();
-
-        // вычисляем индексы вершин.
+        
         for (int ci = 0; ci < columnCount - 1; ci++)
         {
             if (ci % 2 == 0)
@@ -175,7 +173,7 @@ class SolidMoebiusStrips {
             }
             else
             {
-                for (int ri = rowCount - 1; ri >= 0; ri--)
+                for (int ri = rowCount - 1; ri >= 0; ri--)//????????
                 {
                     int index = ci * rowCount + ri;
                     indiciesBuffer.put(index);
@@ -200,7 +198,6 @@ class SolidMoebiusStrips {
             for (int ri = 0; ri < rowCount; ri++) {
                 final float z = rangeZ.x + step * (float)ri;
                 vertices.add(new SVertexP3N(FunctionSurfaces.getPosition(fn, x, z)));
-
                 FunctionSurfaces.calculateNormal(vertices.lastElement(), fn, step);
             }
         }
@@ -215,22 +212,7 @@ class SolidMoebiusStrips {
 
     void draw(GLAutoDrawable drawable){
         final GL2 gl = drawable.getGL().getGL2();
-
-        gl.glCullFace(GL2.GL_BACK);
-
-       //gl.glFrontFace(GL2.GL_CW);
-
-        FunctionSurfaces.doWithBindedArrays(vertices, drawable, new Callable() {
-            @Override
-            public Object call() throws Exception {
-                drawElements(gl);
-                return null;
-            }
-        });
-
-        gl.glCullFace(GL2.GL_FRONT);
-        //gl.glFrontFace(GL2.GL_CCW);
-
+        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         FunctionSurfaces.doWithBindedArrays(vertices, drawable, new Callable() {
             @Override
             public Object call() throws Exception {
