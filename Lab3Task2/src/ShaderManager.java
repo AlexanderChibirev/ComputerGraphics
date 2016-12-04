@@ -7,9 +7,8 @@ import java.nio.IntBuffer;
 import com.jogamp.opengl.GL2;
 
 public class ShaderManager {
-	private int mVertexCopeTexture;
-	private int mFragmentCheckers;
-	private int mFragmentCheckersAndTriangle;
+	private int mVertexChina;
+	private int mFragmentChina;
 	private int mShaderprogram;
 	
 	private String[] loadShaderSrc(String fileName) {
@@ -30,28 +29,29 @@ public class ShaderManager {
 		return new String[]{sb.toString()};
 	}
 	
+	private void getShaderiv(GL2 gl) {
+		IntBuffer compileStatus = BufferUtil.newIntBuffer(1);
+		compileStatus.put(0);
+		gl.glGetShaderiv(mShaderprogram, GL2.GL_COMPILE_STATUS, compileStatus);
+	}
 	
 	public void attachShaders(GL2 gl) throws Exception {
 		mShaderprogram = gl.glCreateProgram();
-		mVertexCopeTexture = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
-		mFragmentCheckersAndTriangle = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
-		//mFragmentCheckers = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+		mVertexChina = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
+		mFragmentChina = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
 
-		String[] vertexShaderSrc = loadShaderSrc("copytexture.vs");
-		gl.glShaderSource(mVertexCopeTexture, 1, vertexShaderSrc, null, 0);
-		gl.glCompileShader(mVertexCopeTexture);
+		String[] vertexShaderSrc = loadShaderSrc("china.vs");
+		gl.glShaderSource(mVertexChina, 1, vertexShaderSrc, null, 0);
+		gl.glCompileShader(mVertexChina);
+		getShaderiv(gl);
+		
+		String[] checkersShaderSrc = loadShaderSrc("china.fs");
+		gl.glShaderSource(mFragmentChina, 1, checkersShaderSrc, null, 0);
+		gl.glCompileShader(mFragmentChina);
+		getShaderiv(gl);
 
-		String[] pictureShaderSrc = loadShaderSrc("checkers-and-triangle.fs");
-		gl.glShaderSource(mFragmentCheckersAndTriangle, 1, pictureShaderSrc, null, 0);
-		gl.glCompileShader(mFragmentCheckersAndTriangle);		
-		//String[] checkersShaderSrc = loadShaderSrc("checkers.fs");
-		//gl.glShaderSource(mFragmentCheckers, 1, checkersShaderSrc, null, 0);
-		//gl.glCompileShader(mFragmentCheckers);
-		//gl.glAttachShader(mShaderprogram, mFragmentCheckersAndTriangle);
-		
-		
-		gl.glAttachShader(mShaderprogram, mVertexCopeTexture);
-		gl.glAttachShader(mShaderprogram, mFragmentCheckers);
+		gl.glAttachShader(mShaderprogram, mVertexChina);
+		gl.glAttachShader(mShaderprogram, mFragmentChina);
 		gl.glLinkProgram(mShaderprogram);
 		
 		gl.glValidateProgram(mShaderprogram);
@@ -61,10 +61,10 @@ public class ShaderManager {
 			gl.glGetProgramiv(mShaderprogram, GL2.GL_INFO_LOG_LENGTH,intBuffer);
 			int size = intBuffer.get(0);
 			System.err.println("Program link error: ");
-			if (size>0) {
+			if (size > 0) {
 				ByteBuffer byteBuffer = ByteBuffer.allocate(size);
 				gl.glGetProgramInfoLog(mShaderprogram, size, intBuffer, byteBuffer);
-				for (byte b:byteBuffer.array()){
+				for (byte b:byteBuffer.array()) {
 					System.err.print((char)b);
 				}
 			} else {

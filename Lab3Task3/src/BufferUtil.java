@@ -17,7 +17,7 @@ public class BufferUtil {
 	
 	
 	public static IntBuffer newIntBuffer(final int value) {
-		ByteBuffer buf = ByteBuffer.allocateDirect(value * 4);
+		ByteBuffer buf= ByteBuffer.allocateDirect(value * 4);
 		buf.order(ByteOrder.nativeOrder());
 		mIntBuf = buf.asIntBuffer();
 		return mIntBuf;

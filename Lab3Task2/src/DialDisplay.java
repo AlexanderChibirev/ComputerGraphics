@@ -1,4 +1,3 @@
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
@@ -11,28 +10,28 @@ public class DialDisplay implements GLEventListener  {
 	
 	private final Vector3f QUAD_TOPLEFT = new Vector3f(-200, -200, 0);
 	private final Vector3f QUAD_SIZE = new Vector3f( 400, 400, 0);
-	Quadrangle mQuadObj = new Quadrangle(QUAD_TOPLEFT, QUAD_SIZE);
+	ChinaFlag mQuadObj = new ChinaFlag(QUAD_TOPLEFT, QUAD_SIZE);
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glClearColor (0, 0, 0, 0);
+		gl.glClearColor (1, 1, 1, 1);
 	    gl.glLoadIdentity();
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		//int mRZ = 2;
-		//float x = -0.15f;
-		//gl.glTranslated(x, 0, 0);
-		//gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+		int mRZ = 512;
+		float x = -0.15f;
+		gl.glTranslated(x, 0, 0);
+		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 		mShaderManager.start(gl);
 			mQuadObj.draw(drawable);
-		mShaderManager.stop(gl);
+	//	mShaderManager.stop(gl);
 	}
 
 	private void setupOpenGLState(GL2 gl)
 	{
-	    // включаем механизмы трёхмерного мира.
+	    //включаем механизмы трёхмерного мира.
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glEnable(GL2.GL_CULL_FACE);
 		gl.glFrontFace(GL2.GL_CCW);
