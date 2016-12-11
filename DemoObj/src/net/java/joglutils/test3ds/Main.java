@@ -113,7 +113,7 @@ public class Main {
             gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
 
             if (!model.isLoaded())
-                model.load(gLDrawable, "Toilet.3DS");
+                model.load(gLDrawable, "Crate1.3ds");
         }
 
 
