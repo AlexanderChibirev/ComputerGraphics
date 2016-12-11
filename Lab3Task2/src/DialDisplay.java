@@ -8,8 +8,8 @@ import com.jogamp.opengl.glu.GLU;
 public class DialDisplay implements GLEventListener  {
 	private ShaderManager mShaderManager = new ShaderManager();
 	
-	private final Vector3f QUAD_TOPLEFT = new Vector3f(-200, -200, 0);
-	private final Vector3f QUAD_SIZE = new Vector3f( 400, 400, 0);
+	private final Vector3f QUAD_TOPLEFT = new Vector3f(-300, -200, 0);
+	private final Vector3f QUAD_SIZE = new Vector3f( 600, 400, 0);
 	ChinaFlag mQuadObj = new ChinaFlag(QUAD_TOPLEFT, QUAD_SIZE);
 	@Override
 	public void display(GLAutoDrawable drawable) {
@@ -21,8 +21,6 @@ public class DialDisplay implements GLEventListener  {
 		gl.glLoadIdentity();
 		
 		int mRZ = 512;
-		float x = -0.15f;
-		gl.glTranslated(x, 0, 0);
 		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 		mShaderManager.start(gl);
 			mQuadObj.draw(drawable);

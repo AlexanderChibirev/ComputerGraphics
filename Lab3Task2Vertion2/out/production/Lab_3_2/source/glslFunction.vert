@@ -143,7 +143,7 @@ const vec4 RED = vec4(1.0, 0, 0, 0);
 void main()
 {
     vec2 pos = gl_TexCoord[0].xy;
-	vec2 star[5] = CreateStarVertexes(vec2(5, 3.75), 0.15);
+	vec2 star[5] = CreateStarVertexes(vec2(0.45, 3.75), 0.15);
 	vec2 littleStar[5] = CreateStarVertexes(vec2(0.45, 3.75), 0.1);
 if(PointIsInsideStar(star, pos) && !PointIsInsideStar(littleStar, pos) )
 {

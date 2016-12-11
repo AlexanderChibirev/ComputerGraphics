@@ -24,7 +24,7 @@ public class DialDisplay implements GLEventListener  {
 			int mRZ = 2;
 			float x = -0.15f;
 			gl.glTranslated(x, 0, 0);
-			gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+			//gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 			mProgramTwist.updateUniformVars(gl, mTwistController.getCurrentValue());
 	        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 	        mLineObj.draw(drawable);
