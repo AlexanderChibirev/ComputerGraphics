@@ -82,7 +82,8 @@ public class MyModel extends Model3DS
             genList(gLDrawable);
         gl.glEndList();
         
-        loaded = true;    
+        loaded = true;
+        
         return loaded;
     }
     
@@ -137,9 +138,10 @@ public class MyModel extends Model3DS
                 }
             gl.glEnd();
             
-            if (tempObj.hasTexture){
-                texture[tempObj.materialID].disable(gl);
+            if (tempObj.hasTexture) {
+            	texture[tempObj.materialID].disable(gl);
             }
         }
     }
 }
+
