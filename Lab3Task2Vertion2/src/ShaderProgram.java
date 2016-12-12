@@ -1,6 +1,10 @@
+
+
 import com.jogamp.opengl.GL2;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.charset.Charset;
 import java.util.Vector;
 
 public class ShaderProgram {
@@ -8,13 +12,13 @@ public class ShaderProgram {
 	private int programId = 0;
 	private Vector<Integer> shaders;
 
-	ShaderProgram(GL2 gl){
+	public ShaderProgram(GL2 gl){
 
 		shaders = new Vector<>();
 		programId = gl.glCreateProgram();
 	}
 
-	ShaderProgram(GL2 gl, int a){
+	public ShaderProgram(GL2 gl, int a){
 
 		programId = 0;
 	}
@@ -30,29 +34,33 @@ public class ShaderProgram {
 	}
 
 
-	void compileShader(GL2 gl, String source, ShaderType type){
+	public void compileShader(GL2 gl, String source, ShaderType type){
 
-		final String[] pSourceLines= { source };
 		final IntBuffer pSourceLengths = BufferUtil.newIntBuffer(1);
 		pSourceLengths.put(source.length());
 
 
 		ShaderRaii shader = new ShaderRaii(gl, type);
-		gl.glShaderSource(shader.getId(), 1, pSourceLines, null);
+		gl.glShaderSource(shader.getId(), 1, new String[]{source}, null);
 		gl.glCompileShader(shader.getId());
 
 		IntBuffer compileStatus = BufferUtil.newIntBuffer(1);
-		compileStatus.put(0);
 		gl.glGetShaderiv(shader.getId(), GL2.GL_COMPILE_STATUS, compileStatus);
+
+		if (compileStatus.get(0) == GL2.GL_FALSE){
+
+			System.out.println("Shader compiling failed");
+		}
 
 		shaders.add(shader.release());
 		gl.glAttachShader(programId, shaders.lastElement());
 
 	}
 
-	void link(GL2 gl){
+	public void link(GL2 gl){
 
 		gl.glLinkProgram(programId);
+		gl.glValidateProgram(programId);
 		IntBuffer linkStatus =  BufferUtil.newIntBuffer(1);
 		linkStatus.put(0);
 
@@ -61,12 +69,12 @@ public class ShaderProgram {
 		freeShaders(gl);
 	}
 
-	void use(GL2 gl){
+	public void use(GL2 gl){
 
 		gl.glUseProgram(programId);
 	}
 
-	final int findUniform(GL2 gl, String name) throws Exception{
+	public final int findUniform(GL2 gl, String name) throws Exception{
 
 		int location = gl.glGetUniformLocation(programId, name);
 		if (location == -1){
@@ -77,9 +85,15 @@ public class ShaderProgram {
 		return location;
 	}
 
-	void dispose(GL2 gl){
+	public int getProgramId(){
+
+		return programId;
+	}
+
+	public void dispose(GL2 gl){
 
 		freeShaders(gl);
 		gl.glDeleteProgram(programId);
 	}
+
 }

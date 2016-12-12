@@ -1,6 +1,8 @@
+
+
 import com.jogamp.opengl.GL2;
 
-public class ShaderRaii {
+class ShaderRaii {
 
 	private int id;
 
@@ -26,7 +28,7 @@ public class ShaderRaii {
 
 	int release(){
 
-		int id = this.id;
+		final int id = this.id;
 		this.id = 0;
 
 		return id;
