@@ -40,19 +40,19 @@ bool PointIsInsideStar(vec2 starsVert[5], vec2 p)
 
 if(isInT1)
 	{
-		summ =summ + 1;
+		summ = summ + 1;
 	}
 if(isInT2)
 	{
-		summ =summ + 1;
+		summ = summ + 1;
 	}
 if(isInT3)
 	{
-		summ =summ + 1;
+		summ = summ + 1;
 	}
 if(isInT4)
 	{
-		summ =summ + 1;
+		summ = summ + 1;
 	}
 if(summ >= 2)
 {
@@ -142,38 +142,38 @@ const vec4 RED = vec4(1.0, 0, 0, 0);
 
 void main()
 {
-    vec2 pos = gl_TexCoord[0].xy;
+	vec2 pos = gl_TexCoord[0].xy;
 	vec2 star[5] = CreateStarVertexes(vec2(5, 3.75), 0.15);
 	vec2 littleStar[5] = CreateStarVertexes(vec2(0.45, 3.75), 0.1);
-if(PointIsInsideStar(star, pos) && !PointIsInsideStar(littleStar, pos) )
-{
-	gl_FragColor = YELLOW;
-}
-else if(PointIsInsideTransformatedQuadrangle(HUMMER_HEAD, pos, HUMMER_ANGLE, HUMMER_POS))
-{
-	gl_FragColor = YELLOW;
-}
-else if(PointIsInsideTransformatedQuadrangle(HUMMER_STICK, pos, HUMMER_ANGLE, HUMMER_STICK_POS))
-{
-	gl_FragColor = YELLOW;
-}
-else if(PointInsideTransformatedEllipse(BIG_POS, BIG_RADIUS, pos,  PI / 2) &&
-							!PointInsideTransformatedEllipse(SMALL_POS, SMALL_RADIUS, pos, PI / 2))
-{
-	gl_FragColor = YELLOW;
-
-}
-else if(PointIsInsideTransformatedQuadrangle(HANDLES_SQUARE, pos, PI / 18, HANDLES_SQUARE_POS))
-{
-	gl_FragColor = YELLOW;
-}
-else if(PointIsInsideTransformatedQuadrangle(HANDLE, pos, -PI / 5, HANDLE_POS))
-{
-	gl_FragColor = YELLOW;
-}
-else
-{
-	gl_FragColor = RED;
-
-}
+	if(PointIsInsideStar(star, pos) && !PointIsInsideStar(littleStar, pos) )
+	{
+		gl_FragColor = YELLOW;
+	}
+	else if(PointIsInsideTransformatedQuadrangle(HUMMER_HEAD, pos, HUMMER_ANGLE, HUMMER_POS))
+	{
+		gl_FragColor = YELLOW;
+	}
+	else if(PointIsInsideTransformatedQuadrangle(HUMMER_STICK, pos, HUMMER_ANGLE, HUMMER_STICK_POS))
+	{
+		gl_FragColor = YELLOW;
+	}
+	else if(PointInsideTransformatedEllipse(BIG_POS, BIG_RADIUS, pos,  PI / 2) &&
+		!PointInsideTransformatedEllipse(SMALL_POS, SMALL_RADIUS, pos, PI / 2))
+	{
+		gl_FragColor = YELLOW;
+	
+	}
+	else if(PointIsInsideTransformatedQuadrangle(HANDLES_SQUARE, pos, PI / 18, HANDLES_SQUARE_POS))
+	{
+		gl_FragColor = YELLOW;
+	}
+	else if(PointIsInsideTransformatedQuadrangle(HANDLE, pos, -PI / 5, HANDLE_POS))
+	{
+		gl_FragColor = YELLOW;
+	}
+	else
+	{
+		gl_FragColor = RED;
+	
+	}
 }

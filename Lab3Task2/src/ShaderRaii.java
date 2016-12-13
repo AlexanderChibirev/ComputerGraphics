@@ -2,7 +2,7 @@ import com.jogamp.opengl.GL2;
 
 public class ShaderRaii {
 
-	private int id;
+	private int mId;
 
 	private int MapShaderType(ShaderType type){
 		switch (type){
@@ -16,25 +16,25 @@ public class ShaderRaii {
 
 	ShaderRaii(GL2 gl, ShaderType type){
 
-		id = gl.glCreateShader(MapShaderType(type));
+		mId = gl.glCreateShader(MapShaderType(type));
 	}
 
 	int getId(){
 
-		return id;
+		return mId;
 	}
 
 	int release(){
 
-		int id = this.id;
-		this.id = 0;
+		int id = this.mId;
+		this.mId = 0;
 
 		return id;
 	}
 
 	void dispose(GL2 gl){
 
-		gl.glDeleteShader(id);
+		gl.glDeleteShader(mId);
 	}
 
 }

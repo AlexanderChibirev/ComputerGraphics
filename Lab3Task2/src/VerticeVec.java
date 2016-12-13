@@ -1,3 +1,4 @@
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
@@ -56,5 +57,10 @@ public class VerticeVec {
 				 vec.y / i,
 				 vec.z / i
 	     );
+	}
+	
+	public static Vector2f sum(Vector2f v1, Vector2f v2){
+
+		return new Vector2f(v1.x + v2.x, v1.y + v2.y);
 	}
 }

@@ -1,4 +1,9 @@
-import javax.vecmath.Vector3f;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import javax.vecmath.Vector2f;
+
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -6,12 +11,14 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
-	private ShaderManager mShaderManager = new ShaderManager();
 	
-	private final Vector3f QUAD_TOPLEFT = new Vector3f(-300, -200, 0);
-	private final Vector3f QUAD_SIZE = new Vector3f( 600, 400, 0);
+	
+	private final Vector2f QUAD_TOPLEFT = new Vector2f(-300, -200);
+	private final Vector2f QUAD_SIZE = new Vector2f( 600, 400);
 	ChinaFlag mQuadObj = new ChinaFlag(QUAD_TOPLEFT, QUAD_SIZE);
+	private ShaderProgram mShaderProgram;
 	@Override
+	
 	public void display(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
@@ -22,9 +29,10 @@ public class DialDisplay implements GLEventListener  {
 		
 		int mRZ = 512;
 		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
-		mShaderManager.start(gl);
-			mQuadObj.draw(drawable);
-		mShaderManager.stop(gl);
+		
+		mShaderProgram.use(gl);
+		mQuadObj.draw(drawable);
+	
 	}
 
 	private void setupOpenGLState(GL2 gl)
@@ -45,14 +53,36 @@ public class DialDisplay implements GLEventListener  {
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
 		setupOpenGLState(gl);
-        // Enable VSync
-        gl.setSwapInterval(1);
-		gl.glShadeModel(GL2.GL_FLAT);
-		try {
-			mShaderManager.attachShaders(gl);
-		} catch (Exception e) {
+        initShaderProgram(gl);
+	}
+	
+	private void initShaderProgram(GL2 gl) {
+        String[] vertexShader = loadShaderFileFromSrc("USSR.vs");
+        String[] fragmentShader = loadShaderFileFromSrc("USSR.fs");
+
+        mShaderProgram = new ShaderProgram(gl);
+        mShaderProgram.compileShader(gl, vertexShader, ShaderType.Vertex);
+        mShaderProgram.compileShader(gl, fragmentShader, ShaderType.Fragment);
+      
+        mShaderProgram.link(gl);
+    }
+	
+	private String[] loadShaderFileFromSrc( String fileName) {
+		StringBuilder sb = new StringBuilder();
+		try{
+			InputStream is = getClass().getResourceAsStream(fileName);
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line;
+			while ((line = br.readLine())!=null){
+				sb.append(line);
+				sb.append('\n');
+			}
+			is.close();
+		}
+		catch (Exception e){
 			e.printStackTrace();
 		}
+		return new String[]{sb.toString()};
 	}
 
 	@Override
@@ -69,5 +99,4 @@ public class DialDisplay implements GLEventListener  {
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glLoadIdentity();
 	}
-
 }

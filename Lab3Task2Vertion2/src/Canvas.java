@@ -2,10 +2,13 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
 
 import java.io.*;
+import java.nio.FloatBuffer;
 
 import javax.vecmath.Vector2f;
+
 
 @SuppressWarnings("serial")
 public class Canvas extends GLCanvas implements GLEventListener {
@@ -14,18 +17,19 @@ public class Canvas extends GLCanvas implements GLEventListener {
     private static final Vector2f QUAD_SIZE   = new Vector2f(600, 300);
 
     private ShaderProgram shaderProgram;
+    private GLU glu;
 
     private Quad function;
 
     Canvas() {
         this.addGLEventListener(this);
-        this.setFocusable(true);
     }
 
     @Override
     public void init(GLAutoDrawable drawable) {
 
 		GL2 gl = drawable.getGL().getGL2();
+		glu = new GLU();
         checkOpenGLVersion(gl);
 
         // ----- Your OpenGL initialization code here -----
@@ -33,19 +37,32 @@ public class Canvas extends GLCanvas implements GLEventListener {
         initShaderProgram(gl);
         initGLContext(gl);
     }
-
+    
+   
+    
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 
-		GL2 gl = drawable.getGL().getGL2();
 
-        final float halfWidth = width * 0.5f;
-        final float halfHeight = height * 0.5f;
-       // final Matrix4f matrix = new Matrix4f().ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, 0.1f, 100.f);
-        //gl.glViewport(0, 0, width, height);
-        //gl.glMatrixMode(GL2.GL_PROJECTION);
-        //gl.glLoadMatrixf(matrix.get(BufferUtil.newFloatBuffer(16)));
-        //gl.glMatrixMode(GL2.GL_MODELVIEW);
+    	   GL2 gl = drawable.getGL().getGL2();
+
+           if (height == 0){
+               height = 1;
+           }
+
+           final float fieldOfView = 60.f;
+           final float aspect = (float)width / height;
+           final float zNear = 0.1f;
+           final float zFar = 100.f;
+
+           gl.glViewport(0, 0, width, height);
+
+           gl.glMatrixMode(GL2.GL_PROJECTION);
+           gl.glLoadIdentity();
+           glu.gluPerspective(fieldOfView, aspect, zNear, zFar);
+
+           gl.glMatrixMode(GL2.GL_MODELVIEW);
+           gl.glLoadIdentity();
     }
 
     @Override
@@ -53,9 +70,13 @@ public class Canvas extends GLCanvas implements GLEventListener {
 
 		GL2 gl = drawable.getGL().getGL2();
 
-        // ----- OpenGL rendering code -----
-        gl.glTranslatef(0.0f, 0.0f, -10.0f);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glLoadIdentity();
 
+		// ----- OpenGL rendering code -----
+        gl.glTranslatef(0.0f, 0.0f, -10.0f);
+    	int mRZ = 40;
+		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
         // ----- Drawing shape -----
         shaderProgram.use(gl);
         function.draw(drawable);
@@ -69,12 +90,10 @@ public class Canvas extends GLCanvas implements GLEventListener {
 
     private void initGLContext(GL2 gl){
 
-        //gl.glClearColor(1f, 1f, 0f, 0f);
+		gl.glClearColor(0f, 0f, 0f, 0f);
+		gl.glClearDepth(1f);
+		gl.glEnable(GL2.GL_DEPTH_TEST);
 
-        //gl.glEnable(GL2.GL_DEPTH_TEST);
-        //gl.glEnable(GL2.GL_CCW);
-        //gl.glEnable(GL2.GL_BACK);
-        //gl.glEnable(GL2.GL_CULL_FACE);
     }
 
     private void initShaderProgram(GL2 gl){
@@ -88,9 +107,9 @@ public class Canvas extends GLCanvas implements GLEventListener {
         shaderProgram.compileShader(gl, vSource, ShaderType.Vertex);
         shaderProgram.compileShader(gl, fSource, ShaderType.Fragment);
 
-        //IntBuffer resultVertex = BufferUtil.newIntBuffer(1);
-        //resultVertex.put(1);
-        //gl.glGetObjectParameterivARB(shaderProgram.getProgramId(), GL2.GL_OBJECT_COMPILE_STATUS_ARB, resultVertex);
+		//IntBuffer resultVertex = BufferUtil.newIntBuffer(1);
+		//resultVertex.put(1);
+		//gl.glGetObjectParameterivARB(shaderProgram.getProgramId(), GL2.GL_OBJECT_COMPILE_STATUS_ARB, resultVertex);
 
         shaderProgram.link(gl);
     }
@@ -127,5 +146,4 @@ public class Canvas extends GLCanvas implements GLEventListener {
 
 		return strBuilder.toString();
 	}
-
 }

@@ -9,59 +9,55 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
 public class BindedUtils {
-	public static void doWithBindedArrays(Vector<SVertexP3N> vertices, GLAutoDrawable drawable, Callable callable){
+	static void doWithBindedArrays(Vector<SVertexP2T2> vertices, GLAutoDrawable drawable, Callable callable){
 
-        GL2 gl = drawable.getGL().getGL2();
+		GL2 gl = drawable.getGL().getGL2();
 
-        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL2.GL_NORMAL_ARRAY);
+		gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 
-        FloatBuffer positions = fillPositionsArray(vertices);
-        FloatBuffer normals = fillNormalsArray(vertices);
+		FloatBuffer positions = fillPositionsBuffer(vertices);
+		FloatBuffer textures = fillTexturesBuffer(vertices);
 
-        normals.rewind();
-        positions.rewind();
+		positions.rewind();
+		textures.rewind();
 
-        gl.glNormalPointer(GL2.GL_FLOAT, 0, normals);
-        gl.glVertexPointer(3, GL2.GL_FLOAT, 0, positions);
+		gl.glTexCoordPointer(2, GL2.GL_FLOAT, 0, textures);
+		gl.glVertexPointer(2, GL2.GL_FLOAT, 0, positions);
 
-        try {
-            callable.call();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+		try {
+			callable.call();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 
-        gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL2.GL_NORMAL_ARRAY);
+		gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+	}
 
-    }
+	private static FloatBuffer fillPositionsBuffer(final Vector<SVertexP2T2> vertices){
 
-	public static FloatBuffer fillPositionsArray(final Vector<SVertexP3N> vertices){
+		FloatBuffer positions = BufferUtil.newFloatBuffer(vertices.size() * 2);
 
-        FloatBuffer positions = BufferUtil.newFloatBuffer(vertices.size() * 3);
+		for (SVertexP2T2 vertice : vertices) {
 
-        for (SVertexP3N vertice : vertices) {
+			positions.put(vertice.position.x);
+			positions.put(vertice.position.y);
+		}
 
-            positions.put(vertice.position.x);
-            positions.put(vertice.position.y);
-            positions.put(vertice.position.z);
-        }
+		return positions;
+	}
 
-        return positions;
-    }
+	private static FloatBuffer fillTexturesBuffer(final Vector<SVertexP2T2> vertices){
 
-	public static FloatBuffer fillNormalsArray(Vector<SVertexP3N> vertices){
+		FloatBuffer texCoords = BufferUtil.newFloatBuffer(vertices.size() * 2);
 
-        FloatBuffer normals = BufferUtil.newFloatBuffer(vertices.size() * 3 + 1);
+		for (SVertexP2T2 vertice : vertices) {
 
-        for (SVertexP3N vertice : vertices) {
-
-            normals.put(vertice.normal.x);
-            normals.put(vertice.normal.y);
-            normals.put(vertice.normal.z);
-        }
-
-        return normals;
-    }
+			texCoords.put(vertice.texCoord.x);
+			texCoords.put(vertice.texCoord.y);
+		}
+		return texCoords;
+	}
 }

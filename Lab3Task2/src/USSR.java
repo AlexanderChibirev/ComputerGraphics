@@ -11,7 +11,7 @@ import com.jogamp.opengl.util.Animator;
 
 public class USSR extends JFrame  {
 	private static final long serialVersionUID = -8427804125587735669L;
-	public static Animator animator = null;
+	public static Animator sAnimator = null;
     public static void main(String[] args) {
         final USSR app = new USSR();
         // запуск асинхронной операции
@@ -26,7 +26,7 @@ public class USSR extends JFrame  {
         SwingUtilities.invokeLater (
             new Runnable() {
                 public void run() {
-                    animator.start();
+                    sAnimator.start();
                 }
             }
         );
@@ -38,7 +38,7 @@ public class USSR extends JFrame  {
         DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
-        animator = new Animator(glcanvas);
+        sAnimator = new Animator(glcanvas);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         setSize(800, 800);
         centerWindow(this);

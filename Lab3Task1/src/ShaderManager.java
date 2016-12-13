@@ -42,6 +42,7 @@ public class ShaderManager {
 		gl.glValidateProgram(shaderprogram);
 		IntBuffer intBuffer = IntBuffer.allocate(1);
 		gl.glGetProgramiv(shaderprogram, GL2.GL_LINK_STATUS,intBuffer);
+		System.out.println(intBuffer);
 		if (intBuffer.get(0) != 1) {
 			gl.glGetProgramiv(shaderprogram, GL2.GL_INFO_LOG_LENGTH,intBuffer);
 			int size = intBuffer.get(0);
