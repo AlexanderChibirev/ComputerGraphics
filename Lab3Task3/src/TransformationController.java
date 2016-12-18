@@ -1,52 +1,48 @@
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-public class TransformationController  extends KeyAdapter {
+public class TransformationController {
 	
 	public static boolean sKeyPressedPlus = false;
 	public static boolean sKeyPressedMinus = false;	
 	
-	private float mCurrentTwistValue = 1;
-	private final float MIN_TWIST = -2.f;
-	private final float MAX_TWIST = 2.f;
-	private final float NEXT_TWIST_STEP = 1f;
+	private float mCurrentTransformTime = 0;
 	
-	@Override
-	public void keyPressed(KeyEvent e) {
-	  if (e.getKeyCode() == KeyEvent.VK_1) {
-		  sKeyPressedPlus = true;
-		//  if(mCurrentTwistValue > MIN_TWIST) {
-			  mCurrentTwistValue -= NEXT_TWIST_STEP;
-		//  }
-		 // else
-		 // {
-			//  mCurrentTwistValue =  MIN_TWIST;
-		 // } 
-		  
-	  }
-	  else if (e.getKeyCode() == KeyEvent.VK_2) {
-		  sKeyPressedMinus = true;
-		  mCurrentTwistValue += NEXT_TWIST_STEP;
-		  System.out.println(mCurrentTwistValue);
-		 
-		//  if(mCurrentTwistValue < MAX_TWIST) {
-			  mCurrentTwistValue += NEXT_TWIST_STEP;
-		//  }
-		//  else
-		//  {
-		//	  mCurrentTwistValue = MAX_TWIST;
-		//  }
+	private final float MIN_TIME = 0.f;
+	private final float MAX_TIME = 1.f;
+	private final float TRANSFORMATION_SPEED = 0.2f;
+	private final float MAX_PAUSE = 1.f;
+	
+	public enum TransformationState {
+		Forward,
+		Reverse,
+		Pause
 	}	
-	  System.out.println(mCurrentTwistValue);
+	TransformationState mState = TransformationState.Forward;	
+	private float mCurrentPauseTime = 0.f;
+	
+	public void update(float deltaSeconds) {
+		switch (mState)
+		{
+		case Forward:
+			mCurrentTransformTime = Math.min(mCurrentTransformTime + deltaSeconds * TRANSFORMATION_SPEED, MAX_TIME);
+			mState = mCurrentTransformTime == MAX_TIME ? TransformationState.Pause : TransformationState.Forward;
+			break;
+		case Reverse:
+			mCurrentTransformTime = Math.max(mCurrentTransformTime - deltaSeconds * TRANSFORMATION_SPEED, MIN_TIME);
+			mState = mCurrentTransformTime == MIN_TIME ? TransformationState.Pause : TransformationState.Reverse;
+			break;
+		case Pause:
+			mCurrentPauseTime = Math.min(mCurrentPauseTime + deltaSeconds, MAX_PAUSE);
+			if (mCurrentPauseTime == MAX_PAUSE)
+			{
+				mState = mCurrentTransformTime == MAX_TIME ? TransformationState.Reverse : TransformationState.Forward;
+				mCurrentPauseTime = 0.f;
+			}
+		default:
+			break;
+		}
 	}
 	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		sKeyPressedPlus = false;
-		sKeyPressedMinus = false;
+	public float getCurrentValue() {		
+		return mCurrentTransformTime;
 	}
-
-	public float getCurrentValue() {
-		return mCurrentTwistValue;
-	}
+	
 }

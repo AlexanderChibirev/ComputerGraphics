@@ -7,7 +7,6 @@ import com.jogamp.opengl.util.*;
 
 
 public class Main extends JFrame {
-	private CustomListener mMouseListener = new CustomListener();
 	private static final long serialVersionUID = -2687152741472560149L;
 	public static Animator animator = null;
     public static void main(String[] args) {
@@ -33,13 +32,9 @@ public class Main extends JFrame {
     public Main() {
         super("Lab3Task2");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        TransformationController inputHandler =  new TransformationController();
-		addKeyListener(inputHandler);
-        DialDisplay display = new DialDisplay(inputHandler);
+        DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
-        glcanvas.addMouseMotionListener(mMouseListener);
-        glcanvas.addMouseListener(mMouseListener);
         animator = new Animator(glcanvas);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         setSize(800, 800);

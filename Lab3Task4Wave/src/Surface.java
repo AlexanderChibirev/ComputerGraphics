@@ -32,8 +32,8 @@ public class Surface {
 	private Vector2f mCenterWave = new Vector2f(0,0);
 	private Boolean mIsChanging = false;
 	private ShaderProgram mShaderProgram;
-	private int mTextureBear;
-	private int mTextureSpace;
+	private int mTextureBilberry;
+	private int mTextureForest;
 	private Texture textureForest;
 	private Texture textureBilberry;
 	
@@ -56,10 +56,9 @@ public class Surface {
 	private void initTextue(GL2 gl) {		
 		try{
 			textureBilberry = TextureIO.newTexture(new File("img/bilberry.jpg"), true);
-			//mTextureBear = (textureBear.getTextureObject(gl));
+			mTextureBilberry = (textureBilberry.getTextureObject(gl));
 			textureForest = TextureIO.newTexture(new File("img/forest.jpg"), true);
-			//mTextureSpace = (textureSpace.getTextureObject(gl));
-			
+			mTextureForest = (textureForest.getTextureObject(gl));
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -96,24 +95,16 @@ public class Surface {
 	}
 
 	public void draw(GLAutoDrawable drawable) throws Exception {
-		GL2 gl = drawable.getGL().getGL2();
-		
-		gl.glActiveTexture(GL2.GL_TEXTURE1);
-		textureForest.bind(gl);
-		
-		gl.glActiveTexture(GL2.GL_TEXTURE0);
-		textureBilberry.bind(gl);
-		
+		GL2 gl = drawable.getGL().getGL2();		
 		mShaderProgram.use(gl);
 		switch(mMode) {
-			
 			case Normal:
-				mShaderProgram.findUniform(gl, "tex0",0);
-				mShaderProgram.findUniform(gl, "tex1", 1);
+				mShaderProgram.findUniform(gl, "tex0", mTextureForest);
+				mShaderProgram.findUniform(gl, "tex1", mTextureBilberry);
 				break;
-			case Revert:
-				mShaderProgram.findUniform(gl, "tex0", GL2.GL_TEXTURE1);
-				mShaderProgram.findUniform(gl, "tex1", GL2.GL_TEXTURE0);
+			case Revert:				
+				mShaderProgram.findUniform(gl, "tex0", mTextureBilberry);
+				mShaderProgram.findUniform(gl, "tex1", mTextureForest);
 				break;
 		}
 		mShaderProgram.findUniform(gl, "time", mAnimationTime);

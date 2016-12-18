@@ -77,17 +77,14 @@ public class ShaderProgram {
 		gl.glUseProgram(mProgramId);
 	}
 
-	public void updateUniformVars(GL2 gl, int time, float value) {
-		assert(time != -1);
-		gl.glUniform1f(time, value);
-	}
-	
-	final int findUniform(GL2 gl, String name) throws Exception {
+	final void findUniform(GL2 gl, String name, float value) throws Exception {
+
 		int location = gl.glGetUniformLocation(mProgramId, name);
 		if (location == -1) {
+
 			throw new Exception("Wrong shader variable name: " + name);
 		}
-		return location;
+		gl.glUniform1f(location, value);
 	}
 	
 	void dispose(GL2 gl) {

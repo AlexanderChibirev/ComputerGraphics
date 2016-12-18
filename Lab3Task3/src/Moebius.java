@@ -1,4 +1,3 @@
-import com.jogamp.common.util.Function;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
@@ -8,90 +7,11 @@ import java.util.Vector;
 import java.util.concurrent.Callable;
 
 import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
-
-/*final class FunctionSurfaces{
-
-    static Vector3f getPosition(final Function<Vector3f, Float> fn, float x, float z){
-
-        return fn.eval(x, z);
-    }
-
-    static void calculateNormals(Vector<SVertexP3N> vertice, final Function<Vector3f, Float> fn, float step){
-
-        for (SVertexP3N vertices : vertice) {
-        final Vector3f position = vertices.position;
-        Vector3f dir1 = getPosition(fn, position.x, position.z + step);
-        dir1.sub(position);
-        Vector3f dir2 = getPosition(fn, position.x + step, position.z);
-        dir2.sub(position);
-
-        vertices.normal = MathVector3f.normalize(MathVector3f.cross(dir1, dir2));
-        }
-    }
-    
-    static void calculateNormal(SVertexP3N vertice, final Function<Vector3f, Float> fn, float step){
-
-        final Vector3f position = vertice.position;
-        Vector3f dir1 = getPosition(fn, position.x, position.z + step);
-        dir1.sub(position);
-        Vector3f dir2 = getPosition(fn, position.x + step, position.z);
-        dir2.sub(position);
-
-        vertice.normal = MathVector3f.normalize(MathVector3f.cross(dir1, dir2));
-    }
-
-    static void doWithBindedArrays(Vector<Vector2f> vertices, GLAutoDrawable drawable, Callable callable){
-
-        GL2 gl = drawable.getGL().getGL2();
-
-        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-
-        FloatBuffer normals = fillNormalsArray(vertices);
-        normals.rewind();
-        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, normals);
-
-        try {
-            callable.call();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        
-        gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-    }
-
-    private static FloatBuffer fillPositionsArray(final Vector<SVertexP3N> vertices){
-
-        FloatBuffer positions = BufferUtil.newFloatBuffer(vertices.size() * 3);
-
-        for (SVertexP3N vertice : vertices) {
-
-            positions.put(vertice.position.x);
-            positions.put(vertice.position.y);
-            positions.put(vertice.position.z);
-        }
-
-        return positions;
-    }
-
-    private static FloatBuffer fillNormalsArray(Vector<Vector2f> vertices){
-
-        FloatBuffer normals = BufferUtil.newFloatBuffer(vertices.size() * 3 + 1);
-        for (Vector2f vertice : vertices) {
-
-            normals.put(vertice.x);
-            normals.put(vertice.y);
-        }
-        return normals;
-    }
-}*/
 
 class SolidMoebiusStrips {
 
     private Vector<Vector2f> mVertices = new Vector<Vector2f>();
     private IntBuffer mIndicies;
-    int mdrawMode = GL2.GL_FILL;
 
     private void calculateTriangleStripIndicies(int columnCount, int rowCount) {
 
@@ -142,7 +62,6 @@ class SolidMoebiusStrips {
   
 	void draw(GLAutoDrawable drawable) {
         final GL2 gl = drawable.getGL().getGL2();
-        
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
         doWithBindedArrays(mVertices, drawable, new Callable<Object>() {
             @Override
@@ -155,14 +74,13 @@ class SolidMoebiusStrips {
     }
 
 	private void doWithBindedArrays(Vector<Vector2f> vertices, GLAutoDrawable drawable, Callable<?> callable) {
-		// TODO Auto-generated method stub
 		 GL2 gl = drawable.getGL().getGL2();
 
 	        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 
 	        FloatBuffer normals = fillNormalsArray(vertices);
 	        normals.rewind();
-	        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, normals);//+
+	        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, normals);
 
 	        try {
 	            callable.call();
@@ -178,7 +96,6 @@ class SolidMoebiusStrips {
 
         FloatBuffer normals = BufferUtil.newFloatBuffer(vertices.size() * 2);
         for (Vector2f vertice : vertices) {
-
             normals.put(vertice.x);
             normals.put(vertice.y);
         }

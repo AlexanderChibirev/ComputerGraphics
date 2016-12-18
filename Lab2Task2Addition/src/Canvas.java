@@ -72,7 +72,6 @@ public class Canvas extends GLCanvas implements GLEventListener {
         gl.glTranslatef(0.0f, 0.0f, -10.0f);
         gl.glRotatef(mouseListener.getDeltaX(), 0.0f, 1.0f, 0.0f);
         gl.glRotatef(mouseListener.getDeltaY(), 1.0f, 0.0f, 0.0f);
-
         solidMoebiusStrip.draw(drawable);
     }
 
