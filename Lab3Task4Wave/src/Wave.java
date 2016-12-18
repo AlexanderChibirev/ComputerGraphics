@@ -1,17 +1,20 @@
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.*;
+import com.jogamp.opengl.util.Animator;
 
-
-public class Main extends JFrame {
+public class Wave extends JFrame  {
+	private static final long serialVersionUID = -8427804125587735669L;
 	private CustomListener mMouseListener = new CustomListener();
-	private static final long serialVersionUID = -2687152741472560149L;
-	public static Animator animator = null;
+	public static Animator sAnimator = null;
     public static void main(String[] args) {
-        final Main app = new Main();
+        final Wave app = new Wave();
         // запуск асинхронной операции
         SwingUtilities.invokeLater (
             new Runnable() {
@@ -24,29 +27,27 @@ public class Main extends JFrame {
         SwingUtilities.invokeLater (
             new Runnable() {
                 public void run() {
-                    animator.start();
+                    sAnimator.start();
                 }
             }
         );
     }
   
-    public Main() {
-        super("Lab3Task2");
+    public Wave() {
+        super("Wave");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        TransformationController inputHandler =  new TransformationController();
-		addKeyListener(inputHandler);
-        DialDisplay display = new DialDisplay(inputHandler);
+        DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
         glcanvas.addMouseMotionListener(mMouseListener);
         glcanvas.addMouseListener(mMouseListener);
-        animator = new Animator(glcanvas);
+        sAnimator = new Animator(glcanvas);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
         setSize(800, 800);
         centerWindow(this);
     }
     
-    public void centerWindow(Component frame) {
+    private void centerWindow(Component frame) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowX = Math.max(0,(screenSize.width - frame.getWidth()) / 2);
 		int windowY = Math.max(0,(screenSize.height - frame.getHeight()) / 2);

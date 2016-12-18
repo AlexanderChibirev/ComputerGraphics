@@ -2,12 +2,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-class MouseControl implements MouseMotionListener, MouseListener {
+class CustomListener implements MouseMotionListener, MouseListener {
 
-    private int startX;
-    private int startY;
-    private int deltaX;
-    private int deltaY;
+    private static int startX;
+    private static int startY;
+    private static int deltaX;
+    private static int deltaY;
     private int oldX;
     private int oldY;
 
@@ -19,13 +19,11 @@ class MouseControl implements MouseMotionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         startX = e.getX() - oldX;
-        System.out.println(startX);
         startY = e.getY() - oldY;
     }
-
+ 
     @Override
     public void mouseReleased(MouseEvent e) {
-
         oldX = deltaX;
         oldY = deltaY;
     }
@@ -42,7 +40,6 @@ class MouseControl implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
         deltaX = e.getX() - startX;
         deltaY = e.getY() - startY;
     }
@@ -52,13 +49,23 @@ class MouseControl implements MouseMotionListener, MouseListener {
 
     }
 
-    int getDeltaX() {
+    static int getDeltaX() {
 
         return deltaX;
     }
 
-    int getDeltaY() {
+    static int getDeltaY() {
 
         return deltaY;
+    }
+    
+    static int getX() {
+
+        return startX;
+    }
+
+    static int getY() {
+
+        return startY;
     }
 }

@@ -9,19 +9,19 @@ public class TransformationController  extends KeyAdapter {
 	private float mCurrentTwistValue = 1;
 	private final float MIN_TWIST = -2.f;
 	private final float MAX_TWIST = 2.f;
-	private final float NEXT_TWIST_STEP = 0.05f;
+	private final float NEXT_TWIST_STEP = 1f;
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
 	  if (e.getKeyCode() == KeyEvent.VK_1) {
 		  sKeyPressedPlus = true;
-		  if(mCurrentTwistValue > MIN_TWIST) {
+		//  if(mCurrentTwistValue > MIN_TWIST) {
 			  mCurrentTwistValue -= NEXT_TWIST_STEP;
-		  }
-		  else
-		  {
-			  mCurrentTwistValue =  MIN_TWIST;
-		  } 
+		//  }
+		 // else
+		 // {
+			//  mCurrentTwistValue =  MIN_TWIST;
+		 // } 
 		  
 	  }
 	  else if (e.getKeyCode() == KeyEvent.VK_2) {
@@ -29,13 +29,13 @@ public class TransformationController  extends KeyAdapter {
 		  mCurrentTwistValue += NEXT_TWIST_STEP;
 		  System.out.println(mCurrentTwistValue);
 		 
-		  if(mCurrentTwistValue < MAX_TWIST) {
+		//  if(mCurrentTwistValue < MAX_TWIST) {
 			  mCurrentTwistValue += NEXT_TWIST_STEP;
-		  }
-		  else
-		  {
-			  mCurrentTwistValue = MAX_TWIST;
-		  }
+		//  }
+		//  else
+		//  {
+		//	  mCurrentTwistValue = MAX_TWIST;
+		//  }
 	}	
 	  System.out.println(mCurrentTwistValue);
 	}

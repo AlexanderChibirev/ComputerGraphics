@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
-final class FunctionSurfaces{
+/*final class FunctionSurfaces{
 
     static Vector3f getPosition(final Function<Vector3f, Float> fn, float x, float z){
 
@@ -49,7 +49,7 @@ final class FunctionSurfaces{
 
         FloatBuffer normals = fillNormalsArray(vertices);
         normals.rewind();
-        gl.glVertexPointer(3, GL2.GL_FLOAT, 0, normals);
+        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, normals);
 
         try {
             callable.call();
@@ -85,7 +85,7 @@ final class FunctionSurfaces{
         }
         return normals;
     }
-}
+}*/
 
 class SolidMoebiusStrips {
 
@@ -95,8 +95,8 @@ class SolidMoebiusStrips {
 
     private void calculateTriangleStripIndicies(int columnCount, int rowCount) {
 
-       mIndicies.clear();
-        
+    	mIndicies.clear();
+    	
         for (int ci = 0; ci < columnCount - 1; ci++)
         {
             if (ci % 2 == 0)
@@ -121,7 +121,7 @@ class SolidMoebiusStrips {
         mIndicies.rewind();
     }
 
-    void tesselate(final int slices, final int stacks){
+    void tesselate(final int slices, final int stacks) {
         mIndicies = BufferUtil.newIntBuffer(slices * stacks * 2);
         mVertices.clear();
         for (int ci = 0; ci < slices ; ++ci)
@@ -130,30 +130,59 @@ class SolidMoebiusStrips {
     		for (int ri = 0; ri < stacks; ++ri)
     		{
     			final float v = ((float)(ri) / (float)(stacks - 1));
-
-    			//glm::vec2 vertex;
-    			//vertex = { u, v };
-    			//m_vertices.push_back(vertex);
+    			
+    			final Vector2f vertex = new Vector2f(u, v );
+    			mVertices.add(vertex);
     		}
     	}
         calculateTriangleStripIndicies(slices, stacks);
     }
 
-    private void drawElements(GL2 gl){
 
-        gl.glDrawElements(GL2.GL_TRIANGLE_STRIP, mIndicies.limit(), GL2.GL_UNSIGNED_INT, mIndicies);
-    }
-
-    void draw(GLAutoDrawable drawable){
+  
+	void draw(GLAutoDrawable drawable) {
         final GL2 gl = drawable.getGL().getGL2();
+        
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-        FunctionSurfaces.doWithBindedArrays(mVertices, drawable, new Callable() {
+        doWithBindedArrays(mVertices, drawable, new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                drawElements(gl);
+            	gl.glDrawElements(GL2.GL_TRIANGLE_STRIP, mIndicies.limit(),
+            		GL2.GL_UNSIGNED_INT, mIndicies);
                 return null;
             }
         });
+    }
+
+	private void doWithBindedArrays(Vector<Vector2f> vertices, GLAutoDrawable drawable, Callable<?> callable) {
+		// TODO Auto-generated method stub
+		 GL2 gl = drawable.getGL().getGL2();
+
+	        gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+
+	        FloatBuffer normals = fillNormalsArray(vertices);
+	        normals.rewind();
+	        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, normals);//+
+
+	        try {
+	            callable.call();
+	        }
+	        catch (Exception e){
+	            e.printStackTrace();
+	        }
+	        
+	        gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+	}
+	
+    private FloatBuffer fillNormalsArray(Vector<Vector2f> vertices){
+
+        FloatBuffer normals = BufferUtil.newFloatBuffer(vertices.size() * 2);
+        for (Vector2f vertice : vertices) {
+
+            normals.put(vertice.x);
+            normals.put(vertice.y);
+        }
+        return normals;
     }
 }
 
