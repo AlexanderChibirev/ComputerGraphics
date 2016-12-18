@@ -32,7 +32,9 @@ public class Main extends JFrame {
     public Main() {
         super("Lab3Task2");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DialDisplay display = new DialDisplay();
+        TransformationController inputHandler =  new TransformationController();
+		addKeyListener(inputHandler);
+        DialDisplay display = new DialDisplay(inputHandler);
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
         animator = new Animator(glcanvas);

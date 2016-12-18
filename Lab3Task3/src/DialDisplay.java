@@ -16,6 +16,11 @@ public class DialDisplay implements GLEventListener  {
 	private ShaderProgram mProgramPositiveNormals;
 	private ShaderProgram mProgramNegativeNormals;	
 	
+	public DialDisplay(TransformationController inputHandler) {
+		mTransformationController = inputHandler;
+	}
+	
+	
 	private void setUniformForPositiveNormals(GL2 gl) {
 		try {
 			mProgramPositiveNormals.findUniform(gl, "time",	mTransformationController.getCurrentValue());
@@ -39,7 +44,6 @@ public class DialDisplay implements GLEventListener  {
         long diff = time - this.mLast;
         this.mLast = time;
     	float elapsedTime = (float) (diff / 1.0e9);
-    	mTransformationController.update(elapsedTime);
 	}
 	private void draw(GLAutoDrawable gLDrawable ) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
