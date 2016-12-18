@@ -2,6 +2,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.vecmath.Vector2f;
+
 class CustomListener implements MouseMotionListener, MouseListener {
 
     private static int startX;
@@ -10,22 +12,26 @@ class CustomListener implements MouseMotionListener, MouseListener {
     private static int deltaY;
     private int oldX;
     private int oldY;
+    static boolean isPressed;
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+    	
+    	
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         startX = e.getX() - oldX;
         startY = e.getY() - oldY;
-    }
- 
+        isPressed = true;
+    }    
+    
     @Override
     public void mouseReleased(MouseEvent e) {
         oldX = deltaX;
-        oldY = deltaY;
+        oldY = deltaY;    
+        isPressed = false;
     }
 
     @Override

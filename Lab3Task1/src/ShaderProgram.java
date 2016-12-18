@@ -4,8 +4,6 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Vector;
 
-import javax.vecmath.Vector2f;
-
 public class ShaderProgram {
 
 	private int mProgramId = 0;
@@ -30,6 +28,12 @@ public class ShaderProgram {
 			gl.glDeleteShader(shaderId);
 		}
 		mShaders.clear();
+	}
+	
+	public void updateUniformVars(GL2 gl, int variable, float value ) {
+		//int mandel_iterations = gl.glGetUniformLocation(shaderprogram, "TWIST");
+		//assert(mandel_iterations != -1);
+		gl.glUniform1f(variable, value);
 	}
 	
 	private void checkStatus(String logError, IntBuffer status, GL2 gl) {
@@ -74,6 +78,7 @@ public class ShaderProgram {
 
 		gl.glLinkProgram(mProgramId);
 		IntBuffer linkStatus =  IntBuffer.allocate(1);
+
 		gl.glGetProgramiv(mProgramId, GL2.GL_LINK_STATUS, linkStatus);
 		checkStatus("link", linkStatus, gl);
 		freeShaders(gl);
@@ -83,25 +88,16 @@ public class ShaderProgram {
 
 		gl.glUseProgram(mProgramId);
 	}
-	
-	final void findUniform(GL2 gl, String name, float value) throws Exception {
+
+	final int findUniform(GL2 gl, String name) throws Exception {
 
 		int location = gl.glGetUniformLocation(mProgramId, name);
 		if (location == -1) {
 
 			throw new Exception("Wrong shader variable name: " + name);
 		}
-		gl.glUniform1f(location, value);
-	}
-	
-	final void findUniform(GL2 gl, String name, Vector2f value) throws Exception {
 
-		int location = gl.glGetUniformLocation(mProgramId, name);
-		if (location == -1) {
-
-			throw new Exception("Wrong shader variable name: " + name);
-		}
-		gl.glUniform2fv(location, VerticeVec.toBuffer(value).limit(), VerticeVec.toBuffer(value));
+		return location;
 	}
 
 	void dispose(GL2 gl) {

@@ -68,8 +68,9 @@ public class VerticeVec {
 
 	public static FloatBuffer toBuffer(Vector2f value) {
         FloatBuffer buffer = BufferUtil.newFloatBuffer(2);
+        
         buffer.put(value.x);
-        buffer.put(value.y);    
+        buffer.put(value.y);
         return buffer;    
 	}
 }

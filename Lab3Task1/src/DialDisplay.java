@@ -1,12 +1,17 @@
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 
 public class DialDisplay implements GLEventListener  {
-	private ShaderManager mProgramTwist = new ShaderManager();
 	private Line3D mLineObj = new Line3D(0, 2.f * (float)Math.PI,  (float)Math.PI / 1000.f);
 	private TwistValueController mTwistController;
+	private ShaderProgram mShaderProgram;
+	
 	public DialDisplay(TwistValueController inputHandler) {
 		mTwistController = inputHandler;
 	}
@@ -20,17 +25,48 @@ public class DialDisplay implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		mProgramTwist.start(gl);
+		mShaderProgram.use(gl);
 			int mRZ = 2;
 			float x = -0.15f;
 			gl.glTranslated(x, 0, 0);
 			gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
-			mProgramTwist.updateUniformVars(gl, mTwistController.getCurrentValue());
+			try {
+				mShaderProgram.updateUniformVars(gl, mShaderProgram.findUniform(gl, "TWIST"), mTwistController.getCurrentValue() );
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//updateUniformVars(gl, mTwistController.getCurrentValue());
 	        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
 	        mLineObj.draw(drawable);
 	        gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-        mProgramTwist.stop(gl);
+        
+	}
+	
+	private void initShaderProgram(GL2 gl) {
+        String[] vertexShader = loadShaderFileFromSrc("vertex.vs");
 
+        mShaderProgram = new ShaderProgram(gl);
+        mShaderProgram.compileShader(gl, vertexShader, ShaderType.Vertex);
+      
+        mShaderProgram.link(gl);
+    }
+	
+	private String[] loadShaderFileFromSrc( String fileName) {
+		StringBuilder sb = new StringBuilder();
+		try{
+			InputStream is = getClass().getResourceAsStream(fileName);
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line;
+			while ((line = br.readLine())!=null){
+				sb.append(line);
+				sb.append('\n');
+			}
+			is.close();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return new String[]{sb.toString()};
 	}
 
 	@Override
@@ -42,12 +78,7 @@ public class DialDisplay implements GLEventListener  {
 	public void init(GLAutoDrawable drawable) {
 		final GL2 gl = drawable.getGL().getGL2();
         gl.setSwapInterval(1);
-		gl.glShadeModel(GL2.GL_FLAT);
-		try {
-			mProgramTwist.attachShaders(gl);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        initShaderProgram(gl);
 	}
 
 	@Override

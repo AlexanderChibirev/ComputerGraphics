@@ -65,7 +65,6 @@ public class ShaderManager {
 		int mandel_iterations = gl.glGetUniformLocation(shaderprogram, "TWIST");
 		assert(mandel_iterations != -1);
 		gl.glUniform1f(mandel_iterations, cur);
-		
 	}
 	
 	public void start(GL2 gl) {

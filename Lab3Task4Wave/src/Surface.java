@@ -24,7 +24,7 @@ public class Surface {
 		Revert,
 	};	
 	private final float MAX_TEX_COORD = 1.f;
-	private final float WAVE_SPEED = 1.f;
+	private final float WAVE_SPEED = 3.f;
 	private Vector<SVertexP2T2> mVertices;
 	private IntBuffer mIndicies;
 	private ChangingImage mMode = ChangingImage.None;
@@ -32,10 +32,10 @@ public class Surface {
 	private Vector2f mCenterWave = new Vector2f(0,0);
 	private Boolean mIsChanging = false;
 	private ShaderProgram mShaderProgram;
-	private int mTextureCat;
-	private int mTextureSky;
-	private Texture textureCat;
-	private Texture textureSky;
+	private int mTextureBear;
+	private int mTextureSpace;
+	private Texture textureForest;
+	private Texture textureBilberry;
 	
 	Surface(Vector2f leftTop, Vector2f size, GL2 gl) {
 		
@@ -55,10 +55,10 @@ public class Surface {
 	
 	private void initTextue(GL2 gl) {		
 		try{
-			textureCat = TextureIO.newTexture(new File("img/cat.jpg"), true);
-			mTextureCat = (textureCat.getTextureObject(gl));
-			textureSky = TextureIO.newTexture(new File("img/sky.jpg"), true);
-			mTextureSky = (textureSky.getTextureObject(gl));
+			textureBilberry = TextureIO.newTexture(new File("img/bilberry.jpg"), true);
+			//mTextureBear = (textureBear.getTextureObject(gl));
+			textureForest = TextureIO.newTexture(new File("img/forest.jpg"), true);
+			//mTextureSpace = (textureSpace.getTextureObject(gl));
 			
 		}
 		catch(IOException e){
@@ -99,40 +99,25 @@ public class Surface {
 		GL2 gl = drawable.getGL().getGL2();
 		
 		gl.glActiveTexture(GL2.GL_TEXTURE1);
-		textureCat.bind(gl);
+		textureForest.bind(gl);
 		
 		gl.glActiveTexture(GL2.GL_TEXTURE0);
-		textureSky.bind(gl);
-		
-
-		
+		textureBilberry.bind(gl);
 		
 		mShaderProgram.use(gl);
 		switch(mMode) {
-			case None:
+			
 			case Normal:
-				mShaderProgram.updateUniformVar(gl,
-						mShaderProgram.findUniform(gl, "tex0"),
-						GL2.GL_TEXTURE0);
-				mShaderProgram.updateUniformVar(gl,
-						mShaderProgram.findUniform(gl, "tex1"),
-						GL2.GL_TEXTURE1);
+				mShaderProgram.findUniform(gl, "tex0",0);
+				mShaderProgram.findUniform(gl, "tex1", 1);
 				break;
 			case Revert:
-				mShaderProgram.updateUniformVar(gl,
-						mShaderProgram.findUniform(gl, "tex0"),
-						GL2.GL_TEXTURE1);
-				mShaderProgram.updateUniformVar(gl,
-						mShaderProgram.findUniform(gl, "tex1"),
-						GL2.GL_TEXTURE0);
+				mShaderProgram.findUniform(gl, "tex0", GL2.GL_TEXTURE1);
+				mShaderProgram.findUniform(gl, "tex1", GL2.GL_TEXTURE0);
 				break;
 		}
-		mShaderProgram.updateUniformVar(gl,
-				mShaderProgram.findUniform(gl, "time"),
-				mAnimationTime);
-		mShaderProgram.updateUniformVar(gl,
-				mShaderProgram.findUniform(gl, "center"),
-				mCenterWave);
+		mShaderProgram.findUniform(gl, "time", mAnimationTime);
+		mShaderProgram.findUniform(gl, "center", mCenterWave);
 		
 		BindedUtils.doWithBindedArrays(mVertices, drawable, new Callable<Object>() {
 	            @Override
@@ -145,10 +130,9 @@ public class Surface {
 	}
 	
 	public void update(double elapsedTime) {
-		//System.out.println(mAnimationTime);
 		mAnimationTime += elapsedTime * WAVE_SPEED;
 		if (mIsChanging) {
-			if (mAnimationTime >= 10.f) {
+			if (mAnimationTime >= 5.f) {
 				mIsChanging = false;
 			}
 		}
@@ -158,6 +142,7 @@ public class Surface {
 	{
 		if (!mIsChanging)
 		{
+			System.out.println(pos);
 			mCenterWave = pos;
 			mMode = mMode == ChangingImage.Normal ? ChangingImage.Revert : ChangingImage.Normal;
 			mIsChanging = true;
