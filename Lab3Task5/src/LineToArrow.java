@@ -9,11 +9,11 @@ import javax.swing.SwingUtilities;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
 
-public class Cannabola extends JFrame  {
+public class LineToArrow extends JFrame  {
 	private static final long serialVersionUID = -8427804125587735669L;
 	public static Animator animator = null;
     public static void main(String[] args) {
-        final Cannabola app = new Cannabola();
+        final LineToArrow app = new LineToArrow();
         // запуск асинхронной операции
         SwingUtilities.invokeLater (
             new Runnable() {
@@ -32,8 +32,8 @@ public class Cannabola extends JFrame  {
         );
     }
   
-    public Cannabola() {
-        super("GeometryShader");
+    public LineToArrow() {
+        super("Cannabola");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         TwistValueController inputHandler =  new TwistValueController();
 		addKeyListener(inputHandler);
