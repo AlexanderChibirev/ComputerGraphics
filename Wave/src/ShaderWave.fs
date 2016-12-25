@@ -13,7 +13,7 @@ void main(void)
 	float len = length(p); //длина вектора 
 	vec2 uv = tc + (p / (len * 12.0 - time * 4.0)) //uv- кординаты на текстуре
 		 * sin(len * 12.0 - time *4.0)
-		 * 0.1f; //0.1f - коэфициент силы волны 
+		 * 0.1f; //0.1f - коэфициент силы волны
 	if (length(-1.0f + 2.0f * (posMouse - uv)) <  len * 12.0f - time * 4.0f) //
 	{
 		gl_FragColor = vec4(texture2D(tex0, uv).xyz, 1.0f); 
