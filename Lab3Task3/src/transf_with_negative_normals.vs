@@ -72,5 +72,4 @@ void main()
     vec4 position = gl_ModelViewProjectionMatrix * vec4(pos,1);
     gl_Position = position;
 
-
 }

@@ -8,10 +8,9 @@ public class BufferUtil {
 	public static  IntBuffer mIntBuf;
 	
 	public static FloatBuffer newFloatBuffer(final int value) {
-		ByteBuffer buf= ByteBuffer.allocateDirect(value * 5);
+		ByteBuffer buf= ByteBuffer.allocateDirect(value * 4);
 		buf.order(ByteOrder.nativeOrder());
 		mFloatBuf = buf.asFloatBuffer();
-		mFloatBuf.rewind();
 		return mFloatBuf;
 	}
 

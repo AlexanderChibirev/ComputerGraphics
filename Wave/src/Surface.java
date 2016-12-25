@@ -32,8 +32,6 @@ public class Surface {
 	private Vector2f mCenterWave = new Vector2f(0,0);
 	private Boolean mIsChanging = false;
 	private ShaderProgram mShaderProgram;
-	private int mTextureBilberry;
-	private int mTextureForest;
 	private Texture textureForest;
 	private Texture textureBilberry;
 	
@@ -43,7 +41,6 @@ public class Surface {
 		SVertexP2T2 vRightTop = new SVertexP2T2(VerticeVec.sum(leftTop, new Vector2f(size.x, 0.f)), new Vector2f(MAX_TEX_COORD, 0));
 		SVertexP2T2 vLeftBottom = new SVertexP2T2(VerticeVec.sum(leftTop, new Vector2f(0.f, size.y)), new Vector2f(0, MAX_TEX_COORD));
 		SVertexP2T2 vRightBottom = new SVertexP2T2(VerticeVec.sum(leftTop, new Vector2f(size.x, size.y)), new Vector2f(MAX_TEX_COORD, MAX_TEX_COORD));
-
 		mVertices = new Vector<>(Arrays.asList(vLeftTop, vRightTop, vLeftBottom, vRightBottom));
 		int[] indArray = {0, 1, 2, 1, 3, 2};
 		mIndicies = BufferUtil.newIntBuffer(6);
@@ -56,9 +53,7 @@ public class Surface {
 	private void initTextue(GL2 gl) {		
 		try{
 			textureBilberry = TextureIO.newTexture(new File("img/bilberry.jpg"), true);
-			mTextureBilberry = (textureBilberry.getTextureObject(gl));
 			textureForest = TextureIO.newTexture(new File("img/forest.jpg"), true);
-			mTextureForest = (textureForest.getTextureObject(gl));
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -96,19 +91,27 @@ public class Surface {
 
 	public void draw(GLAutoDrawable drawable) throws Exception {
 		GL2 gl = drawable.getGL().getGL2();		
+		gl.glActiveTexture(GL2.GL_TEXTURE1);
+		textureBilberry.bind(gl);
+		gl.glActiveTexture(GL2.GL_TEXTURE0);
+		textureForest.bind(gl);
+		
 		mShaderProgram.use(gl);
+		
 		switch(mMode) {
 			case Normal:
-				mShaderProgram.findUniform(gl, "tex0", mTextureForest);
-				mShaderProgram.findUniform(gl, "tex1", mTextureBilberry);
+				mShaderProgram.findUniform(gl, "tex0", 0);//0 = Position texture in stack textures
+				mShaderProgram.findUniform(gl, "tex1", 1);//1 = Position texture in stack textures
 				break;
 			case Revert:				
-				mShaderProgram.findUniform(gl, "tex0", mTextureBilberry);
-				mShaderProgram.findUniform(gl, "tex1", mTextureForest);
+				mShaderProgram.findUniform(gl, "tex0", 1);//1 = Position texture in stack textures
+				mShaderProgram.findUniform(gl, "tex1", 0);//0 = Position texture in stack textures
 				break;
 		}
 		mShaderProgram.findUniform(gl, "time", mAnimationTime);
-		mShaderProgram.findUniform(gl, "center", mCenterWave);
+		mShaderProgram.findUniform(gl, "posMouseX", mCenterWave.x);
+		mShaderProgram.findUniform(gl, "posMouseY", mCenterWave.y);
+		
 		
 		BindedUtils.doWithBindedArrays(mVertices, drawable, new Callable<Object>() {
 	            @Override
@@ -131,9 +134,10 @@ public class Surface {
 	
 	public void setWaveCenter(final Vector2f pos)
 	{
+		System.out.println(pos);
 		if (!mIsChanging)
 		{
-			System.out.println(pos);
+			//System.out.println(pos);
 			mCenterWave = pos;
 			mMode = mMode == ChangingImage.Normal ? ChangingImage.Revert : ChangingImage.Normal;
 			mIsChanging = true;

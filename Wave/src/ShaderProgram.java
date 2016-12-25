@@ -1,6 +1,7 @@
 import com.jogamp.opengl.GL2;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Vector;
 
@@ -94,6 +95,18 @@ public class ShaderProgram {
 		gl.glUniform1f(location, value);
 	}
 	
+	final void findUniform(GL2 gl, String name, int value) throws Exception {
+
+		int location = gl.glGetUniformLocation(mProgramId, name);
+		if (location == -1) {
+
+			throw new Exception("Wrong shader variable name: " + name);
+		}
+		//System.out.println(value);
+		gl.glUniform1i(location, value);
+		
+	}
+	
 	final void findUniform(GL2 gl, String name, Vector2f value) throws Exception {
 
 		int location = gl.glGetUniformLocation(mProgramId, name);
@@ -101,7 +114,9 @@ public class ShaderProgram {
 
 			throw new Exception("Wrong shader variable name: " + name);
 		}
-		gl.glUniform2fv(location, VerticeVec.toBuffer(value).limit(), VerticeVec.toBuffer(value));
+		FloatBuffer buf = VerticeVec.toBuffer(value);
+		//System.out.println(buf.get(1)); 
+		gl.glUniform2fv(location, buf.limit(), buf);
 	}
 
 	void dispose(GL2 gl) {

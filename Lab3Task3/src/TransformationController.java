@@ -7,7 +7,7 @@ public class TransformationController  extends KeyAdapter {
 	public static boolean sKeyPressedPlus = false;
 	public static boolean sKeyPressedMinus = false;	
 	
-	private float mCurrentTwistValue = 0;
+	private float mCurrentTwistValue = 1;
 	private final float MIN_TWIST = 0.f;
 	private final float MAX_TWIST = 1.f;
 	private final float NEXT_TWIST_STEP = 0.02f;

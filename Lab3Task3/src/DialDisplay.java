@@ -15,7 +15,7 @@ public class DialDisplay implements GLEventListener  {
 	private SolidMoebiusStrips mMobiusBand = new SolidMoebiusStrips();
 	private ShaderProgram mProgramPositiveNormals;
 	private ShaderProgram mProgramNegativeNormals;	
-	
+	private boolean mIsDrawing = false;
 	public DialDisplay(TransformationController inputHandler) {
 		mTransformationController = inputHandler;
 	}
@@ -39,32 +39,32 @@ public class DialDisplay implements GLEventListener  {
 		}
 	}
 	
-	protected void update() {
-        long time = System.nanoTime();
-        long diff = time - this.mLast;
-        this.mLast = time;
-    	float elapsedTime = (float) (diff / 1.0e9);
-	}
 	private void draw(GLAutoDrawable gLDrawable ) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
+		
 		mProgramPositiveNormals.use(gl);
 		setUniformForPositiveNormals(gl);
-		gl.glCullFace(GL2.GL_BACK);		
-		mMobiusBand.draw(gLDrawable);
+		gl.glCullFace(GL2.GL_BACK);
+		mMobiusBand.draw(gLDrawable);	
 		
 		mProgramNegativeNormals.use(gl);
 		setUniformForNegativeNormals(gl);		
 		gl.glCullFace(GL2.GL_FRONT);
 		mMobiusBand.draw(gLDrawable);
-		
-		
 	}
 	
 	@Override
 	public void display(GLAutoDrawable gLDrawable) {
 		final GL2 gl = gLDrawable.getGL().getGL2();
-		update();
-	    draw(gLDrawable);
+		int mRZ = 0;
+		gl.glOrtho (-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
+		if(mIsDrawing == false) {
+			draw(gLDrawable);
+			mIsDrawing = true;
+		}
+		if(mTransformationController.sKeyPressedMinus || mTransformationController.sKeyPressedPlus) {
+			mIsDrawing = false;
+		}		
 	}
 	
 	private void includeMechanisms3DWorld(GL2 gl) {
@@ -141,12 +141,11 @@ public class DialDisplay implements GLEventListener  {
 
 	@Override
 	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
-/*
-		GL2 gl = gLDrawable.getGL().getGL2();
+		/*GL2 gl = gLDrawable.getGL().getGL2();
 	    gl.glViewport(0, 0, width, height);
 	    gl.glMatrixMode(GL2.GL_PROJECTION);
 	    gl.glLoadIdentity();
-	    glu.gluPerspective(45, width/ (float) height, 0.1f, 1000.0);
+	    glu.gluPerspective(187, width/ (float) height, 0.9f, 1000.0);
 	    gl.glMatrixMode(GL2.GL_MODELVIEW);*/
 	}
 

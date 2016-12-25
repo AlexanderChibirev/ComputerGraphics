@@ -22,12 +22,12 @@ public class DialDisplay implements GLEventListener  {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		
 		update();
-		if(CustomListener.isPressed){
-			mSurface.setWaveCenter(new Vector2f(CustomListener.getX() / 2, (800 -  CustomListener.getY() ) / 2));
-		}
-		
+		if(CustomListener.isPressed) {
+			float sizeWindow = 800f;
+			mSurface.setWaveCenter(new Vector2f(CustomListener.getX() / sizeWindow,
+					( sizeWindow - CustomListener.getY()) / sizeWindow));
+		}		
 		
 		try {
 			mSurface.draw(drawable);

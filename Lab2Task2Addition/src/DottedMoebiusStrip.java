@@ -47,7 +47,7 @@ final class FunctionSurface{
         positions.flip();
 
         gl.glNormalPointer(GL2.GL_FLOAT, 0, normals);
-        gl.glVertexPointer(3, GL2.GL_FLOAT, 0, positions);
+        gl.glVertexPointer(2, GL2.GL_FLOAT, 0, positions);
 
         try {
             callable.call();
