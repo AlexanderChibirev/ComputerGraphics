@@ -37,6 +37,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private Texture starsTex;
 	private final static int FLOOR_LEN = 20;  // should be even
 	private int starsDList;
+	
+	private Camera mCamera = new Camera();
   // rotation variables
   
 	public void start() {
@@ -83,8 +85,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mTextures.add(new File("src/images/block2.jpg"));
 		mTextures.add(new File("src/images/block3.jpg"));
 		mTextures.add(new File("src/images/movingPlatform.jpg"));
-	}
-	
+	}	
 	
 	
 	private void drawStars(GL2 gl)
@@ -135,6 +136,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		gl.glDisable(GL2.GL_TEXTURE_2D);
 		gl.glEnable(GL2.GL_LIGHTING);
 	} // end of drawStars()
+	
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		
@@ -201,11 +203,12 @@ public class GameGLListener extends JFrame implements GLEventListener {
 
 	    // update the rotations (if rotations were specified)
 	    final GL2 gl = drawable.getGL().getGL2();
-	
+
 	    // clear colour and depth buffers
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
+	    mCamera.update(glu, gl);
 	    // apply rotations to the x,y,z axes
 	    
 	    starsDList = gl.glGenLists(1);
@@ -214,8 +217,10 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glEndList();
 	    gl.glCallList(starsDList);
 	    
+	    gl.glTranslated(0, 1.5, 0);
 	    tankMajorModel.draw(gl);  // draw the model
-	    //tankEnemyModel.draw(gl);
+	    gl.glTranslated(10, 1.5, 0);
+	    tankEnemyModel.draw(gl);
 	    gl.glFlush();
 	} // end of display
 
