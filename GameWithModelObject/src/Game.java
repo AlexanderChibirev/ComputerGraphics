@@ -32,7 +32,7 @@ public class Game extends JFrame{
     public Game() {
         super("Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ModelLoaderGLListener display = new ModelLoaderGLListener();
+        DialDisplay display = new DialDisplay();
         GLCanvas glcanvas =  new GLCanvas();
         glcanvas.addGLEventListener(display);
         

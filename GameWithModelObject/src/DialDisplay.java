@@ -10,7 +10,7 @@ import OBJLoader.OBJModel;
 import java.text.DecimalFormat;
 
 
-public class ModelLoaderGLListener implements GLEventListener 
+public class DialDisplay implements GLEventListener 
 {
   private static final float INCR_MAX = 0.45f;   // for rotation increments
   private static final double Z_DIST = 7.0;      // for the camera position
@@ -30,15 +30,15 @@ public class ModelLoaderGLListener implements GLEventListener
 
 
 
-  public ModelLoaderGLListener(String nm, float sz, boolean r) { 
+  public DialDisplay(String nm, float sz, boolean r) { 
     modelName = nm;
     maxSize = sz;
     doRotate = r;
   } // end of ModelLoaderGLListener
 
 
-  public ModelLoaderGLListener() { 
-	 modelName = "tank2";
+  public DialDisplay() { 
+	 modelName = "tankEnemy";
 	 maxSize = MAX_SIZE;
 	 doRotate = false;
   } 
@@ -55,9 +55,9 @@ public class ModelLoaderGLListener implements GLEventListener
     // initialize the rotation variables
     rotX = 0; rotY = 0; rotZ = 0;
     Random random = new Random();
-    incrX = (0.5f +random.nextFloat()/2)*INCR_MAX;   // INCR_MAX/2 - INCR_MAX degrees
-    incrY = (0.5f +random.nextFloat()/2)*INCR_MAX; 
-    incrZ = (0.5f +random.nextFloat()/2)*INCR_MAX; 
+    incrX = (0.5f + random.nextFloat() / 2) * INCR_MAX;   // INCR_MAX/2 - INCR_MAX degrees
+    incrY = (0.5f + random.nextFloat() / 2) * INCR_MAX; 
+    incrZ = (0.5f + random.nextFloat() / 2) * INCR_MAX; 
 
     gl.glClearColor(0.17f, 0.65f, 0.92f, 1.0f);  
                   // sky colour background for GLCanvas
@@ -85,15 +85,15 @@ public class ModelLoaderGLListener implements GLEventListener
     float[] whiteLight = {1.0f, 1.0f, 1.0f, 1.0f};  // bright white
 
     float lightPos[] = {10.0f, 10.0f, -10.0f, 1.0f}; 
-       // light located at the right, top, and back 
-       // light 0 has white ambient, diffuse, and specular components by default
+    // light located at the right, top, and back 
+    // light 0 has white ambient, diffuse, and specular components by default
     gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, lightPos, 0);
     
     float lightPos1[] = {-10.0f, -10.0f, 10.0f, 1.0f};
-       // light located at the left, bottom, and front 
+    // light located at the left, bottom, and front 
     gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, whiteLight, 0);  // diffuse white
     gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos1, 0);
-  }  // end of addLight()
+  } // end of addLight()
 
   @Override
   public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) 
@@ -132,10 +132,7 @@ public class ModelLoaderGLListener implements GLEventListener
     gl.glLoadIdentity();
 
     glu.gluLookAt(0,0,Z_DIST, 0,0,0, 0,1,0);   // position camera
-
     // apply rotations to the x,y,z axes
-    //gl.glRotatef(11, 0.0f, 1.0f, 0.0f);
-    //gl.glRotatef(11, 1.0f, 0.0f, 0.0f);
     if (doRotate) {
       gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
       gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
