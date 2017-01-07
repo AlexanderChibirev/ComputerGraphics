@@ -2,6 +2,7 @@ import java.util.*;
 
 import javax.swing.JFrame;
 import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 
 import org.dyn4j.dynamics.World;
 
@@ -25,6 +26,22 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 
+
+enum PossitionID {
+	BACKGROUND(0),
+	BOX(1),
+	BLOCK1(2),
+	BLOCK2(3),
+	BLOCK3(4),
+	MOVING_PLATFORM(5);
+	private final Integer value;
+	
+	PossitionID(Integer value) {
+        this.value = value;
+    }
+	public Integer getValue()   { return value; }
+}
+
 @SuppressWarnings("serial")
 public class GameGLListener extends JFrame implements GLEventListener {
 	protected GLCanvas canvas;
@@ -42,7 +59,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private final static int FLOOR_LEN = 50;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
-
+	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(25f, 0.1f, 25f));
+	
+	
 	public void start() {
 		this.lastTime = System.nanoTime();
 		Animator animator = new Animator(this.canvas);
@@ -245,7 +264,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTexturesID.get(0));	
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTexturesID.get(PossitionID.BACKGROUND.getValue()));	
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
 			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
@@ -273,6 +292,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	   // includeMechanisms3DWorld(gl);
 	    drawBackground(gl);
 	    mCamera.update(glu, gl);
+	    mGLBox.draw(gl, mTexturesID.get(PossitionID.BOX.getValue()));
 	    // apply rotations to the x,y,z axes
 	    
 	    starsDList = gl.glGenLists(1);
@@ -281,7 +301,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glEndList();
 	    gl.glCallList(starsDList);
 	    
-	    gl.glTranslated(0, 1.5, 0);
+	    gl.glTranslated(0, 1.2, 0);
 	    tankMajorModel.draw(gl);  // draw the model
 	    //gl.glTranslated(5, 0, 0);
 	    //tankEnemyModel.draw(gl);
