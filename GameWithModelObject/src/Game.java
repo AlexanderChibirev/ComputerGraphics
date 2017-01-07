@@ -10,7 +10,7 @@ public class Game   {
 	public static void main(String[] args) {
 		GameGLListener window = new GameGLListener(WINDOW_WIDTH, WINDOW_HEIGHT);
 		window.setVisible(true);
-		window.setTitle("Arcanoid 3D");
+		window.setTitle("Game 3D");
 		centerWindow(window);
 		window.start();
 	}

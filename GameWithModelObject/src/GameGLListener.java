@@ -100,6 +100,20 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mTextures.add(new File("images/movingPlatform.jpg"));
 	}	
 	
+	private void includeMechanisms3DWorld(GL2 gl) {
+		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glEnable(GL2.GL_CULL_FACE);
+		gl.glFrontFace(GL2.GL_CCW);
+		gl.glCullFace(GL2.GL_BACK);
+		gl.glEnable(GL2.GL_LIGHTING);
+		gl.glEnable(GL2.GL_COLOR_MATERIAL);
+		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glEnable(GL2.GL_TEXTURE_2D);	
+		gl.glLoadIdentity();
+	 }
+	
 	
 	private void drawStars(GL2 gl)
 	{
@@ -155,8 +169,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		
 		final GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
-		loadTextures(gl);
-		
+		loadTextures(gl);		
 		initializeTexturesName();
 		initTexture(gl);
 		
@@ -173,6 +186,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		gl.glShadeModel(GL2.GL_SMOOTH);    // use smooth shading
 		
 		addLight(gl);
+		
 		
 		// load the OBJ model
 		tankMajorModel = new OBJModel("tankMajor", MAX_SIZE, gl, true);
@@ -218,6 +232,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private void drawBackground (GL2 gl) {
 		gl.glDisable(GL.GL_DEPTH_TEST); 
 		gl.glDisable(GL.GL_CULL_FACE); 
+		gl.glEnable(GL2.GL_TEXTURE_2D);	
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
@@ -255,6 +270,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
 	    
+	   // includeMechanisms3DWorld(gl);
 	    drawBackground(gl);
 	    mCamera.update(glu, gl);
 	    // apply rotations to the x,y,z axes

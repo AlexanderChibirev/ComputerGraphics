@@ -7,8 +7,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 public class TextureUtils {
-	static public Texture loadTexture(String fnm, GL2 gl)
-	  {
+	static public Texture loadTexture(String fnm, GL2 gl) {
 	    String fileName = "images/" + fnm;
 	    Texture tex = null;
 	    try {
@@ -20,5 +19,5 @@ public class TextureUtils {
 	    { System.out.println("Error loading texture " + fileName);  }
 
 	    return tex;
-	  }  // end of loadTexture()
+	}  // end of loadTexture()
 }
