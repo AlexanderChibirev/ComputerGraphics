@@ -56,10 +56,10 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private OBJModel tankMajorModel;
 	private OBJModel tankEnemyModel;
 	private Texture starsTex;
-	private final static int FLOOR_LEN = 50;  // should be even
+	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
-	RectangularPrism mGLBox = new RectangularPrism(new Vector3f(25f, 0.1f, 25f));
+	RectangularPrism mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
 	
 	
 	public void start() {
@@ -193,7 +193,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		initTexture(gl);
 		
 		gl.setSwapInterval(0);   
-		   /* switches off vertical synchronization, for extra speed (maybe) */
+		/* switches off vertical synchronization, for extra speed (maybe) */
 		
 		// initialize the rotation variables
 		gl.glClearColor(1f, 1f, 1f, 1.0f);  
