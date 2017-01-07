@@ -6,10 +6,10 @@ import com.jogamp.opengl.glu.GLU;
 public class Camera {
 	private float mAngleX; 
 	private float mAngleY; 
-	private float mShiftAngleY = 1.0f;
-	private float mShiftAngleX = 1.0f;
-	private float mShifRZ = 0.08f;
-	private float mRZ = -8;
+	private float mShiftAngleY = 0.03f;
+	private float mShiftAngleX = 0.03f;
+	private float mShifRZ = 0.001f;
+	private float mRZ = -5;
 	
 	public void update(GLU glu, GL2 gl) {
 		if(InputHandler.sKeyPressedUP) {

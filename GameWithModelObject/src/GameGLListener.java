@@ -1,9 +1,11 @@
 import java.util.*;
 
 import javax.swing.JFrame;
+import javax.vecmath.Vector2f;
 
 import org.dyn4j.dynamics.World;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -21,6 +23,7 @@ import Utils.TextureUtils;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings("serial")
 public class GameGLListener extends JFrame implements GLEventListener {
@@ -28,19 +31,18 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	public static  World sWorld;
 	protected long lastTime;
 	private Vector<File> mTextures = new Vector<File>();
-		
+	private Vector<Integer> mTexturesID = new Vector<Integer>();
+	
 	private static final double Z_DIST = 7.0;      // for the camera position
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
 	private GLU glu;
 	private OBJModel tankMajorModel;
 	private OBJModel tankEnemyModel;
 	private Texture starsTex;
-	private final static int FLOOR_LEN = 20;  // should be even
-	private int starsDList;
-	
+	private final static int FLOOR_LEN = 50;  // should be even
+	private int starsDList;	
 	private Camera mCamera = new Camera();
-  // rotation variables
-  
+
 	public void start() {
 		this.lastTime = System.nanoTime();
 		Animator animator = new Animator(this.canvas);
@@ -54,6 +56,18 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
 	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 	}  // end of loadTextures()
+	
+	private void initTexture(GL2 gl) {
+		for(File name : mTextures) {
+			try{
+				Texture texture = TextureIO.newTexture(name,true);
+				mTexturesID.add(texture.getTextureObject(gl));
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}	
+		}
+	}
 	
 	public GameGLListener(int windowWidth, int windowHeight) {
 	// TODO Auto-generated constructor stub
@@ -75,16 +89,15 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		setResizable(false);
 		pack();
 		//initializeWorldPhysics();
-		
 	}
 	
 	private void initializeTexturesName() {
-		mTextures.add(new File("src/images/background.jpg"));
-		mTextures.add(new File("src/images/boxPlatform.jpg"));
-		mTextures.add(new File("src/images/block1.jpg"));
-		mTextures.add(new File("src/images/block2.jpg"));
-		mTextures.add(new File("src/images/block3.jpg"));
-		mTextures.add(new File("src/images/movingPlatform.jpg"));
+		mTextures.add(new File("images/background.jpg"));
+		mTextures.add(new File("images/boxPlatform.jpg"));
+		mTextures.add(new File("images/block1.jpg"));
+		mTextures.add(new File("images/block2.jpg"));
+		mTextures.add(new File("images/block3.jpg"));
+		mTextures.add(new File("images/movingPlatform.jpg"));
 	}	
 	
 	
@@ -143,8 +156,11 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		final GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
 		loadTextures(gl);
+		
 		initializeTexturesName();
-		// gl.setSwapInterval(0);   
+		initTexture(gl);
+		
+		gl.setSwapInterval(0);   
 		   /* switches off vertical synchronization, for extra speed (maybe) */
 		
 		// initialize the rotation variables
@@ -198,6 +214,36 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	} // end of reshape()
+	
+	private void drawBackground (GL2 gl) {
+		gl.glDisable(GL.GL_DEPTH_TEST); 
+		gl.glDisable(GL.GL_CULL_FACE); 
+		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glPushMatrix();
+		gl.glLoadIdentity();
+		gl.glOrtho(0, 1, 0, 1, 0, 1);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glPushMatrix();
+		gl.glLoadIdentity();
+		gl.glDepthMask(false);
+		gl.glEnable(GL2.GL_BLEND);
+		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
+		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTexturesID.get(0));	
+		gl.glBegin(GL2.GL_QUADS);
+			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
+			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
+			gl.glTexCoord2f(1f,1f); gl.glVertex2f(1,1);
+			gl.glTexCoord2f(1f,0f); gl.glVertex2f(1,0);
+		gl.glEnd();		
+		gl.glDepthMask(true);
+		gl.glPopMatrix();
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glPopMatrix();
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glPopMatrix();
+	}
 	@Override
 	public void display(GLAutoDrawable drawable) {// the model is rotated and rendered
 
@@ -208,6 +254,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
+	    
+	    drawBackground(gl);
 	    mCamera.update(glu, gl);
 	    // apply rotations to the x,y,z axes
 	    
@@ -219,8 +267,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    
 	    gl.glTranslated(0, 1.5, 0);
 	    tankMajorModel.draw(gl);  // draw the model
-	    gl.glTranslated(10, 1.5, 0);
-	    tankEnemyModel.draw(gl);
+	    //gl.glTranslated(5, 0, 0);
+	    //tankEnemyModel.draw(gl);
 	    gl.glFlush();
 	} // end of display
 
