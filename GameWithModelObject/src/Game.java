@@ -1,48 +1,21 @@
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import javax.swing.*;
+public class Game   {
 
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.*;
+	private static final int WINDOW_HEIGHT = 600;
+	private static final int WINDOW_WIDTH = 800;
 
-
-public class Game extends JFrame{
-	private static final long serialVersionUID = -2687152741472560149L;
-	public static Animator animator = null;
-    public static void main(String[] args) {
-        final Game app = new Game();
-        // запуск асинхронной операции
-        SwingUtilities.invokeLater (
-            new Runnable() {
-                public void run() {
-                    app.setVisible(true);
-                }
-            }
-        );
-        
-        SwingUtilities.invokeLater (
-            new Runnable() {
-                public void run() {
-                    animator.start();
-                }
-            }
-        );
-    }
-  
-    public Game() {
-        super("Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        DialDisplay display = new DialDisplay();
-        GLCanvas glcanvas =  new GLCanvas();
-        glcanvas.addGLEventListener(display);
-        
-        animator = new Animator(glcanvas);
-        getContentPane().add(glcanvas, BorderLayout.CENTER);
-        setSize(800, 800);
-        centerWindow(this);
-    }
-    
-    private void centerWindow(Component frame) {
+	public static void main(String[] args) {
+		GameGLListener window = new GameGLListener(WINDOW_WIDTH, WINDOW_HEIGHT);
+		window.setVisible(true);
+		window.setTitle("Arcanoid 3D");
+		centerWindow(window);
+		window.start();
+	}
+	
+	public static void centerWindow(Component frame) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int windowX = Math.max(0,(screenSize.width - frame.getWidth()) / 2);
 		int windowY = Math.max(0,(screenSize.height - frame.getHeight()) / 2);
