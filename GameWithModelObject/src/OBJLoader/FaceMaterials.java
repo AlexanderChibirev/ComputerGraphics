@@ -1,13 +1,3 @@
-
-// FaceMaterials.java
-// Andrew Davison, November 2006, ad@fivedots.coe.psu.ac.th
-
-/* FaceMaterials stores the face indicies where a material
-   is first used. At render time, this information is utilized
-   to change the rendering material when a given face needs
-   to be drawn.
-*/
-
 package OBJLoader;
 
 import java.util.*;
@@ -75,4 +65,4 @@ public class FaceMaterials
     }
   }  // end of showUsedMaterials()
 
-} // end of FaceMaterials class
+}

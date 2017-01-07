@@ -1,12 +1,3 @@
-
-// ModelLoaderGLListener.java
-// Andrew Davison, November 2006, ad@fivedots.coe.psu.ac.th
-
-/* Display a loaded OBJ model, scaled and centered, 
-   and possibly rotating.
-*/
-
-
 import java.util.*;
 
 import com.jogamp.opengl.GL2;
@@ -47,7 +38,7 @@ public class ModelLoaderGLListener implements GLEventListener
 
 
   public ModelLoaderGLListener() { 
-	 modelName = "penguin";
+	 modelName = "tank";
 	 maxSize = MAX_SIZE;
 	 doRotate = false;
   } 

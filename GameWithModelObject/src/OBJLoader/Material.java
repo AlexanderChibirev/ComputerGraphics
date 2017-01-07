@@ -1,21 +1,7 @@
-
-// Material.java
-// Andrew Davison, November 2006, ad@fivedots.coe.psu.ac.th
-
-/* A Material object holds colour and texture information
-   for a named material.
-
-   The Material object also manages the rendering using its
-   colours (see setMaterialColors()). The rendering using the
-   texture is done by the Materials object.
-
-*/
-
 package OBJLoader;
 
 
 import java.io.*;
-import java.util.*;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
@@ -154,4 +140,4 @@ public class Material
   public Texture getTexture()
   {  return texture;  }
 
-}  // end of Material class
+}

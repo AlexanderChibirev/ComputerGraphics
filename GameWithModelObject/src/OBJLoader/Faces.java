@@ -1,33 +1,11 @@
 
-// Faces.java
-// Andrew Davison, February 2007, ad@fivedots.coe.psu.ac.th
-
-/* Faces stores the information for each face of a model.
-
-   A face is represented by three arrays of indicies for 
-   the vertices, normals, and tex coords used in that face.
-
-   facesVertIdxs, facesTexIdxs, and facesNormIdxs are ArrayLists of
-   those arrays; one entry for each face.
-
-   renderFace() is supplied with a face index, looks up the
-   associated vertices, normals, and tex coords indicies arrays,
-   and uses those arrays to access the actual vertices, normals, 
-   and tex coords data for rendering the face.
-
-   CHANGES (Feb 2007)
-     - changed renderFace() to flip tex coords if necessary
-
-*/
-
 package OBJLoader;
 
-import java.io.*;
 import java.util.*;
 
 import com.jogamp.opengl.GL2;
 
-import java.text.DecimalFormat;
+//import java.text.DecimalFormat;
 
 
 
@@ -47,7 +25,7 @@ public class Faces
   private ArrayList<Tuple3> texCoords;
 
   // for reporting
-  private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
+ // private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
 
 
   public Faces(ArrayList<Tuple3> vs, ArrayList<Tuple3> ns, 
@@ -147,11 +125,11 @@ public class Faces
 
     int polytype;
     if (vertIdxs.length == 3)
-      polytype = gl.GL_TRIANGLES;
+      polytype = GL2.GL_TRIANGLES;
     else if (vertIdxs.length == 4)
-      polytype = gl.GL_QUADS;
+      polytype = GL2.GL_QUADS;
     else
-      polytype = gl.GL_POLYGON;
+      polytype = GL2.GL_POLYGON;
 
 
     gl.glBegin(polytype);

@@ -1,33 +1,3 @@
-
-// OBJModel.java
-// Andrew Davison, February 2007, ad@fivedots.coe.psu.ac.th
-
-/* Load the OBJ model from MODEL_DIR, centering and scaling it.
-   The scale comes from the sz argument in the constructor, and
-   is implemented by changing the vertices of the loaded model.
-   
-   The model can have vertices, normals and tex coordinates, and
-   refer to materials in a MTL file.
-
-   The OpenGL commands for rendering the model are stored in 
-   a display list (modelDispList), which is drawn by calls to
-   draw().
-
-   Information about the model is printed to stdout.
-
-   Based on techniques used in the OBJ loading code in the
-   JautOGL multiplayer racing game by Evangelos Pournaras 
-   (http://today.java.net/pub/a/today/2006/10/10/
-               development-of-3d-multiplayer-racing-game.html 
-   and https://jautogl.dev.java.net/), and the 
-   Asteroids tutorial by Kevin Glass 
-   (http://www.cokeandcode.com/asteroidstutorial)
-
-   CHANGES (Feb 2007)
-     - a global flipTexCoords boolean
-     - drawToList() sets and uses flipTexCoords
-*/
-
 package OBJLoader;
 
 import java.io.*;
@@ -361,4 +331,4 @@ public class OBJModel
   }  // end of reportOnModel()
 
 
-} // end of OBJModel class
+}

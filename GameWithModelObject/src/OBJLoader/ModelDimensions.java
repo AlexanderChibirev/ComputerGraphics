@@ -1,16 +1,3 @@
-
-// ModelDimensions.java
-// Andrew Davison, Novemeber 2006, ad@fivedots.coe.psu.ac.th
-
-/* This class calculates the 'edge' coordinates for the model
-   along its three dimensions. 
-
-   The edge coords are used to calculate the model's:
-      * width, height, depth
-      * its largest dimension (width, height, or depth)
-      * (x, y, z) center point
-*/
-
 package OBJLoader;
 
 
@@ -121,7 +108,7 @@ public class ModelDimensions
     System.out.println("z Coords: " + df.format(nearPt) + " to " + df.format(farPt));
     System.out.println("  Mid: " + df.format(center.getZ()) + 
                        "; Depth: " + df.format(getDepth()) );
-  }  // end of reportDimensions()
+  }  
 
 
-}  // end of ModelDimensions class
+}

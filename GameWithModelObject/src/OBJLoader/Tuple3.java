@@ -1,11 +1,3 @@
-
-// Tuple3.java
-// Andrew Davison, November 2006, ad@fivedots.coe.psu.ac.th
-
-/* A tuple of 3 elements, which can be used to
-   store a vertex, normal, or texture coord.
-*/
-
 package OBJLoader;
 
 
@@ -46,4 +38,4 @@ public class Tuple3
   public float getZ() 
   { return z; }
 
-}  // end of Tuple3 class
+}

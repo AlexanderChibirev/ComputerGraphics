@@ -1,19 +1,3 @@
-
-// Materials.java
-// Andrew Davison, February 2007, ad@fivedots.coe.psu.ac.th
-
-/* This class does two main tasks:
-      * it loads the material details from the MTL file, storing
-        them as Material objects in the materials ArrayList.
-
-      * it sets up a specified material's colours or textures 
-        to be used when rendering -- see renderWithMaterial()
-
-   CHANGES (Feb 2007)
-     - a flipTexCoords global
-     - renderWithMaterial() sets and returns flipTexCoords
-*/
-
 package OBJLoader;
 
 
@@ -228,4 +212,4 @@ public class Materials
   }  // end of setMaterialColors()
 
 
-} // end of Materials class
+}
