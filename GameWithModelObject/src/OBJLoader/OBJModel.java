@@ -33,11 +33,7 @@ package OBJLoader;
 import java.io.*;
 import java.util.*;
 
-import javax.media.opengl.*;
-
-import com.jogamp.opengl.GL;
-import com.sun.opengl.util.*;
-import com.sun.opengl.util.texture.*;
+import com.jogamp.opengl.GL2;
 
 
 
@@ -66,17 +62,17 @@ public class OBJModel
   private int modelDispList;  // the model's display list
 
 
-  public OBJModel(String nm, GL gl)
+  public OBJModel(String nm, GL2 gl)
   {  this(nm, 1.0f, gl, false);  }
 
 
-  public OBJModel(String nm, float sz, GL gl, boolean showDetails)
+  public OBJModel(String nm, float sz, GL2 gl, boolean showDetails)
   {
     modelNm = nm;
     maxSize = sz;
     initModelData(modelNm);
 
-    loadModel(modelNm);
+    loadModel(modelNm, gl);
     centerScale();
     drawToList(gl);
 
@@ -97,13 +93,13 @@ public class OBJModel
   }  // end of initModelData()
 
 
-  private void loadModel(String modelNm)
+  private void loadModel(String modelNm, GL2 gl)
   {
     String fnm = MODEL_DIR + modelNm + ".obj";
     try {
       System.out.println("Loading model from " + fnm + " ...");
       BufferedReader br = new BufferedReader( new FileReader(fnm) );
-      readModel(br);
+      readModel(br, gl);
       br.close();
     }
     catch(IOException e)
@@ -113,7 +109,7 @@ public class OBJModel
   }  // end of loadModel()
 
 
-  private void readModel(BufferedReader br)
+  private void readModel(BufferedReader br, GL2 gl)
   // parse the OBJ file line-by-line
   {
     boolean isLoaded = true;   // hope things will go okay
@@ -147,7 +143,7 @@ public class OBJModel
             numFaces++;
           }
           else if (line.startsWith("mtllib "))   // load material
-            materials = new Materials( line.substring(7) );
+            materials = new Materials( line.substring(7), gl);
           else if (line.startsWith("usemtl "))   // use material
             faceMats.addUse( numFaces, line.substring(7));   
           else if (line.charAt(0) == 'g') {  // group name
@@ -319,12 +315,12 @@ public class OBJModel
 
 
 
-  private void drawToList(GL gl)
+  private void drawToList(GL2 gl)
   /* render the model to a display list, so it can be
      drawn quicker later */
   {
     modelDispList = gl.glGenLists(1);
-    gl.glNewList(modelDispList, GL.GL_COMPILE);
+    gl.glNewList(modelDispList, GL2.GL_COMPILE);
 
     gl.glPushMatrix();
     // render the model face-by-face
@@ -344,7 +340,7 @@ public class OBJModel
 
 
 
-  public void draw(GL gl)
+  public void draw(GL2 gl)
   {  gl.glCallList(modelDispList);  } 
 
 

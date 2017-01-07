@@ -20,6 +20,10 @@ package OBJLoader;
 import java.io.*;
 import java.util.*;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.texture.Texture;
+
+
 public class Materials
 {
   private static final String MODEL_DIR = "models/";
@@ -36,7 +40,7 @@ public class Materials
 
 
 
-  public Materials(String mtlFnm)
+  public Materials(String mtlFnm, GL2 gl)
   {
     materials = new ArrayList<Material>();
 
@@ -44,7 +48,7 @@ public class Materials
     try {
       System.out.println("Loading material from " + mfnm);
       BufferedReader br = new BufferedReader( new FileReader(mfnm));
-      readMaterials(br);
+      readMaterials(br, gl);
       br.close();
     }
     catch (IOException e) 
@@ -54,7 +58,7 @@ public class Materials
 
 
 
-  private void readMaterials(BufferedReader br)
+  private void readMaterials(BufferedReader br, GL2 gl)
   /* Parse the MTL file line-by-line, building Material
      objects which are collected in the materials ArrayList. */
   {
@@ -76,7 +80,7 @@ public class Materials
         }
         else if (line.startsWith("map_Kd ")) {  // texture filename
           String fileName = MODEL_DIR + line.substring(7);
-          currMaterial.loadTexture( fileName );
+          currMaterial.loadTexture( fileName, gl);
         }
         else if (line.startsWith("Ka "))    // ambient colour
           currMaterial.setKa( readTuple3(line) );
@@ -146,7 +150,7 @@ public class Materials
   
   // ----------------- using a material at render time -----------------
 
-  public boolean renderWithMaterial(String faceMat, GL gl)
+  public boolean renderWithMaterial(String faceMat, GL2 gl)
   /* Render using the texture or colours associated with the
      material, faceMat. But only change things if faceMat is
      different from the current rendering material, whose name
@@ -177,25 +181,25 @@ public class Materials
   }  // end of renderWithMaterial()
 
 
-  public void switchOffTex(GL gl)
+  public void switchOffTex(GL2 gl)
   // switch texturing off and put the lights on;
   // also called from ObjModel.drawToList()
   {
     if (usingTexture) {
-      gl.glDisable(GL.GL_TEXTURE_2D);
+      gl.glDisable(GL2.GL_TEXTURE_2D);
       usingTexture = false;
-      gl.glEnable(GL.GL_LIGHTING);
+      gl.glEnable(GL2.GL_LIGHTING);
     }
   } // end of resetMaterials()
 
 
-  private void switchOnTex(Texture tex, GL gl)
+  private void switchOnTex(Texture tex, GL2 gl)
   // switch the lights off, and texturing on 
   {
-    gl.glDisable(GL.GL_LIGHTING);
-    gl.glEnable(GL.GL_TEXTURE_2D);
+    gl.glDisable(GL2.GL_LIGHTING);
+    gl.glEnable(GL2.GL_TEXTURE_2D);
     usingTexture = true;
-    tex.bind();
+    tex.bind(gl);
   } // end of resetMaterials()
 
 
@@ -212,7 +216,7 @@ public class Materials
   } // end of getTexture()
 
 
-  private void setMaterialColors(String matName, GL gl)
+  private void setMaterialColors(String matName, GL2 gl)
   // start rendering using the colours specifies by the named material
   {
     Material m;

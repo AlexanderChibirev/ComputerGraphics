@@ -25,6 +25,8 @@ package OBJLoader;
 import java.io.*;
 import java.util.*;
 
+import com.jogamp.opengl.GL2;
+
 import java.text.DecimalFormat;
 
 
@@ -122,7 +124,7 @@ public class Faces
 
 
 
-  public void renderFace(int i, boolean flipTexCoords, GL gl)
+  public void renderFace(int i, boolean flipTexCoords, GL2 gl)
   /* Render the ith face by getting the vertex, normal, and tex
      coord indicies for face i. Use those indicies to access the
      actual vertex, normal, and tex coord data, and render the face.
