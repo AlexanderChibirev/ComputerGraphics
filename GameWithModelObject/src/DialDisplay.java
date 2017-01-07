@@ -12,35 +12,14 @@ import java.text.DecimalFormat;
 
 public class DialDisplay implements GLEventListener 
 {
-  private static final float INCR_MAX = 0.45f;   // for rotation increments
   private static final double Z_DIST = 7.0;      // for the camera position
   private static final float MAX_SIZE = 4.0f;  // for a model's dimension
-  private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
-
   private GLU glu;
-
-  private String modelName;
-  private OBJModel model;
-  private float maxSize;
-  private boolean doRotate;
-
+  private OBJModel tankMajorModel;
+  private OBJModel tankEnemyModel;
   // rotation variables
-  private float rotX, rotY, rotZ;     // total rotations in x,y,z axes
-  private float incrX, incrY, incrZ;  // increments for x,y,z rotations
-
-
-
-  public DialDisplay(String nm, float sz, boolean r) { 
-    modelName = nm;
-    maxSize = sz;
-    doRotate = r;
-  } // end of ModelLoaderGLListener
-
-
   public DialDisplay() { 
-	 modelName = "tankEnemy";
-	 maxSize = MAX_SIZE;
-	 doRotate = false;
+	
   } 
   
   @Override
@@ -53,13 +32,7 @@ public class DialDisplay implements GLEventListener
        /* switches off vertical synchronization, for extra speed (maybe) */
 
     // initialize the rotation variables
-    rotX = 0; rotY = 0; rotZ = 0;
-    Random random = new Random();
-    incrX = (0.5f + random.nextFloat() / 2) * INCR_MAX;   // INCR_MAX/2 - INCR_MAX degrees
-    incrY = (0.5f + random.nextFloat() / 2) * INCR_MAX; 
-    incrZ = (0.5f + random.nextFloat() / 2) * INCR_MAX; 
-
-    gl.glClearColor(0.17f, 0.65f, 0.92f, 1.0f);  
+    gl.glClearColor(1f, 1f, 1f, 1.0f);  
                   // sky colour background for GLCanvas
 
     // z- (depth) buffer initialization for hidden surface removal
@@ -70,7 +43,8 @@ public class DialDisplay implements GLEventListener
     addLight(gl);
 
     // load the OBJ model
-    model = new OBJModel(modelName, maxSize, gl, true);
+    tankMajorModel = new OBJModel("tankMajor", MAX_SIZE, gl, true);
+    tankEnemyModel = new OBJModel("tankEnemy", MAX_SIZE, gl, true);
   } // end of init()
 
 
@@ -108,8 +82,7 @@ public class DialDisplay implements GLEventListener
     gl.glMatrixMode(GL2.GL_PROJECTION);
     gl.glLoadIdentity();
     glu.gluPerspective(45.0, (float)width/(float)height, 1, 100); // 5, 100); 
-              // fov, aspect ratio, near & far clipping planes
-
+    // fov, aspect ratio, near & far clipping planes
     gl.glMatrixMode(GL2.GL_MODELVIEW);
     gl.glLoadIdentity();
   } // end of reshape()
@@ -119,28 +92,15 @@ public class DialDisplay implements GLEventListener
   // the model is rotated and rendered
   {
     // update the rotations (if rotations were specified)
-    if (doRotate) {
-      rotX = (rotX + incrX) % 360.0f;
-      rotY = (rotY + incrY) % 360.0f;
-      rotZ = (rotZ + incrZ) % 360.0f;
-    }
-
     final GL2 gl = drawable.getGL().getGL2();
 
     // clear colour and depth buffers
     gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
     gl.glLoadIdentity();
-
-    glu.gluLookAt(0,0,Z_DIST, 0,0,0, 0,1,0);   // position camera
+    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
     // apply rotations to the x,y,z axes
-    if (doRotate) {
-      gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-      gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-      gl.glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-    }
-
-    model.draw(gl);      // draw the model
-
+    tankMajorModel.draw(gl);  // draw the model
+    tankEnemyModel.draw(gl);
     gl.glFlush();
   } // end of display
 
