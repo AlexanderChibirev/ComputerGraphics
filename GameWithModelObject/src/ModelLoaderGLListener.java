@@ -38,7 +38,7 @@ public class ModelLoaderGLListener implements GLEventListener
 
 
   public ModelLoaderGLListener() { 
-	 modelName = "tank";
+	 modelName = "tank2";
 	 maxSize = MAX_SIZE;
 	 doRotate = false;
   } 
@@ -134,6 +134,8 @@ public class ModelLoaderGLListener implements GLEventListener
     glu.gluLookAt(0,0,Z_DIST, 0,0,0, 0,1,0);   // position camera
 
     // apply rotations to the x,y,z axes
+    //gl.glRotatef(11, 0.0f, 1.0f, 0.0f);
+    //gl.glRotatef(11, 1.0f, 0.0f, 0.0f);
     if (doRotate) {
       gl.glRotatef(rotX, 1.0f, 0.0f, 0.0f);
       gl.glRotatef(rotY, 0.0f, 1.0f, 0.0f);
