@@ -47,7 +47,6 @@ enum PossitionID {
 @SuppressWarnings("serial")
 public class GameGLListener extends JFrame implements GLEventListener {
 	protected GLCanvas canvas;
-	public static  World sWorld;
 	protected long lastTime;
 	private Vector<File> mTextures = new Vector<File>();
 	private Vector<Integer> mTexturesID = new Vector<Integer>();
@@ -55,7 +54,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private static final double Z_DIST = 7.0;      // for the camera position
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
 	private GLU glu;
-	
 	private OBJModel tankEnemyModel;
 	protected long mLast;
 	private Player tankMajor;
@@ -63,9 +61,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
-	
-	DYN4JBlock mPhysicsBlock = new DYN4JBlock();
-	private GLBlock mGlBlock = new GLBlock();
 	
 
 	public void start() {
@@ -122,7 +117,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		final GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
 		mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2), gl);
-		initializeWorldPhysics();
 		initializeTexturesName();
 		initTexture(gl);
 		tankMajor = new Player(new Vector3f(0, 1.2f, 0), gl);
@@ -157,17 +151,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos1, 0);
 	} // end of addLight()
 	
-
-	private void updateGLBlocks(GL2 gl) {
-		for (double i = RangesConst.RANGE_BEGIN_FOR_BLOCKS.getValue(); i < sWorld.getBodyCount(); ++i) {
-			mGlBlock = (GLBlock) sWorld.getBody((int) i);
-			mGlBlock.render(gl, mTexturesID.get(PossitionID.BLOCK1.getValue()));
-		}
-	}
-	
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {  // called when the drawable component is moved or resized
-	  
 	    final GL2 gl = drawable.getGL().getGL2();
 	    if (height == 0)
 	      height = 1;    // to avoid division by 0 in aspect ratio below
@@ -181,37 +166,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	} // end of reshape()
-	
-	protected void update() {
-        long time = System.nanoTime();
-        long diff = time - this.mLast;
-        this.mLast = time;
-    	double elapsedTime = diff / WorldConsts.NANO_TO_BASE.getValue();
-    	if(InputHandler.sKeyPressedEnter) {
-    		sWorld.update(elapsedTime);
-    	}
-	}
-	protected void initializeWorldPhysics() {//initial bodyes
-		
-		sWorld = new World();
-		sWorld.setGravity(new Vector2(0,0));
-		sWorld.getSettings().setRestitutionVelocity(0);
-		//addPlat
-		//sWorld.addBody(mPhysicsMovingPlatform.getMovingPlatform());
-		//addBox
-		//DYN4JBox mPhysicsBox = new DYN4JBox();
-		//for(Body boxPart: mPhysicsBox.getBox()) {
-		//	sWorld.addBody(boxPart);
-		//}
-		//addBall
-		//sWorld.addBody(mBall.getBall());
-		//addBlocks
-		
-		for(GLBlock block: mPhysicsBlock.getBlock()) {
-			System.out.println("sadad");
-			sWorld.addBody(block);
-		}
-	}
 	
 	@Override
 	public void display(GLAutoDrawable drawable) {// the model is rotated and rendered
@@ -228,9 +182,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    
 	    mCamera.update(glu, gl);
 	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
-	    drawSkyBox(gl);
-	    updateGLBlocks(gl);		
+	    drawSkyBox(gl);	
 	    tankMajor.draw(gl);
+	    System.out.println(tankMajor.getBounds());
 	    gl.glFlush();
 	} // end of display
 	
