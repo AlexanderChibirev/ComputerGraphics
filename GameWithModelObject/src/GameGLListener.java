@@ -49,32 +49,25 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	protected long lastTime;
 	private Vector<File> mTextures = new Vector<File>();
 	private Vector<Integer> mTexturesID = new Vector<Integer>();
-	
+	RectangularPrism mGLBox;
 	private static final double Z_DIST = 7.0;      // for the camera position
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
 	private GLU glu;
-	private OBJModel tankMajorModel;
+	
 	private OBJModel tankEnemyModel;
-	private Texture starsTex;
+	
+	private Player tankMajor;
+	
 	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
-	RectangularPrism mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
-	
 	
 	public void start() {
 		this.lastTime = System.nanoTime();
 		Animator animator = new Animator(this.canvas);
 		animator.setRunAsFastAsPossible(true);
 		animator.start();	
-	}
-	
-	private void loadTextures(GL2 gl)
-	{
-	    starsTex = TextureUtils.loadTexture("stars.jpg", gl);
-	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
-	}  // end of loadTextures()
+	}	
 	
 	private void initTexture(GL2 gl) {
 		for(File name : mTextures) {
@@ -89,7 +82,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	}
 	
 	public GameGLListener(int windowWidth, int windowHeight) {
-	// TODO Auto-generated constructor stub
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension size = new Dimension(windowWidth, windowHeight);
 		GLCapabilities caps = new GLCapabilities(GLProfile.get(GLProfile.GL2));
@@ -107,7 +99,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		add(this.canvas);
 		setResizable(false);
 		pack();
-		//initializeWorldPhysics();
 	}
 	
 	private void initializeTexturesName() {
@@ -117,98 +108,26 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mTextures.add(new File("images/block2.jpg"));
 		mTextures.add(new File("images/block3.jpg"));
 		mTextures.add(new File("images/movingPlatform.jpg"));
-	}	
-	
-	private void includeMechanisms3DWorld(GL2 gl) {
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glEnable(GL2.GL_CULL_FACE);
-		gl.glFrontFace(GL2.GL_CCW);
-		gl.glCullFace(GL2.GL_BACK);
-		gl.glEnable(GL2.GL_LIGHTING);
-		gl.glEnable(GL2.GL_COLOR_MATERIAL);
-		gl.glColorMaterial(GL2.GL_FRONT,GL2.GL_AMBIENT_AND_DIFFUSE);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glEnable(GL2.GL_TEXTURE_2D);	
-		gl.glLoadIdentity();
-	 }
-	
-	
-	private void drawStars(GL2 gl)
-	{
-		gl.glDisable(GL2.GL_LIGHTING);
-		// enable texturing and choose the 'stars' texture
-		gl.glEnable(GL2.GL_TEXTURE_2D);
-		starsTex.bind(gl);
-		TextureCoords tc = starsTex.getImageTexCoords();
-		float lf = tc.left();
-		float r = tc.right();
-		float b = tc.bottom();
-		float t = tc.top();
-		// replace the quad colors with the texture
-		gl.glTexEnvf(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_ENV_MODE,
-		GL2.GL_REPLACE);
-		gl.glBegin(GL2.GL_QUADS);
-		// back wall
-		int edge = FLOOR_LEN/2;
-		gl.glTexCoord2f(lf, b); gl.glVertex3i(-edge, 0, -edge);
-		gl.glTexCoord2f(2*r, b); gl.glVertex3i(edge, 0, -edge);
-		gl.glTexCoord2f(2*r, t); gl.glVertex3i(edge, edge, -edge);
-		gl.glTexCoord2f(lf, t); gl.glVertex3i(-edge, edge, -edge);
-		// right wall
-		gl.glTexCoord2f(lf, b); gl.glVertex3i(edge, 0, -edge);
-		gl.glTexCoord2f(2*r, b); gl.glVertex3i(edge, 0, edge);
-		gl.glTexCoord2f(2*r, t); gl.glVertex3i(edge, edge, edge);
-		gl.glTexCoord2f(lf, t); gl.glVertex3i(edge, edge, -edge);
-		// front wall
-		gl.glTexCoord2f(lf, b); gl.glVertex3i(edge, 0, edge);
-		gl.glTexCoord2f(2*r, b); gl.glVertex3i(-edge, 0, edge);
-		gl.glTexCoord2f(2*r, t); gl.glVertex3i(-edge, edge, edge);
-		gl.glTexCoord2f(lf, t); gl.glVertex3i(edge, edge, edge);
-		// left wall
-		gl.glTexCoord2f(lf, b); gl.glVertex3i(-edge, 0, edge);
-		gl.glTexCoord2f(2*r, b); gl.glVertex3i(-edge, 0, -edge);
-		gl.glTexCoord2f(2*r, t); gl.glVertex3i(-edge, edge, -edge);
-		gl.glTexCoord2f(lf, t); gl.glVertex3i(-edge, edge, edge);
-		// ceiling
-		gl.glTexCoord2f(lf, b); gl.glVertex3i(edge, edge, edge);
-		gl.glTexCoord2f(2*r, b); gl.glVertex3i(-edge, edge, edge);
-		gl.glTexCoord2f(2*r, 2*t); gl.glVertex3i(-edge, edge, -edge);
-		gl.glTexCoord2f(lf, 2*t); gl.glVertex3i(edge, edge, -edge);
-		gl.glEnd();
-		// switch back to modulation of quad colors and texture
-		gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE,
-		GL2.GL_MODULATE);
-		gl.glDisable(GL2.GL_TEXTURE_2D);
-		gl.glEnable(GL2.GL_LIGHTING);
-	} // end of drawStars()
+	}
 	
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		
 		final GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
-		loadTextures(gl);		
+		mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2), gl);
 		initializeTexturesName();
 		initTexture(gl);
-		
+		tankMajor = new Player(new Vector3f(0, 1.2f, 0), gl);
+
 		gl.setSwapInterval(0);   
-		/* switches off vertical synchronization, for extra speed (maybe) */
-		
-		// initialize the rotation variables
-		gl.glClearColor(1f, 1f, 1f, 1.0f);  
-		              // sky colour background for GLCanvas
-		
-		// z- (depth) buffer initialization for hidden surface removal
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		
-		gl.glShadeModel(GL2.GL_SMOOTH);    // use smooth shading
-		
+
+		gl.glEnable(GL2.GL_DEPTH_TEST);		
+		gl.glShadeModel(GL2.GL_SMOOTH);		
 		addLight(gl);
 		
-		
 		// load the OBJ model
-		tankMajorModel = new OBJModel("tankMajor", MAX_SIZE, gl, true);
+		
 		tankEnemyModel = new OBJModel("tankEnemy", MAX_SIZE, gl, true);
 	} // end of init()
 	
@@ -248,36 +167,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glLoadIdentity();
 	} // end of reshape()
 	
-	private void drawBackground (GL2 gl) {
-		gl.glDisable(GL.GL_DEPTH_TEST); 
-		gl.glDisable(GL.GL_CULL_FACE); 
-		gl.glEnable(GL2.GL_TEXTURE_2D);	
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glPushMatrix();
-		gl.glLoadIdentity();
-		gl.glOrtho(0, 1, 0, 1, 0, 1);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glPushMatrix();
-		gl.glLoadIdentity();
-		gl.glDepthMask(false);
-		gl.glEnable(GL2.GL_BLEND);
-		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
-		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, mTexturesID.get(PossitionID.BACKGROUND.getValue()));	
-		gl.glBegin(GL2.GL_QUADS);
-			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
-			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
-			gl.glTexCoord2f(1f,1f); gl.glVertex2f(1,1);
-			gl.glTexCoord2f(1f,0f); gl.glVertex2f(1,0);
-		gl.glEnd();		
-		gl.glDepthMask(true);
-		gl.glPopMatrix();
-		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glPopMatrix();
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glPopMatrix();
-	}
+	
 	@Override
 	public void display(GLAutoDrawable drawable) {// the model is rotated and rendered
 
@@ -288,26 +178,25 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
+
+	    mGLBox.drawBackground(gl, mTexturesID);
 	    
-	   // includeMechanisms3DWorld(gl);
-	    drawBackground(gl);
 	    mCamera.update(glu, gl);
-	    mGLBox.draw(gl, mTexturesID.get(PossitionID.BOX.getValue()));
-	    // apply rotations to the x,y,z axes
-	    
-	    starsDList = gl.glGenLists(1);
-	    gl.glNewList(starsDList, GL2.GL_COMPILE);
-	      drawStars(gl);
-	    gl.glEndList();
-	    gl.glCallList(starsDList);
-	    
-	    gl.glTranslated(0, 1.2, 0);
-	    tankMajorModel.draw(gl);  // draw the model
-	    //gl.glTranslated(5, 0, 0);
-	    //tankEnemyModel.draw(gl);
+	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
+	    drawSkyBox(gl);
+	   
+		
+	    tankMajor.draw(gl);
 	    gl.glFlush();
 	} // end of display
-
+	
+	private void drawSkyBox(GL2 gl) {
+		 starsDList = gl.glGenLists(1);
+		 gl.glNewList(starsDList, GL2.GL_COMPILE);
+		 mGLBox.drawStars(gl, FLOOR_LEN);
+		 gl.glEndList();
+		 gl.glCallList(starsDList);
+	}
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {

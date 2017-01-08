@@ -3,6 +3,10 @@ import java.awt.event.KeyEvent;
 
 class InputHandler extends KeyAdapter {
 	public static boolean sKeyPressedEnter = false;
+	
+	
+	public static boolean sKeyPressedW = false;
+	public static boolean sKeyPressedS = false;
 	public static boolean sKeyPressedA = false;
 	public static boolean sKeyPressedD = false;
 	
@@ -11,8 +15,8 @@ class InputHandler extends KeyAdapter {
 	public static boolean sKeyPressedLeft = false;
 	public static boolean sKeyPressedRight = false;
 	
-	public static boolean sKeyPressedW = false;
-	public static boolean sKeyPressedS = false;
+	public static boolean sKeyPressedE = false;
+	public static boolean sKeyPressedQ = false;
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -30,6 +34,12 @@ class InputHandler extends KeyAdapter {
 		  sKeyPressedDOWN = true;
 	  }
 	  
+	  else if (e.getKeyCode() == KeyEvent.VK_E) {
+		  sKeyPressedE = true;
+	  }
+	  else if (e.getKeyCode() == KeyEvent.VK_Q) {
+		  sKeyPressedQ = true;
+	  }
 	  else if (e.getKeyCode() == KeyEvent.VK_W) {
 		  sKeyPressedW = true;
 	  }
@@ -55,6 +65,8 @@ class InputHandler extends KeyAdapter {
 		sKeyPressedDOWN = false;
 		sKeyPressedLeft = false;
 		sKeyPressedRight = false;
+		sKeyPressedE = false;
+		sKeyPressedQ = false;
 		sKeyPressedW = false;
 		sKeyPressedS = false;
 	}
