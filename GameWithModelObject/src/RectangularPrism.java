@@ -17,6 +17,10 @@ public class RectangularPrism {
 		loadTextures(gl);
 	}
 	
+	public RectangularPrism(Vector3f size) {
+		this.mSize = size;
+	}
+
 	public void setSize(Vector3f size) {
 		mSize = size;
 	}
@@ -27,6 +31,7 @@ public class RectangularPrism {
 	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
 	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 	}  // end of loadTextures()
+	
 	
 	public void drawFloor(GL2 gl, int textureID) {
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);

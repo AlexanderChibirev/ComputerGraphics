@@ -37,8 +37,6 @@ public class Player {
 		else if(angle >= 251 && angle <= 280) {
 			direction = Direction.RIGHT;
 		}
-		System.out.println(angle);
-		System.out.println(direction);
 	}
 	
 	private void updateRotation(GL2 gl) {
@@ -63,7 +61,7 @@ public class Player {
 		if(InputHandler.sKeyPressedW){
 			if(direction == Direction.UP) {
 				position.z += shiftTranslated;
-			}		
+			}
 			else if(direction == Direction.DOWN) {
 				position.z -= shiftTranslated;
 			}
@@ -73,7 +71,7 @@ public class Player {
 			else if(direction == Direction.LEFT) {
 				position.x -= shiftTranslated;
 			}
-			
+			//System.out.println(position.x); //75
 		}
 		gl.glTranslated(position.x, position.y, position.z);
 	}
