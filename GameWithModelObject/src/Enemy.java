@@ -7,8 +7,8 @@ import OBJLoader.OBJModel;
 public class Enemy extends BodyBound {
 	
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
-	private static final int SIZE_WIDTH = 3;  // for a model's dimension
-	private static final int SIZE_HEIGHT = 4;  // for a model's dimension
+	private static final int SIZE_WIDTH = 2;  // for a model's dimension
+	private static final int SIZE_HEIGHT = 2;  // for a model's dimension
 	
 	private float angle = 0;
 	private OBJModel tank;

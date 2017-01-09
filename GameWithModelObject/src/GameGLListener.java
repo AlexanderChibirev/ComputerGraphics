@@ -189,6 +189,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    for(int i = 0; i < glball.size(); i++) {
 	    	glball.get(i).render(gl, glu);
 	    	if(glball.get(i).getBounds().intersects(tankEnemy.getBounds())) {
+	    		System.out.println(tankEnemy.getBounds());
+	    		System.out.println(glball.get(i).getBounds());
 	    		glball.remove(i);// удаляем пулю
 	    		System.out.println(tankEnemy.getBounds());
 	    		break;
@@ -199,11 +201,12 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    tankMajor.draw(gl);
 	   
 	    if(tankMajor.getBounds().intersects(tankEnemy.getBounds())){
+	    	
 	    	//System.out.println("intersects");
-	    	System.out.println(tankMajor.getBounds());
-	 	    System.out.println(tankEnemy.getBounds());
+	    	//System.out.println(tankMajor.getBounds());
+	 	   // System.out.println(tankEnemy.getBounds());
 	    }
-	    System.out.println(  glball.size());
+	   // System.out.println(  glball.size());
 	 
 	    gl.glFlush();
 	}// end of display

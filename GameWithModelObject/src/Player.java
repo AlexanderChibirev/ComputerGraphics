@@ -44,7 +44,7 @@ public class Player extends BodyBound {
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				GameGLListener.glball.add(new GLBall(x, y, 1, 1));//new GLBall(x, y, 1, 1);
+				GameGLListener.glball.add(new GLBall(x, y, 2, 1));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
 		}

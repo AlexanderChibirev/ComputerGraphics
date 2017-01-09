@@ -13,10 +13,10 @@ public class GLBall extends BodyBound {
 	}
 	public void render(GL2 gl, GLU glu) {
 		gl.glPushMatrix();
-		System.out.print("Ball x: ");
-		System.out.println(x);
-		System.out.print("Ball y: ");
-		System.out.println(y);
+	//	System.out.print("Ball x: ");
+	//	System.out.println(x);
+	//	System.out.print("Ball y: ");
+	//	System.out.println(y);
 		gl.glTranslated(x, 1.2f, y);
 		
 		switch (Player.direction) {
