@@ -70,10 +70,9 @@ public class RectangularPrism {
 		gl.glFlush();		
 	}
 	
-	public void drawStars(GL2 gl, int size)
+	public void drawBox(GL2 gl, int size)
 	{
 		gl.glDisable(GL2.GL_LIGHTING);
-		// enable texturing and choose the 'stars' texture
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 		starsTex.bind(gl);
 		TextureCoords tc = starsTex.getImageTexCoords();

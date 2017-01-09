@@ -184,8 +184,11 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
 	    
 	    tankEnemy.draw(gl);
-	    drawSkyBox(gl);	
-	   // ball.render(gl, glu);
+	   
+	    //mGLBox.drawBox(gl, 10);	   
+	    mGLBox.drawBox(gl, FLOOR_LEN);
+	    
+	    // ball.render(gl, glu);
 	    for(int i = 0; i < glball.size(); i++) {
 	    	glball.get(i).render(gl, glu);
 	    	if(glball.get(i).getBounds().intersects(tankEnemy.getBounds())) {
@@ -195,8 +198,10 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    		System.out.println(tankEnemy.getBounds());
 	    		break;
 	    	}
-	    }   
-	    
+	    	
+	    }
+	    System.out.print("size: ");
+	    System.out.println(glball.size());
 	    
 	    tankMajor.draw(gl);
 	   
@@ -211,13 +216,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glFlush();
 	}// end of display
 	
-	private void drawSkyBox(GL2 gl) {
-		 starsDList = gl.glGenLists(1);
-		 gl.glNewList(starsDList, GL2.GL_COMPILE);
-		 mGLBox.drawStars(gl, FLOOR_LEN);
-		 gl.glEndList();
-		 gl.glCallList(starsDList);
-	}
+	
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
