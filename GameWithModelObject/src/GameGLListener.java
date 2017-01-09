@@ -54,9 +54,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private static final double Z_DIST = 7.0;      // for the camera position
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
 	private GLU glu;
-	private OBJModel tankEnemyModel;
 	protected long mLast;
 	private Player tankMajor;
+	private Enemy tankEnemy;
 	
 	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
@@ -119,8 +119,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2), gl);
 		initializeTexturesName();
 		initTexture(gl);
-		tankMajor = new Player(new Vector3f(0, 1.2f, 0), gl);
-
+		tankMajor = new Player(new Vector3f(0, 1.2f, 0), gl, glu);
+		float angle = 90f;
+		tankEnemy =  new Enemy(new Vector3f(0, 1.2f, 0), gl, angle);
 		gl.setSwapInterval(0);   
 
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
@@ -177,16 +178,19 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
-
 	    mGLBox.drawBackground(gl, mTexturesID);
-	    
 	    mCamera.update(glu, gl);
 	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
+	    
+	    tankEnemy.draw(gl);
 	    drawSkyBox(gl);	
 	    tankMajor.draw(gl);
-	    System.out.println(tankMajor.getBounds());
+	    
+	    
+	    // System.out.println(tankMajor.getBounds());
+	    //System.out.println(tankEnemy.getBounds());
 	    gl.glFlush();
-	} // end of display
+	}// end of display
 	
 	private void drawSkyBox(GL2 gl) {
 		 starsDList = gl.glGenLists(1);
