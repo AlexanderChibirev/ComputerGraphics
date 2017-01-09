@@ -119,9 +119,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2), gl);
 		initializeTexturesName();
 		initTexture(gl);
-		tankMajor = new Player(new Vector3f(0, 1.2f, 0), gl, glu);
+		tankMajor = new Player(new Vector3f(0, 0, 0), gl, glu);
 		float angle = 90f;
-		tankEnemy =  new Enemy(new Vector3f(0, 1.2f, 0), gl, angle);
+		tankEnemy =  new Enemy(new Vector3f(11, 0, 0), gl, angle);
 		gl.setSwapInterval(0);   
 
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
@@ -186,9 +186,12 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    drawSkyBox(gl);	
 	    tankMajor.draw(gl);
 	    
-	    
-	    // System.out.println(tankMajor.getBounds());
-	    //System.out.println(tankEnemy.getBounds());
+	    if(tankMajor.getBounds().intersects(tankEnemy.getBounds())){
+	    	//System.out.println("intersects");
+	    	System.out.println(tankMajor.getBounds());
+	 	    System.out.println(tankEnemy.getBounds());
+	    }
+	   
 	    gl.glFlush();
 	}// end of display
 	

@@ -10,13 +10,17 @@ import OBJLoader.OBJModel;
 
 
 public class Player extends BodyBound {
+	
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
+	private static final int SIZE_WIDTH = 3;  // for a model's dimension
+	private static final int SIZE_HEIGHT = 4;  // for a model's dimension
+	
 	private float angle = 180;
 	private OBJModel tankMajorModel;
 	public static Direction direction = Direction.UP;
 	
 	public Player(Vector3f pos, GL2 gl, GLU glu) {
-		super(pos.x, pos.z, 4, 4);
+		super(pos.x, pos.z, SIZE_WIDTH, SIZE_HEIGHT);
 		tankMajorModel = new OBJModel("tankMajor", MAX_SIZE, gl, true);
 	}
 	public void draw(GL2 gl) {
