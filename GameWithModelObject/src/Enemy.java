@@ -31,6 +31,6 @@ public class Enemy extends BodyBound {
 		//return old state for next object
 		gl.glTranslated(-x, -1.2f, -y);
 		gl.glRotatef(-angle, 0, 1, 0);
+		
 	}
-
 }

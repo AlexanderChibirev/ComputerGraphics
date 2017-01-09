@@ -17,6 +17,8 @@ class InputHandler extends KeyAdapter {
 	
 	public static boolean sKeyPressedE = false;
 	public static boolean sKeyPressedQ = false;
+
+	public static boolean sKeyPressedSpace = false;
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -25,6 +27,9 @@ class InputHandler extends KeyAdapter {
 	  }
 	  else if(e.getKeyCode() == KeyEvent.VK_A) {
 		  sKeyPressedA = true;
+	  }
+	  else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+		  sKeyPressedSpace = true;
 	  }
 	  
 	  else if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -69,5 +74,6 @@ class InputHandler extends KeyAdapter {
 		sKeyPressedQ = false;
 		sKeyPressedW = false;
 		sKeyPressedS = false;
+		sKeyPressedSpace = false;
 	}
 }

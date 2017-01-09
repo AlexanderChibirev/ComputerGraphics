@@ -9,11 +9,11 @@ public class Camera {
 	private float mShiftAngleY = 0.03f;
 	private float mShiftAngleX = 0.03f;
 	private float mShifRZ = 0.001f;
-	private float mRZ = -5;
+	private float mRZ = -8;
 	
 	private float mStepZ = 0;
 	private float mStepX = 0;
-	private float mShiftUp = 0.0002f;
+	private float mShiftUp = 0.0005f;
 	
 	public void update(GLU glu, GL2 gl) {
 		if(InputHandler.sKeyPressedUP) {

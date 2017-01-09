@@ -1,5 +1,3 @@
-import java.awt.Rectangle;
-
 import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
@@ -14,8 +12,10 @@ public class Player extends BodyBound {
 	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
 	private static final int SIZE_WIDTH = 3;  // for a model's dimension
 	private static final int SIZE_HEIGHT = 4;  // for a model's dimension
+	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
 	
 	private float angle = 180;
+	private float cooldown = 0;
 	private OBJModel tankMajorModel;
 	public static Direction direction = Direction.UP;
 	
@@ -29,6 +29,7 @@ public class Player extends BodyBound {
 		updateRotation(gl);
 		getDirection();
 		//update state
+		//System.out.println(x);
 		gl.glTranslated(x, shiftForY, y);
 		gl.glRotatef(angle, 0, 1, 0);
 		
@@ -36,8 +37,20 @@ public class Player extends BodyBound {
 		//return old state for next object
 		gl.glTranslated(-x, -shiftForY, -y);
 		gl.glRotatef(-angle, 0, 1, 0);
+		
+		updateBullet(gl);
 	}	
 	
+	private void updateBullet(GL2 gl) {
+		if(InputHandler.sKeyPressedSpace) {
+			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
+				GameGLListener.glball.add(new GLBall(x, y, 1, 1));//new GLBall(x, y, 1, 1);
+				cooldown = 0;
+			}
+		}
+		float shiftCooldown = 0.003f;
+		cooldown += shiftCooldown;
+	}
 	private void getDirection() {
 		if(angle >= 157 && angle <= 193) {
 			direction = Direction.UP;

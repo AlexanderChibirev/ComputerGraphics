@@ -57,10 +57,11 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	protected long mLast;
 	private Player tankMajor;
 	private Enemy tankEnemy;
-	
+	//private GLBall ball = new GLBall(0f, 0f, 4, 4); 
 	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
+	public static Vector<GLBall> glball = new Vector<>();
 	
 
 	public void start() {
@@ -184,14 +185,26 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    
 	    tankEnemy.draw(gl);
 	    drawSkyBox(gl);	
-	    tankMajor.draw(gl);
+	   // ball.render(gl, glu);
+	    for(int i = 0; i < glball.size(); i++) {
+	    	glball.get(i).render(gl, glu);
+	    	if(glball.get(i).getBounds().intersects(tankEnemy.getBounds())) {
+	    		glball.remove(i);// удаляем пулю
+	    		System.out.println(tankEnemy.getBounds());
+	    		break;
+	    	}
+	    }   
 	    
+	    
+	    tankMajor.draw(gl);
+	   
 	    if(tankMajor.getBounds().intersects(tankEnemy.getBounds())){
 	    	//System.out.println("intersects");
 	    	System.out.println(tankMajor.getBounds());
 	 	    System.out.println(tankEnemy.getBounds());
 	    }
-	   
+	    System.out.println(  glball.size());
+	 
 	    gl.glFlush();
 	}// end of display
 	
