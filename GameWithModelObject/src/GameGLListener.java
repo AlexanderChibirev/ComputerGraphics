@@ -35,7 +35,7 @@ enum PossitionID {
 	BLOCK1(2),
 	BLOCK2(3),
 	BLOCK3(4),
-	MOVING_PLATFORM(5);
+	MOVING_PLATFORM(5), BLOCK22(6);
 	private final Integer value;
 	
 	PossitionID(Integer value) {
@@ -110,6 +110,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		mTextures.add(new File("images/block2.jpg"));
 		mTextures.add(new File("images/block3.jpg"));
 		mTextures.add(new File("images/movingPlatform.jpg"));
+		mTextures.add(new File("images/block22.jpg"));
 	}
 	
 	@Override
@@ -181,7 +182,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    mCamera.update(glu, gl);
 	 //   mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
 	    
-	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK2.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
+	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK22.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
 	    tankEnemy.draw(gl);
 	   
 	    //mGLBox.drawBox(gl, 10);	   

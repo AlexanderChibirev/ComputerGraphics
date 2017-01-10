@@ -13,7 +13,7 @@ public class Camera {
 	
 	private float mStepZ = 0;
 	private float mStepX = 0;
-	private float mShiftUp = 0.0005f;
+	private float mSpeed = 0.5f;
 	
 	public void update(GLU glu, GL2 gl) {
 		if(InputHandler.sKeyPressedUP) {
@@ -26,29 +26,16 @@ public class Camera {
 		}
 		else if(InputHandler.sKeyPressedQ) {			mRZ += mShifRZ;
 		}
-		else if(InputHandler.sKeyPressedRight) {
+		else if(InputHandler.sKeyPressedD) {
 			mAngleX -= mShiftAngleX;
-		}
-		else if(InputHandler.sKeyPressedLeft) {
+		}		
+		else if(InputHandler.sKeyPressedA) {
 			mAngleX += mShiftAngleX;
+		}		
+		else if(InputHandler.sKeyPressedW) {			
+			mStepX = Player.shiftX * mSpeed;
+			mStepZ = -Player.shiftY * mSpeed;
 		}
-		
-		else if(InputHandler.sKeyPressedW) {
-			
-			if(Player.direction == Direction.RIGHT) {
-				//mStepX += mShiftUp;
-			}
-			else if(Player.direction == Direction.LEFT) {
-				//mStepX -= mShiftUp;
-			}
-			else if(Player.direction == Direction.UP) {
-				//mStepZ -= mShiftUp;
-			}
-			else if(Player.direction == Direction.DOWN) {
-				//mStepZ += mShiftUp;
-			}
-		}
-		
 		
 		if (mAngleY < -89.0){mAngleY= -89.0f;}
 		if (mAngleY > 89.0){mAngleY= 89.0f;}

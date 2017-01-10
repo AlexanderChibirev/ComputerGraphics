@@ -15,6 +15,8 @@ public class Player extends BodyBound {
 	private static final int SIZE_HEIGHT = 4;  // for a model's dimension
 	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
 	
+	public static float shiftX = 0;
+	public static float shiftY = 0;
 	private double angle = 180;
 	private double angleForMoveTank = 0;
 	private float cooldown = 0;
@@ -52,10 +54,14 @@ public class Player extends BodyBound {
 		return Math.sin( Math.toRadians(angle));
 	}
 	
+	private double getCosDegrees(double angle) {
+		return Math.cos( Math.toRadians(angle));
+	}
+	
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, mEndPoint));//new GLBall(x, y, 1, 1);
+				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, mEndPoint, angle));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
 		}
@@ -131,9 +137,11 @@ public class Player extends BodyBound {
 			}
 		}
 		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y)); //считаем дистанцию (длину от точки А до точки Б). формула длины вектора		
-		if(InputHandler.sKeyPressedW) {
+		if(InputHandler.sKeyPressedW && !InputHandler.sKeyPressedD && !InputHandler.sKeyPressedA) {
 			x += speed * (mEndPoint.x - x) / mDistance;
-			y += speed * (mEndPoint.y - y) / mDistance;	
+			y += speed * (mEndPoint.y - y) / mDistance;			
+			shiftX = x;
+			shiftY = y;
 		}		
 	}
 }

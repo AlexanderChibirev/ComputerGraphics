@@ -40,8 +40,8 @@ newmtl 29e601c1_dds
 	Kd 0.700000 0.700000 0.700000
 	Ks 0.100000 0.100000 0.100000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka textures\texture_0010.dds
-	map_Kd textures\texture_0010.dds
+	map_Ka textures\texture_0011.dds
+	map_Kd textures\texture_0011.dds
 
 newmtl db9171ba_dds
 	Ns 10.000000
