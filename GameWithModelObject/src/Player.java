@@ -14,7 +14,7 @@ public class Player extends BodyBound {
 	private static final int SIZE_HEIGHT = 4;  // for a model's dimension
 	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
 	
-	private float angle = 180;
+	private double angle = 180;
 	private float cooldown = 0;
 	private OBJModel tankMajorModel;
 	public static Direction direction = Direction.UP;
@@ -29,14 +29,13 @@ public class Player extends BodyBound {
 		updateRotation(gl);
 		getDirection();
 		//update state
-		//System.out.println(x);
 		gl.glTranslated(x, shiftForY, y);
-		gl.glRotatef(angle, 0, 1, 0);
+		gl.glRotatef((float) angle, 0, 1, 0);
 		
 		tankMajorModel.draw(gl);
 		//return old state for next object
 		gl.glTranslated(-x, -shiftForY, -y);
-		gl.glRotatef(-angle, 0, 1, 0);
+		gl.glRotatef((float) -angle, 0, 1, 0);
 		
 		updateBullet(gl);
 	}	
@@ -44,7 +43,8 @@ public class Player extends BodyBound {
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				GameGLListener.glball.add(new GLBall(x, y, 2, 1));//new GLBall(x, y, 1, 1);
+				//System.out.println(angle);
+				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, angle));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
 		}
@@ -80,6 +80,9 @@ public class Player extends BodyBound {
 		if(angle < 0) {
 			angle = 360;
 		}		
+		//System.out.print("tank angle: ");
+		//System.out.println(angle);
+		    
 	}
 	
 	private void updatePosition(GL2 gl) {

@@ -26,7 +26,7 @@ public class Camera {
 		}
 		else if(InputHandler.sKeyPressedQ) {			mRZ += mShifRZ;
 		}
-		else if(InputHandler.sKeyPressedRight) {
+		else if(InputHandler.sKeyPressedD) {
 			mAngleX -= mShiftAngleX;
 		}
 		else if(InputHandler.sKeyPressedW) {
@@ -44,7 +44,7 @@ public class Camera {
 				mStepZ += mShiftUp;
 			}
 		}
-		else if(InputHandler.sKeyPressedLeft) {
+		else if(InputHandler.sKeyPressedA) {
 			mAngleX += mShiftAngleX;
 		}
 		

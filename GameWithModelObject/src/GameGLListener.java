@@ -61,7 +61,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private final static int FLOOR_LEN = 150;  // should be even
 	private int starsDList;	
 	private Camera mCamera = new Camera();
-	public static Vector<GLBall> glball = new Vector<>();
+	public static Vector<GLBullet> glball = new Vector<>();
 	
 
 	public void start() {
@@ -117,7 +117,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		
 		final GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
-		mGLBox = new RectangularPrism(new Vector3f( FLOOR_LEN/2, 0.1f, FLOOR_LEN/2), gl);
+		mGLBox = new RectangularPrism(gl);
 		initializeTexturesName();
 		initTexture(gl);
 		tankMajor = new Player(new Vector3f(0, 0, 0), gl, glu);
@@ -128,9 +128,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
 		gl.glShadeModel(GL2.GL_SMOOTH);		
 		addLight(gl);
-		
 		// load the OBJ model
-		
 		//tankEnemyModel = new OBJModel("tankEnemy", MAX_SIZE, gl, true);
 	} // end of init()
 	
@@ -181,8 +179,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
 	    mGLBox.drawBackground(gl, mTexturesID);
 	    mCamera.update(glu, gl);
-	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
+	 //   mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
 	    
+	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK2.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
 	    tankEnemy.draw(gl);
 	   
 	    //mGLBox.drawBox(gl, 10);	   
@@ -192,16 +191,19 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    for(int i = 0; i < glball.size(); i++) {
 	    	glball.get(i).render(gl, glu);
 	    	if(glball.get(i).getBounds().intersects(tankEnemy.getBounds())) {
-	    		System.out.println(tankEnemy.getBounds());
-	    		System.out.println(glball.get(i).getBounds());
+	    		//System.out.println(tankEnemy.getBounds());
+	    		//System.out.println(glball.get(i).getBounds());
 	    		glball.remove(i);// удаляем пулю
-	    		System.out.println(tankEnemy.getBounds());
+	    		//System.out.println(tankEnemy.getBounds());
 	    		break;
+	    		
 	    	}
-	    	
+	    	//if(glball.get(i).x == 75 || glball.get(i).x == -75 || glball.get(i).y == 75 || glball.get(i).y == -75) {
+    		//	glball.remove(i);// удаляем пулю
+    		//}
 	    }
-	    System.out.print("size: ");
-	    System.out.println(glball.size());
+	   // System.out.print("size: ");
+	   // System.out.println(glball.size());
 	    
 	    tankMajor.draw(gl);
 	   

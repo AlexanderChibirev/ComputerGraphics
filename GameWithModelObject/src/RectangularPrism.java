@@ -12,13 +12,8 @@ import Utils.TextureUtils;
 public class RectangularPrism {
 	private Texture starsTex;
 	private Vector3f mSize;
-	RectangularPrism(Vector3f size, GL2 gl) {
-		this.mSize = size;
+	RectangularPrism(GL2 gl) {
 		loadTextures(gl);
-	}
-	
-	public RectangularPrism(Vector3f size) {
-		this.mSize = size;
 	}
 
 	public void setSize(Vector3f size) {
@@ -33,7 +28,8 @@ public class RectangularPrism {
 	}  // end of loadTextures()
 	
 	
-	public void drawFloor(GL2 gl, int textureID) {
+	public void drawFloor(GL2 gl, int textureID, Vector3f size) {
+		setSize(size);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
 			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(1.0f * mSize.x, 1.0f * mSize.y, -1.0f * mSize.z); // Top Right Of The Quad (Top)
