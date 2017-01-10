@@ -33,6 +33,15 @@ public class Player extends BodyBound {
 		float shiftForY = 1.2f;
 		updateRotation(gl);		
 		/////////////////
+		System.out.print("angleForMove in Player: ");
+		System.out.println(angleForMove);
+		
+		System.out.print("mEndPoint in Player: ");
+		System.out.println(mEndPoint);
+		//System.out.print("angleForMove: ");
+		//System.out.println(angleForMove);
+	
+		
 		double b = 75 * getSinInDegrees(angleForMove) / getSinInDegrees(180 - 90 - angleForMove);		
 		if( (angleForMove >= -90 && angleForMove <= 0) || (angleForMove <= 90 && angleForMove > 0)) {
 			mEndPoint = new Vector2d(b, 80);
@@ -42,9 +51,13 @@ public class Player extends BodyBound {
 				mEndPoint = new Vector2d(-b, -80);
 			}
 			else {
-				angleForMove -= 90;
-				b = 75 * getSinInDegrees(angleForMove) / getSinInDegrees(180 - 90 - angleForMove);
-				mEndPoint = new Vector2d(80, -b);				
+				System.out.println("TET");
+				//angleForMove -= 90;
+				b = 75 * getSinInDegrees(angleForMove - 90) / getSinInDegrees(180 - 90 - angleForMove - 90);
+				if(angleForMove > 180) {
+					mEndPoint = new Vector2d(-80, -b);
+				}
+				else{mEndPoint = new Vector2d(80, b);}		
 			}
 		}
 		mDistance = 2000; //Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y));//считаем дистанцию (длину от точки А до точки Б). формула длины вектора		
@@ -71,7 +84,8 @@ public class Player extends BodyBound {
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, angle));//new GLBall(x, y, 1, 1);
+				System.out.println(mEndPoint);
+				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, mEndPoint));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
 		}
@@ -97,22 +111,32 @@ public class Player extends BodyBound {
 		if(InputHandler.sKeyPressedA) {
 			angle -= 0.03;
 			angleForMove -= 0.03;
+			/*if(angleForMove < 0) {
+				//angleForMove = 360;
+			}
+			else{
+				
+			}*/
 		}
 		else if(InputHandler.sKeyPressedD) {
 			angle += 0.03;	
 			angleForMove += 0.03;
-		}
-		
+			
+		}		
 		if(angle > 360) {
 			angle = 0;
-			angleForMove = 0;
 		}
 		if(angle < 0) {
 			angle = 360;
-			angleForMove = 360;
 		}
-		    
-	
+		
+		//System.out.println(angleForMove);
+		if(angleForMove > 360) {			
+			angleForMove = 0;
+		}
+		if(angleForMove < -270) {			
+			angleForMove = 90;
+		}
 	}
 	
 	private void updatePosition(GL2 gl) {

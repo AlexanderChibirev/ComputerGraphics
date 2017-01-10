@@ -13,15 +13,12 @@ public class GLBullet extends BodyBound {
 	private float speed = 0.01f;
 	private double mDistance;
 	private Vector2d mEndPoint;
-	public GLBullet(float x, float y, int width, int height, double angle) {
+	public GLBullet(float x, float y, int width, int height, Vector2d endPoint) {
 		super(x, y, width, height);
+		mEndPoint = endPoint;
+		//mAngle = angle - 180;			
 		
-		mAngle = angle - 180;		
-		
-		
-		
-		
-		double b = 75 * getSinInDegrees(mAngle) / getSinInDegrees(180 - 90 - mAngle);		
+		/*double b = 75 * getSinInDegrees(mAngle) / getSinInDegrees(180 - 90 - mAngle);		
 		if( (mAngle >= -90 && mAngle <= 0) || (mAngle <= 90 && mAngle > 0)) {
 			mEndPoint = new Vector2d(b, 80);
 		}
@@ -36,7 +33,7 @@ public class GLBullet extends BodyBound {
 			}
 		}
 		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y));//считаем дистанцию (длину от точки ј до точки Ѕ). формула длины вектора		
-	}
+	*/} 
 	
 	private double getSinInDegrees(double angle) {
 		return Math.sin( Math.toRadians(angle));
@@ -44,6 +41,7 @@ public class GLBullet extends BodyBound {
 
 	public void render(GL2 gl, GLU glu) {
 		gl.glPushMatrix();
+		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y));
 		x += speed * (mEndPoint.x - x) / mDistance; //идем по иксу с помощью вектора нормали
 		y += speed * (mEndPoint.y - y) / mDistance; //идем по игреку так же
 		gl.glTranslated(x, 0.5f, y);
