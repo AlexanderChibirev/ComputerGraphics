@@ -32,8 +32,7 @@ public class Player extends BodyBound {
 	public void draw(GL2 gl) {
 		
 		updateRotation(gl);
-		updatePosition(gl);		
-		
+		updatePosition(gl);
 
 		getDirection();		
 		float shiftForY = 1.2f;
@@ -106,28 +105,33 @@ public class Player extends BodyBound {
 	}
 	
 	private void updatePosition(GL2 gl) {
-		double b = 75 * getSinInDegrees(angleForMoveTank) / getSinInDegrees(180 - 90 - angleForMoveTank);		
-		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) || (angleForMoveTank <= 90 && angleForMoveTank > 0)) {
-			mEndPoint = new Vector2d(b, 80);
+		double sizeSkybox = WorldConsts.SIZE_SKYBOX.getValue();
+		double triangleSide = sizeSkybox 
+				* getSinInDegrees(angleForMoveTank)
+				/ getSinInDegrees(180 - 90 - angleForMoveTank);	// 180 - 90 - angleForMoveTank == gama(Y) angle	
+		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) 
+				|| (angleForMoveTank <= 90 && angleForMoveTank > 0)) { // 1 и 2 ая четверть
+			mEndPoint = new Vector2d(triangleSide, sizeSkybox);
 		}
-		else {
+		else {//когда нижняя координата переводим в верхнюю и меняем координаты
 			if(angleForMoveTank < 90) {
-				mEndPoint = new Vector2d(-b, -80);				
+				mEndPoint = new Vector2d(-triangleSide, -sizeSkybox);				
 			}
 			else {
-				b = 75 * getSinInDegrees(angleForMoveTank - 90) / getSinInDegrees(180 - 90 - angleForMoveTank - 90);
+				triangleSide = sizeSkybox
+						* getSinInDegrees(angleForMoveTank - 90) 
+						/ getSinInDegrees(180 - 90 - angleForMoveTank - 90);//180 - 90 - angleForMoveTank - 90 =  gama(Y) смещенная для 4ой четверти
 				if(angleForMoveTank > 180) {
 					
-					mEndPoint = new Vector2d(-80, -b);
+					mEndPoint = new Vector2d(-sizeSkybox, -triangleSide);
 				}
-				else{
-					
-					mEndPoint = new Vector2d(80, b);
+				else {					
+					mEndPoint = new Vector2d(sizeSkybox, triangleSide);
 				}		
 			}
 		}
 		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y)); //считаем дистанцию (длину от точки А до точки Б). формула длины вектора		
-		if(InputHandler.sKeyPressedW){
+		if(InputHandler.sKeyPressedW) {
 			x += speed * (mEndPoint.x - x) / mDistance;
 			y += speed * (mEndPoint.y - y) / mDistance;	
 		}		
