@@ -1,3 +1,4 @@
+import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
@@ -15,9 +16,13 @@ public class Player extends BodyBound {
 	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
 	
 	private double angle = 180;
+	private double angleForMove = 0;
 	private float cooldown = 0;
 	private OBJModel tankMajorModel;
+	private float speed = 0.01f;
 	public static Direction direction = Direction.UP;
+	private Vector2d mEndPoint;
+	private double mDistance = 0;
 	
 	public Player(Vector3f pos, GL2 gl, GLU glu) {
 		super(pos.x, pos.z, SIZE_WIDTH, SIZE_HEIGHT);
@@ -26,7 +31,24 @@ public class Player extends BodyBound {
 	public void draw(GL2 gl) {
 		updatePosition(gl);
 		float shiftForY = 1.2f;
-		updateRotation(gl);
+		updateRotation(gl);		
+		/////////////////
+		double b = 75 * getSinInDegrees(angleForMove) / getSinInDegrees(180 - 90 - angleForMove);		
+		if( (angleForMove >= -90 && angleForMove <= 0) || (angleForMove <= 90 && angleForMove > 0)) {
+			mEndPoint = new Vector2d(b, 80);
+		}
+		else {
+			if(angleForMove < 90) {
+				mEndPoint = new Vector2d(-b, -80);
+			}
+			else {
+				angleForMove -= 90;
+				b = 75 * getSinInDegrees(angleForMove) / getSinInDegrees(180 - 90 - angleForMove);
+				mEndPoint = new Vector2d(80, -b);				
+			}
+		}
+		mDistance = 2000; //Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y));//считаем дистанцию (длину от точки ј до точки Ѕ). формула длины вектора		
+		
 		getDirection();
 		//update state
 		gl.glTranslated(x, shiftForY, y);
@@ -40,10 +62,15 @@ public class Player extends BodyBound {
 		updateBullet(gl);
 	}	
 	
+	
+	
+	private double getSinInDegrees(double angle) {
+		return Math.sin( Math.toRadians(angle));
+	}
+	
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				//System.out.println(angle);
 				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, angle));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
@@ -69,26 +96,30 @@ public class Player extends BodyBound {
 	private void updateRotation(GL2 gl) {
 		if(InputHandler.sKeyPressedA) {
 			angle -= 0.03;
+			angleForMove -= 0.03;
 		}
 		else if(InputHandler.sKeyPressedD) {
-			angle += 0.03;			
+			angle += 0.03;	
+			angleForMove += 0.03;
 		}
 		
 		if(angle > 360) {
 			angle = 0;
+			angleForMove = 0;
 		}
 		if(angle < 0) {
 			angle = 360;
-		}		
-		//System.out.print("tank angle: ");
-		//System.out.println(angle);
+			angleForMove = 360;
+		}
 		    
+	
 	}
 	
 	private void updatePosition(GL2 gl) {
 		final float shiftTranslated = 0.001f;
 		if(InputHandler.sKeyPressedW){
 			if(direction == Direction.UP) {
+				//x += speed * (mEndPoint.x - x) / mDistance; //идем по иксу с помощью вектора нормали				//y += speed * (mEndPoint.y - y) / mDistance; //идем по игреку так же
 				y += shiftTranslated;
 			}
 			else if(direction == Direction.DOWN) {
@@ -100,7 +131,6 @@ public class Player extends BodyBound {
 			else if(direction == Direction.LEFT) {
 				x -= shiftTranslated;
 			}
-			//System.out.println(position.x); //75
 		}		
 	}
 }

@@ -26,27 +26,29 @@ public class Camera {
 		}
 		else if(InputHandler.sKeyPressedQ) {			mRZ += mShifRZ;
 		}
-		else if(InputHandler.sKeyPressedD) {
+		else if(InputHandler.sKeyPressedRight) {
 			mAngleX -= mShiftAngleX;
 		}
-		else if(InputHandler.sKeyPressedW) {
-			
-			if(Player.direction == Direction.RIGHT){
-				mStepX += mShiftUp;
-			}
-			else if(Player.direction == Direction.LEFT){
-				mStepX -= mShiftUp;
-			}
-			else if(Player.direction == Direction.UP){
-				mStepZ -= mShiftUp;
-			}
-			else if(Player.direction == Direction.DOWN){
-				mStepZ += mShiftUp;
-			}
-		}
-		else if(InputHandler.sKeyPressedA) {
+		else if(InputHandler.sKeyPressedLeft) {
 			mAngleX += mShiftAngleX;
 		}
+		
+		else if(InputHandler.sKeyPressedW) {
+			
+			if(Player.direction == Direction.RIGHT) {
+				//mStepX += mShiftUp;
+			}
+			else if(Player.direction == Direction.LEFT) {
+				//mStepX -= mShiftUp;
+			}
+			else if(Player.direction == Direction.UP) {
+				//mStepZ -= mShiftUp;
+			}
+			else if(Player.direction == Direction.DOWN) {
+				//mStepZ += mShiftUp;
+			}
+		}
+		
 		
 		if (mAngleY < -89.0){mAngleY= -89.0f;}
 		if (mAngleY > 89.0){mAngleY= 89.0f;}
