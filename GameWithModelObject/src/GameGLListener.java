@@ -202,8 +202,8 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    		glball.remove(i);// удаляем пулю
     		}
 	    }
-	    System.out.print("size: ");
-	    System.out.println(glball.size());
+	    //System.out.print("size: ");
+	    //System.out.println(glball.size());
 	    
 	    tankMajor.draw(gl);
 	   

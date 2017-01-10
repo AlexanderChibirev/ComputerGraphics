@@ -16,10 +16,10 @@ public class Player extends BodyBound {
 	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
 	
 	private double angle = 180;
-	private double angleForMove = 0;
+	private double angleForMoveTank = 0;
 	private float cooldown = 0;
 	private OBJModel tankMajorModel;
-	private float speed = 0.01f;
+	private float speed = 0.001f;
 	public static Direction direction = Direction.UP;
 	private Vector2d mEndPoint;
 	private double mDistance = 0;
@@ -33,42 +33,42 @@ public class Player extends BodyBound {
 		float shiftForY = 1.2f;
 		updateRotation(gl);		
 		/////////////////
-		System.out.print("angleForMove in Player: ");
-		System.out.println(angleForMove);
+		//System.out.print("angleForMove in Player: ");
+		//System.out.println(angleForMove);
 		
-		System.out.print("mEndPoint in Player: ");
-		System.out.println(mEndPoint);
+		//System.out.print("mEndPoint in Player: ");
+		//System.out.println(mEndPoint);
 		//System.out.print("angleForMove: ");
 		//System.out.println(angleForMove);
 	
 		
-		double b = 75 * getSinInDegrees(angleForMove) / getSinInDegrees(180 - 90 - angleForMove);		
-		if( (angleForMove >= -90 && angleForMove <= 0) || (angleForMove <= 90 && angleForMove > 0)) {
+		double b = 75 * getSinInDegrees(angleForMoveTank) / getSinInDegrees(180 - 90 - angleForMoveTank);		
+		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) || (angleForMoveTank <= 90 && angleForMoveTank > 0)) {
 			mEndPoint = new Vector2d(b, 80);
 		}
 		else {
-			if(angleForMove < 90) {
-				mEndPoint = new Vector2d(-b, -80);
+			if(angleForMoveTank < 90) {
+				mEndPoint = new Vector2d(-b, -80);				
 			}
 			else {
-				System.out.println("TET");
-				//angleForMove -= 90;
-				b = 75 * getSinInDegrees(angleForMove - 90) / getSinInDegrees(180 - 90 - angleForMove - 90);
-				if(angleForMove > 180) {
+				b = 75 * getSinInDegrees(angleForMoveTank - 90) / getSinInDegrees(180 - 90 - angleForMoveTank - 90);
+				if(angleForMoveTank > 180) {
+					
 					mEndPoint = new Vector2d(-80, -b);
 				}
-				else{mEndPoint = new Vector2d(80, b);}		
+				else{
+					
+					mEndPoint = new Vector2d(80, b);
+				}		
 			}
 		}
-		mDistance = 2000; //Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y));//считаем дистанцию (длину от точки ј до точки Ѕ). формула длины вектора		
+		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y)); //считаем дистанцию (длину от точки ј до точки Ѕ). формула длины вектора
 		
 		getDirection();
-		//update state
 		gl.glTranslated(x, shiftForY, y);
 		gl.glRotatef((float) angle, 0, 1, 0);
 		
 		tankMajorModel.draw(gl);
-		//return old state for next object
 		gl.glTranslated(-x, -shiftForY, -y);
 		gl.glRotatef((float) -angle, 0, 1, 0);
 		
@@ -84,7 +84,6 @@ public class Player extends BodyBound {
 	private void updateBullet(GL2 gl) {
 		if(InputHandler.sKeyPressedSpace) {
 			if(cooldown > MAX_COOLDOWN_WAIT_TIME) {
-				System.out.println(mEndPoint);
 				GameGLListener.glball.add(new GLBullet(x, y, 2, 1, mEndPoint));//new GLBall(x, y, 1, 1);
 				cooldown = 0;
 			}
@@ -110,51 +109,37 @@ public class Player extends BodyBound {
 	private void updateRotation(GL2 gl) {
 		if(InputHandler.sKeyPressedA) {
 			angle -= 0.03;
-			angleForMove -= 0.03;
-			/*if(angleForMove < 0) {
-				//angleForMove = 360;
-			}
-			else{
-				
-			}*/
+			angleForMoveTank -= 0.03;
 		}
 		else if(InputHandler.sKeyPressedD) {
 			angle += 0.03;	
-			angleForMove += 0.03;
+			angleForMoveTank += 0.03;
 			
-		}		
+		}
+		
 		if(angle > 360) {
 			angle = 0;
-		}
+		}		
 		if(angle < 0) {
 			angle = 360;
 		}
 		
-		//System.out.println(angleForMove);
-		if(angleForMove > 360) {			
-			angleForMove = 0;
+		if(angleForMoveTank > 360) {		
+			angleForMoveTank = 0;
 		}
-		if(angleForMove < -270) {			
-			angleForMove = 90;
+		if(angleForMoveTank < -270) {			
+			angleForMoveTank = 90.1;
 		}
 	}
 	
 	private void updatePosition(GL2 gl) {
 		final float shiftTranslated = 0.001f;
 		if(InputHandler.sKeyPressedW){
-			if(direction == Direction.UP) {
-				//x += speed * (mEndPoint.x - x) / mDistance; //идем по иксу с помощью вектора нормали				//y += speed * (mEndPoint.y - y) / mDistance; //идем по игреку так же
-				y += shiftTranslated;
-			}
-			else if(direction == Direction.DOWN) {
-				y -= shiftTranslated;
-			}
-			else if(direction == Direction.RIGHT) {
-				x += shiftTranslated;
-			}	
-			else if(direction == Direction.LEFT) {
-				x -= shiftTranslated;
-			}
+			System.out.println(angleForMoveTank);
+			//if(angleForMoveTank != 90) {
+				x += speed * (mEndPoint.x - x) / mDistance;
+				y += speed * (mEndPoint.y - y) / mDistance;
+			//}			
 		}		
 	}
 }
