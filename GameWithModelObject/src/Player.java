@@ -28,50 +28,22 @@ public class Player extends BodyBound {
 		super(pos.x, pos.z, SIZE_WIDTH, SIZE_HEIGHT);
 		tankMajorModel = new OBJModel("tankMajor", MAX_SIZE, gl, true);
 	}
-	public void draw(GL2 gl) {
-		updatePosition(gl);
-		float shiftForY = 1.2f;
-		updateRotation(gl);		
-		/////////////////
-		//System.out.print("angleForMove in Player: ");
-		//System.out.println(angleForMove);
-		
-		//System.out.print("mEndPoint in Player: ");
-		//System.out.println(mEndPoint);
-		//System.out.print("angleForMove: ");
-		//System.out.println(angleForMove);
 	
+	public void draw(GL2 gl) {
 		
-		double b = 75 * getSinInDegrees(angleForMoveTank) / getSinInDegrees(180 - 90 - angleForMoveTank);		
-		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) || (angleForMoveTank <= 90 && angleForMoveTank > 0)) {
-			mEndPoint = new Vector2d(b, 80);
-		}
-		else {
-			if(angleForMoveTank < 90) {
-				mEndPoint = new Vector2d(-b, -80);				
-			}
-			else {
-				b = 75 * getSinInDegrees(angleForMoveTank - 90) / getSinInDegrees(180 - 90 - angleForMoveTank - 90);
-				if(angleForMoveTank > 180) {
-					
-					mEndPoint = new Vector2d(-80, -b);
-				}
-				else{
-					
-					mEndPoint = new Vector2d(80, b);
-				}		
-			}
-		}
-		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y)); //считаем дистанцию (длину от точки А до точки Б). формула длины вектора
+		updateRotation(gl);
+		updatePosition(gl);		
 		
-		getDirection();
+
+		getDirection();		
+		float shiftForY = 1.2f;
 		gl.glTranslated(x, shiftForY, y);
 		gl.glRotatef((float) angle, 0, 1, 0);
 		
 		tankMajorModel.draw(gl);
+		
 		gl.glTranslated(-x, -shiftForY, -y);
 		gl.glRotatef((float) -angle, 0, 1, 0);
-		
 		updateBullet(gl);
 	}	
 	
@@ -107,13 +79,14 @@ public class Player extends BodyBound {
 	}
 	
 	private void updateRotation(GL2 gl) {
+		float speedRotation = 0.03f;
 		if(InputHandler.sKeyPressedA) {
-			angle -= 0.03;
-			angleForMoveTank -= 0.03;
+			angle -=speedRotation;
+			angleForMoveTank -= speedRotation;
 		}
 		else if(InputHandler.sKeyPressedD) {
-			angle += 0.03;	
-			angleForMoveTank += 0.03;
+			angle += speedRotation;	
+			angleForMoveTank += speedRotation;
 			
 		}
 		
@@ -128,18 +101,35 @@ public class Player extends BodyBound {
 			angleForMoveTank = 0;
 		}
 		if(angleForMoveTank < -270) {			
-			angleForMoveTank = 90.1;
+			angleForMoveTank = 90.1f;
 		}
 	}
 	
 	private void updatePosition(GL2 gl) {
-		final float shiftTranslated = 0.001f;
+		double b = 75 * getSinInDegrees(angleForMoveTank) / getSinInDegrees(180 - 90 - angleForMoveTank);		
+		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) || (angleForMoveTank <= 90 && angleForMoveTank > 0)) {
+			mEndPoint = new Vector2d(b, 80);
+		}
+		else {
+			if(angleForMoveTank < 90) {
+				mEndPoint = new Vector2d(-b, -80);				
+			}
+			else {
+				b = 75 * getSinInDegrees(angleForMoveTank - 90) / getSinInDegrees(180 - 90 - angleForMoveTank - 90);
+				if(angleForMoveTank > 180) {
+					
+					mEndPoint = new Vector2d(-80, -b);
+				}
+				else{
+					
+					mEndPoint = new Vector2d(80, b);
+				}		
+			}
+		}
+		mDistance = Math.sqrt((mEndPoint.x - x)*(mEndPoint.x - x) + (mEndPoint.y - y) * (mEndPoint.y - y)); //считаем дистанцию (длину от точки А до точки Б). формула длины вектора		
 		if(InputHandler.sKeyPressedW){
-			System.out.println(angleForMoveTank);
-			//if(angleForMoveTank != 90) {
-				x += speed * (mEndPoint.x - x) / mDistance;
-				y += speed * (mEndPoint.y - y) / mDistance;
-			//}			
+			x += speed * (mEndPoint.x - x) / mDistance;
+			y += speed * (mEndPoint.y - y) / mDistance;	
 		}		
 	}
 }
