@@ -15,6 +15,7 @@ import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
+import OBJLoader.OBJModel;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -26,7 +27,7 @@ enum PossitionTextureID {
 	BLOCK_UNDESTROYABLES(1),
 	BLOCK1(2),
 	BLOCK_DESTROYABLES(3),
-	BLOCK3(4),
+	THE_END(4),
 	PLATFORM(5), BLOCK22(6);
 	private final Integer value;
 	
@@ -46,7 +47,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private GLU mGlu;
 	protected long mLast;
 	private Player mTankMajor;
-	private Enemy mTankEnemy;
 	static double elapsedTime;
 	private final static int FLOOR_LEN = 150;  // should be even
 	
@@ -54,6 +54,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	private BlockUndestroyable mBlocksUndestroyable = new BlockUndestroyable();
 	private BlockDestroyable mBlocksDestroyable = new BlockDestroyable();
 	public static Vector<Enemy> sTankEnemyes = new Vector<>();
+	private Boss boss;
 	
 	protected void update() {
         long time = System.nanoTime();
@@ -64,7 +65,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 
 	public void start() {
 		this.lastTime = System.nanoTime();
-		System.out.println(lastTime);
 		Animator animator = new Animator(this.canvas);
 		animator.setRunAsFastAsPossible(true);
 		animator.start();	
@@ -114,7 +114,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 			for (int j = 0; j < Map.WIDTH_MAP; j++)
 			{
 				final char tile = Map.TileMap[i].charAt(j);
-				if(tile == 'd' || tile == 'u' ||  tile == 'e') {
+				if(tile == 'd' || tile == 'u' ||  tile == 'e' || tile == 'b') {
 					z = -i * size * 2;
 					x = j * size * 2;
 					if (tile == 'd') {
@@ -125,7 +125,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 						typeBlock = PossitionTextureID.BLOCK_UNDESTROYABLES.getValue();
 						BlockUndestroyable.sBlockUndestroyables.addElement(new BodyBound(x - sizeShift, z + sizeShift, size, size, typeBlock));
 					}
-					
+					else if ((tile == 'b')) {
+						boss = new Boss(x - sizeShift,z + sizeShift, 25, gl);
+					}					
 					else if ((tile == 'e')) {
 						if(quantE % 2 == 0)
 							sTankEnemyes.addElement(new Enemy(x - sizeShift, z + sizeShift, Direction.UP, gl));	
@@ -159,8 +161,6 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		initTexture(gl);
 		mTankMajor = new Player(new Vector3f(0, 0, 0), gl, mGlu);
 		initMap(gl);
-		float angle = 90f;
-		
 		gl.setSwapInterval(0);   
 
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
@@ -197,21 +197,9 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glLoadIdentity();
 	} // end of reshape()
 	
-	@Override
-	public void display(GLAutoDrawable drawable) {// the model is rotated and rendered
-
-	    // update the rotations (if rotations were specified)
-	    final GL2 gl = drawable.getGL().getGL2();
-
-	    // clear colour and depth buffers
-	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-	    gl.glLoadIdentity();
-	    final double Z_DIST = 7.0; // for the camera position
-	    mGlu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
-	    update();
+	private void render(GL2 gl) {
 	    RectangularPrism.drawBackground(gl, sTexturesID);
 	    mCamera.update(mGlu, gl);
-	    
 	    mBlocksUndestroyable.draw(gl);
 	    mBlocksDestroyable.draw(gl);
 	    RectangularPrism.drawFloor(gl, sTexturesID.get(PossitionTextureID.PLATFORM.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
@@ -240,23 +228,46 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	 		}	    	
 	    }
 	    /////////////////////////////////////////////////////////////
-	    
-	    
-	    
 	    for(int i = 0; i < BlockDestroyable.sBlockDestroyables.size(); ++i) {
 			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
 				if(BlockDestroyable.sBlockDestroyables.get(i).getBounds().
 						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
-					System.out.println("asdsa");
 					BlockDestroyable.sBlockDestroyables.remove(i);
 					Bullet.sBulletsArray.remove(j);
 					break;
 				}
 			}
+		}	    
+	    for(int i = 0; i < BlockUndestroyable.sBlockUndestroyables.size(); ++i) {
+			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
+				if(BlockUndestroyable.sBlockUndestroyables.get(i).getBounds().
+						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
+					Bullet.sBulletsArray.remove(j);
+					break;
+				}
+			}
 		}
-	    
+	    boss.update(gl);	   
 	    mTankMajor.draw(gl);	 
 	    gl.glFlush();
+	}
+	
+	@Override
+	public void display(GLAutoDrawable drawable) {// the model is rotated and rendered
+	    // update the rotations (if rotations were specified)
+	    final GL2 gl = drawable.getGL().getGL2();
+	    // clear colour and depth buffers
+	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+	    gl.glLoadIdentity();   
+	    final double Z_DIST = 7.0; // for the camera position
+		mGlu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);// position camera
+	    if(boss.isDead()) {
+	    	RectangularPrism.drawBackground(gl, sTexturesID);
+	    }
+	    else {
+	    	update();
+		    render(gl);	 
+	    }
 	}
 	
 	

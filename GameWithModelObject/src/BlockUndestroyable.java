@@ -16,7 +16,7 @@ public class BlockUndestroyable {
 			gl.glTranslated(block.x, mSizeBlock + shiftForY, block.y);
 			RectangularPrism.drawFloor(gl,
 					GameGLListener.sTexturesID.get(block.typeSprite),
-					new Vector3f(mSizeBlock, mSizeBlock * 4, mSizeBlock));
+					new Vector3f(mSizeBlock, mSizeBlock, mSizeBlock));
 			gl.glTranslated(-block.x, -mSizeBlock - shiftForY,  -block.y);
 		}
 	}

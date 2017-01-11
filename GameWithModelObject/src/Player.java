@@ -37,8 +37,6 @@ public class Player extends BodyBound {
 	
 	
 	public void draw(GL2 gl) {
-		
-		
 		updateRotation(gl);
 		updatePosition(gl);
 		float shiftForY = 1.8f;

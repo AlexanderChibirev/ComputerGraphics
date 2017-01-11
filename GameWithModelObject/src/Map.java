@@ -24,8 +24,8 @@ public class Map {
 			"u       uuuuuuu        u",
 			"udddddduuuuuuuuuuuuddddu",
 			"udduuuu         uuuudduu",
-			"u e   ueee   eeeu      u",
-			"u     d         d   e  u",
+			"u e   u    b    u   e  u",
+			"u     d         d      u",
 			"uuuuuuuuuuuuuuuuuuuuuuuu",
 		};
 }
