@@ -15,8 +15,8 @@ public class BodyBound {
 	        this.typeSprite = typeSprite;
 	 }
 	 
-	 public Rectangle getBounds() {
+	 public Rectangle getBounds() {		 	
 	        return new Rectangle((int)x, (int)y, width, height);
-	}	 
+	 }
 	 
 }

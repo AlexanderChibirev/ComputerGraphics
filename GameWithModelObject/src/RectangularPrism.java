@@ -10,8 +10,8 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 import Utils.TextureUtils;
 
 public class RectangularPrism{
-	private Texture starsTex;
-	private Vector3f mSize;
+	static Texture starsTex;
+	static Vector3f mSize;
 	RectangularPrism(GL2 gl) {
 		loadTextures(gl);
 	}
@@ -20,7 +20,7 @@ public class RectangularPrism{
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setSize(Vector3f size) {
+	public static void setSize(Vector3f size) {
 		mSize = size;
 	}
 	
@@ -32,7 +32,7 @@ public class RectangularPrism{
 	}  // end of loadTextures()
 	
 	
-	public void drawFloor(GL2 gl, int textureID, Vector3f size) {
+	public static void drawFloor(GL2 gl, int textureID, Vector3f size) {
 		setSize(size);
 		gl.glBindTexture(GL2.GL_TEXTURE_2D, textureID);
 		gl.glBegin(GL2.GL_QUADS); // Start Drawing The Cube
@@ -70,7 +70,7 @@ public class RectangularPrism{
 		gl.glFlush();		
 	}
 	
-	public void drawBox(GL2 gl, int size)
+	public static void drawBox(GL2 gl, int size)
 	{
 		gl.glDisable(GL2.GL_LIGHTING);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
@@ -119,7 +119,7 @@ public class RectangularPrism{
 	} // end of drawStars()
 	
 	
-	public void drawBackground (GL2 gl, Vector<Integer> texturesID) {
+	public static void drawBackground (GL2 gl, Vector<Integer> texturesID) {
 		gl.glDisable(GL.GL_DEPTH_TEST); 
 		gl.glDisable(GL.GL_CULL_FACE); 
 		gl.glEnable(GL2.GL_TEXTURE_2D);	
