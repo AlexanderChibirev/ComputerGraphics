@@ -7,30 +7,24 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
-import Utils.TextureUtils;
+import Utils.LoaderTextures;
 
-public class RectangularPrism{
+public class DrawRects{
 	static Texture starsTex;
 	static Vector3f mSize;
-	RectangularPrism(GL2 gl) {
-		loadTextures(gl);
+	DrawRects(GL2 gl) {
+		starsTex = LoaderTextures.loadTexture("stars.jpg", gl);
+	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 	}
 
-	public RectangularPrism() {
+	public DrawRects() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public static void setSize(Vector3f size) {
 		mSize = size;
-	}
-	
-	private void loadTextures(GL2 gl)
-	{
-	    starsTex = TextureUtils.loadTexture("stars.jpg", gl);
-	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-	    starsTex.setTexParameteri(gl, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
-	}  // end of loadTextures()
-	
+	}	
 	
 	public static void drawFloor(GL2 gl, int textureID, Vector3f size) {
 		setSize(size);

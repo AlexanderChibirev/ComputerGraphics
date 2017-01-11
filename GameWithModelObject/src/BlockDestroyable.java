@@ -4,20 +4,21 @@ import javax.vecmath.Vector3f;
 
 import com.jogamp.opengl.GL2;
 
+import Utils.LoaderTextures;
+
 public class BlockDestroyable {
-	private int mSizeBlock = 3;
+	private int sizeBlock = 3;
 	float shiftForY = 0.1f;
-	public static Vector<BodyBound> sBlockDestroyables = new Vector<>();
 	float sizeShift = 70;
-	int mTypeBlock;
+	int typeBlock;
 	
 	public void draw(GL2 gl) {
-		for(BodyBound block : BlockDestroyable.sBlockDestroyables) {
-			gl.glTranslated(block.x, mSizeBlock + shiftForY, block.y);
-			RectangularPrism.drawFloor(gl,
-					GameGLListener.sTexturesID.get(block.typeSprite),
-					new Vector3f(mSizeBlock, mSizeBlock, mSizeBlock));
-			gl.glTranslated(-block.x, -mSizeBlock - shiftForY,  -block.y);
+		for(BodyBound block : Entity.sBlockDestroyables) {
+			gl.glTranslated(block.x, sizeBlock + shiftForY, block.y);
+			DrawRects.drawFloor(gl,
+					LoaderTextures.sTexturesID.get(block.textureId),
+					new Vector3f(sizeBlock, sizeBlock, sizeBlock));
+			gl.glTranslated(-block.x, -sizeBlock - shiftForY,  -block.y);
 		}
 	}
 }

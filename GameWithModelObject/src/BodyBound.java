@@ -5,14 +5,14 @@ public class BodyBound {
 	 protected float y;
 	 protected int width;
 	 protected int height;
-	 protected int typeSprite;
+	 protected int textureId;
 	 
-	 public BodyBound(float x, float y, int width, int height, int typeSprite) {
+	 public BodyBound(float x, float y, int width, int height, int textureId) {
 	        this.x = x;
 	        this.y = y;
 	        this.width = width;
 	        this.height = height;
-	        this.typeSprite = typeSprite;
+	        this.textureId = textureId;
 	 }
 	 
 	 public Rectangle getBounds() {		 	

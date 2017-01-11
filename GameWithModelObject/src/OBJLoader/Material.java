@@ -41,7 +41,7 @@ public class Material
     if (kd != null)
       System.out.println("  Kd: " + kd.toString());
     if (ks != null)
-      System.out.println("  Ks: " + ks.toString());
+     System.out.println("  Ks: " + ks.toString());
     if (ns != 0.0f)
       System.out.println("  Ns: " + ns);
     if (d != 1.0f)

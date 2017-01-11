@@ -10,7 +10,6 @@ public class Camera {
 	private float mShiftAngleX = 0.3f;
 	private float mShifRZ = 0.01f;
 	private float mRZ = -8;
-	
 	private float mStepZ = 0;
 	private float mStepX = 0;
 	private float mSpeed = 0.5f;
@@ -36,10 +35,9 @@ public class Camera {
 			mStepX = Player.sShiftX * mSpeed;
 			mStepZ = -Player.sShiftY * mSpeed;
 		}
-		
 		if (mAngleY < -89.0){mAngleY= -89.0f;}
 		if (mAngleY > 89.0){mAngleY= 89.0f;}
-	
+		
 		glu.gluLookAt(mStepX, 0, mStepZ, mStepX - Math.sin(mAngleX / 180 * Math.PI), 0 + (Math.tan(mAngleY / 180 * Math.PI)), mStepZ-Math.cos(mAngleX / 180 * Math.PI), 0, 1, 0);
 		gl.glOrtho(-10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ, -10-mRZ, 10+mRZ);
 	}	

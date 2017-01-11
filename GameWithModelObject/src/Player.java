@@ -10,9 +10,9 @@ import OBJLoader.OBJModel;
 
 public class Player extends BodyBound {
 	private static final float MAX_SIZE = 6.0f;  // for a model's dimension
-	private static final int SIZE_WIDTH = 4;  // for a model's dimension
-	private static final int SIZE_HEIGHT = 7;  // for a model's dimension
-	private static final int MAX_COOLDOWN_WAIT_TIME = 6;  // for a model's dimension
+	private static final int SIZE_WIDTH = 4;  
+	private static final int SIZE_HEIGHT = 7;  
+	private static final int MAX_COOLDOWN_WAIT_TIME = 6; 
 	
 	public static float sShiftX = 0;
 	public static float sShiftY = 0;
@@ -36,7 +36,7 @@ public class Player extends BodyBound {
 	
 	
 	
-	public void draw(GL2 gl) {
+	public void update(GL2 gl) {
 		updateRotation(gl);
 		updatePosition(gl);
 		float shiftForY = 1.8f;
@@ -47,13 +47,13 @@ public class Player extends BodyBound {
 		gl.glTranslated(-x, -shiftForY, -y);
 		gl.glRotatef((float) -tankStartAngle, 0, 1, 0);
 		updateBullet(gl);
-		for(BodyBound block : BlockDestroyable.sBlockDestroyables) {
+		for(BodyBound block : Entity.sBlockDestroyables) {
 			if(this.getBounds().intersects(block.getBounds())) {
 				x = (float) oldPosition.x;
 				y = (float) oldPosition.y;
 			}
 		}	
-		for(BodyBound block : BlockUndestroyable.sBlockUndestroyables) {
+		for(BodyBound block : Entity.sBlockUndestroyables) {
 			if(this.getBounds().intersects(block.getBounds())) {
 				x = (float) oldPosition.x;
 				y = (float) oldPosition.y;
@@ -104,33 +104,33 @@ public class Player extends BodyBound {
 			angleForMoveTank = 90.1f;
 		}
 	}
-	//поднять "y"  у баунда
+	
 	private void updatePosition(GL2 gl) {
 		oldPosition.x = this.x;
 		oldPosition.y = this.y;
 		
-		double sizeSkybox = WorldConsts.SIZE_SKYBOX.getValue();
-		double triangleSide = sizeSkybox 
+		double side = WorldConst.SIDE_FOR_DIRECTION_VECTOR;
+		double triangleSide = side 
 				* getSinInDegrees(angleForMoveTank)
 				/ getSinInDegrees(180 - 90 - angleForMoveTank);	// 180 - 90 - angleForMoveTank == gama(Y) angle	
 		if( (angleForMoveTank >= -90 && angleForMoveTank <= 0) 
 				|| (angleForMoveTank <= 90 && angleForMoveTank > 0)) { // 1 и 2 ая четверть
-			endPointForMovingTank = new Vector2d(triangleSide, sizeSkybox);
+			endPointForMovingTank = new Vector2d(triangleSide, side);
 		}
 		else {//когда нижняя координата переводим в верхнюю и меняем координаты
 			if(angleForMoveTank < 90) {
-				endPointForMovingTank = new Vector2d(-triangleSide, -sizeSkybox);				
+				endPointForMovingTank = new Vector2d(-triangleSide, -side);				
 			}
 			else {
-				triangleSide = sizeSkybox
+				triangleSide = side
 						* getSinInDegrees(angleForMoveTank - 90) 
 						/ getSinInDegrees(180 - 90 - angleForMoveTank - 90);//180 - 90 - angleForMoveTank - 90 =  gama(Y) смещенная для 4ой четверти
 				if(angleForMoveTank > 180) {
 					
-					endPointForMovingTank = new Vector2d(-sizeSkybox, -triangleSide);
+					endPointForMovingTank = new Vector2d(-side, -triangleSide);
 				}
 				else {					
-					endPointForMovingTank = new Vector2d(sizeSkybox, triangleSide);
+					endPointForMovingTank = new Vector2d(side, triangleSide);
 				}
 			}
 		}

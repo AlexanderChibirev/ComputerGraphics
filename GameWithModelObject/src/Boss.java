@@ -1,7 +1,6 @@
 import com.jogamp.opengl.GL2;
 
 import OBJLoader.OBJModel;
-
 public class Boss extends BodyBound{
 
 	private boolean isDead = false;
@@ -20,7 +19,8 @@ public class Boss extends BodyBound{
 		float shiftY = 5.8f;
 		gl.glTranslated(this.x, shiftY, this.y);
 			boss.draw(gl);
-		gl.glTranslated(-this.x, -shiftY,  -this.y);	
+		gl.glTranslated(-this.x, -shiftY,  -this.y);
+		
 		for(Bullet body :Bullet.sBulletsArray) {
 			if(body.getBounds().intersects(this.getBounds())) {
 				life -= 0.5;
@@ -31,6 +31,5 @@ public class Boss extends BodyBound{
 		if(life < 0){
 			isDead = true;
 		}
-		System.out.println(life);
 	}
 }

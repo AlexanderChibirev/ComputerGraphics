@@ -16,6 +16,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
 import OBJLoader.OBJModel;
+import Utils.LoaderTextures;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -28,7 +29,7 @@ enum PossitionTextureID {
 	BLOCK1(2),
 	BLOCK_DESTROYABLES(3),
 	THE_END(4),
-	PLATFORM(5), BLOCK22(6);
+	PLATFORM(5), BLOCK22(6), SKY_BOX(8);
 	private final Integer value;
 	
 	PossitionTextureID(Integer value) {
@@ -38,29 +39,27 @@ enum PossitionTextureID {
 }
 
 @SuppressWarnings("serial")
-public class GameGLListener extends JFrame implements GLEventListener {
+public class GameGLListener extends JFrame implements GLEventListener { 
+	
+	protected double elapsedTime;	
 	protected GLCanvas canvas;
 	protected long lastTime;
-	private Vector<File> mTextures = new Vector<File>();
-	public static Vector<Integer> sTexturesID = new Vector<Integer>();
-	RectangularPrism mSkyBox;
-	private GLU mGlu;
-	protected long mLast;
-	private Player mTankMajor;
-	static double elapsedTime;
-	private final static int FLOOR_LEN = 150;  // should be even
+	protected long pLast;
 	
-	private Camera mCamera = new Camera();
-	private BlockUndestroyable mBlocksUndestroyable = new BlockUndestroyable();
+	private GLU glu;
+	private Player tankMajor;	
+	private Camera camera = new Camera();
+	private BlockUndestroyable blocksUndestroyable = new BlockUndestroyable();
 	private BlockDestroyable mBlocksDestroyable = new BlockDestroyable();
-	public static Vector<Enemy> sTankEnemyes = new Vector<>();
-	private Boss boss;
+
 	
-	protected void update() {
+	
+	protected void updateTime() {
         long time = System.nanoTime();
-        long diff = time - this.mLast;
-        this.mLast = time;
-    	elapsedTime = diff / WorldConsts.NANO_TO_BASE.getValue();
+        long diff = time - this.pLast;
+        this.pLast = time;
+        
+    	elapsedTime = diff / WorldConst.NANO_TO_BASE;
 	}
 
 	public void start() {
@@ -70,17 +69,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		animator.start();	
 	}	
 	
-	private void initTexture(GL2 gl) {
-		for(File name : mTextures) {
-			try{
-				Texture texture = TextureIO.newTexture(name,true);
-				sTexturesID.add(texture.getTextureObject(gl));
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}	
-		}
-	}
+	
 	
 	public GameGLListener(int windowWidth, int windowHeight) {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,66 +92,15 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		
 	}
 	
-	private void initMap(GL2 gl) {
-		int size = 3;
-		float x = -size * 5;
-		int sizeShift = 70;
-		float z = 0;
-		int typeBlock = 0;
-		int quantE = 0;
-		for (int i = 0; i < Map.HEIGHT_MAP; i++) {
-			for (int j = 0; j < Map.WIDTH_MAP; j++)
-			{
-				final char tile = Map.TileMap[i].charAt(j);
-				if(tile == 'd' || tile == 'u' ||  tile == 'e' || tile == 'b') {
-					z = -i * size * 2;
-					x = j * size * 2;
-					if (tile == 'd') {
-						typeBlock = PossitionTextureID.BLOCK_DESTROYABLES.getValue();
-						BlockDestroyable.sBlockDestroyables.addElement(new BodyBound(x - sizeShift, z + sizeShift, size * 2, size * 2, typeBlock));
-					}
-					else if ((tile == 'u')) {
-						typeBlock = PossitionTextureID.BLOCK_UNDESTROYABLES.getValue();
-						BlockUndestroyable.sBlockUndestroyables.addElement(new BodyBound(x - sizeShift, z + sizeShift, size, size, typeBlock));
-					}
-					else if ((tile == 'b')) {
-						boss = new Boss(x - sizeShift,z + sizeShift, 25, gl);
-					}					
-					else if ((tile == 'e')) {
-						if(quantE % 2 == 0)
-							sTankEnemyes.addElement(new Enemy(x - sizeShift, z + sizeShift, Direction.UP, gl));	
-						else 
-							sTankEnemyes.addElement(new Enemy(x - sizeShift, z + sizeShift, Direction.RIGHT, gl));	
-						quantE++;
-					}
-				}				
-			}
-		}
-	}
-
-	private void initializeTexturesName() {
-		mTextures.add(new File("images/background.jpg"));
-		mTextures.add(new File("images/boxPlatform.jpg"));
-		mTextures.add(new File("images/block1.jpg"));
-		mTextures.add(new File("images/block2.jpg"));
-		mTextures.add(new File("images/block3.jpg"));
-		mTextures.add(new File("images/movingPlatform.jpg"));
-		mTextures.add(new File("images/block22.jpg"));
-	}
 	
 	@Override
 	public void init(GLAutoDrawable drawable) {
-	
 		final GL2 gl = drawable.getGL().getGL2();
-		mGlu = new GLU();
-		
-		mSkyBox = new RectangularPrism(gl);
-		initializeTexturesName();
-		initTexture(gl);
-		mTankMajor = new Player(new Vector3f(0, 0, 0), gl, mGlu);
-		initMap(gl);
-		gl.setSwapInterval(0);   
-
+		glu = new GLU();		
+		LoaderTextures.loadTextures(gl);
+		tankMajor = new Player(new Vector3f(0, 0, 0), gl, glu);
+		Entity.initMap(gl);
+		gl.setSwapInterval(0);
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
 		gl.glShadeModel(GL2.GL_SMOOTH);		
 		addLight(gl);
@@ -192,63 +130,20 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glViewport(x, y, width, height);  // size of drawing area	
 	    gl.glMatrixMode(GL2.GL_PROJECTION);
 	    gl.glLoadIdentity();
-	    mGlu.gluPerspective(45.0, (float)width/(float)height, 1, 100); 
+	    glu.gluPerspective(45.0, (float)width/(float)height, 1, 100); 
 	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	} // end of reshape()
 	
-	private void render(GL2 gl) {
-	    RectangularPrism.drawBackground(gl, sTexturesID);
-	    mCamera.update(mGlu, gl);
-	    mBlocksUndestroyable.draw(gl);
-	    mBlocksDestroyable.draw(gl);
-	    RectangularPrism.drawFloor(gl, sTexturesID.get(PossitionTextureID.PLATFORM.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
+	private void updateWorld(GL2 gl) {
 	    
-	    for(int i = 0; i < sTankEnemyes.size(); i++ ) {
-	    	sTankEnemyes.get(i).update(gl);
-	    }
-	    
-	    RectangularPrism.drawBox(gl, FLOOR_LEN);
-	    
-	    /////////////////////////////////////////////////////////////update bullet
-	    for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
-	    	Bullet.sBulletsArray.get(i).render(gl, mGlu);
-	    	for(int j = 0; j < sTankEnemyes.size(); j++){
-		    	if(Bullet.sBulletsArray.get(i).getBounds().intersects(sTankEnemyes.get(j).getBounds())) {
-		    		Bullet.sBulletsArray.remove(i);
-		    		sTankEnemyes.remove(j);
-		    		break;
-		    	}
-	    	}	    	
-	    }
-	    for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
-	    	if(Bullet.sBulletsArray.get(i).x > 75 || Bullet.sBulletsArray.get(i).x < -75 || Bullet.sBulletsArray.get(i).y > 75 || Bullet.sBulletsArray.get(i).y < -75) {
-	     		Bullet.sBulletsArray.remove(i);
-	     		break;
-	 		}	    	
-	    }
-	    /////////////////////////////////////////////////////////////
-	    for(int i = 0; i < BlockDestroyable.sBlockDestroyables.size(); ++i) {
-			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
-				if(BlockDestroyable.sBlockDestroyables.get(i).getBounds().
-						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
-					BlockDestroyable.sBlockDestroyables.remove(i);
-					Bullet.sBulletsArray.remove(j);
-					break;
-				}
-			}
-		}	    
-	    for(int i = 0; i < BlockUndestroyable.sBlockUndestroyables.size(); ++i) {
-			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
-				if(BlockUndestroyable.sBlockUndestroyables.get(i).getBounds().
-						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
-					Bullet.sBulletsArray.remove(j);
-					break;
-				}
-			}
-		}
-	    boss.update(gl);	   
-	    mTankMajor.draw(gl);	 
+	    for(int i = 0; i < Entity.sTankEnemyes.size(); i++ ) {
+	    	Entity.sTankEnemyes.get(i).update(gl);
+	    }	    
+	    updateBullet(gl);   
+	    updateBlocks();	    
+	    Entity.sBoss.update(gl);	   
+	    tankMajor.update(gl);	    
 	    gl.glFlush();
 	}
 	
@@ -260,17 +155,65 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();   
 	    final double Z_DIST = 7.0; // for the camera position
-		mGlu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);// position camera
-	    if(boss.isDead()) {
-	    	RectangularPrism.drawBackground(gl, sTexturesID);
+		glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);// position camera
+	    if(Entity.sBoss.isDead()) {
+	    	DrawRects.drawBackground(gl, LoaderTextures.sTexturesID);
 	    }
 	    else {
-	    	update();
-		    render(gl);	 
+	    	updateTime();
+	    	DrawRects.drawBackground(gl, LoaderTextures.sTexturesID);
+	    	camera.update(glu, gl);
+		    DrawRects.drawFloor(gl, PossitionTextureID.SKY_BOX.getValue(), new Vector3f(WorldConst.SKYBOX_SIZE, WorldConst.SKYBOX_SIZE, WorldConst.SKYBOX_SIZE));
+		    DrawRects.drawFloor(gl, LoaderTextures.sTexturesID.get(PossitionTextureID.PLATFORM.getValue()), new Vector3f(WorldConst.SKYBOX_SIZE, 0.1f, WorldConst.SKYBOX_SIZE));
+		    blocksUndestroyable.draw(gl);
+		    mBlocksDestroyable.draw(gl);
+		    updateWorld(gl);
 	    }
 	}
 	
+	private void updateBullet(GL2 gl) {
+		 for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
+		    	Bullet.sBulletsArray.get(i).render(gl, glu);
+		    	for(int j = 0; j < Entity.sTankEnemyes.size(); j++){
+			    	if(Bullet.sBulletsArray.get(i).getBounds().intersects(Entity.sTankEnemyes.get(j).getBounds())) {
+			    		Bullet.sBulletsArray.remove(i);
+			    		Entity.sTankEnemyes.remove(j);
+			    		break;
+			    	}
+		    	}	    	
+		    }
+		    for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
+		    	if(Bullet.sBulletsArray.get(i).x > WorldConst.SKYBOX_SIZE 
+		    			|| Bullet.sBulletsArray.get(i).x < -WorldConst.SKYBOX_SIZE 
+		    			|| Bullet.sBulletsArray.get(i).y > WorldConst.SKYBOX_SIZE 
+		    			|| Bullet.sBulletsArray.get(i).y < -WorldConst.SKYBOX_SIZE) {
+		     		Bullet.sBulletsArray.remove(i);
+		     		break;
+		 		}	    	
+		    }
+	}
 	
+	private void updateBlocks() {
+		for(int i = 0; i < Entity.sBlockDestroyables.size(); ++i) {
+			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
+				if(Entity.sBlockDestroyables.get(i).getBounds().
+						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
+					Entity.sBlockDestroyables.remove(i);
+					Bullet.sBulletsArray.remove(j);
+					break;
+				}
+			}
+		}	    
+	    for(int i = 0; i < Entity.sBlockUndestroyables.size(); ++i) {
+			for(int j = 0; j < Bullet.sBulletsArray.size(); ++j) {
+				if(Entity.sBlockUndestroyables.get(i).getBounds().
+						intersects(Bullet.sBulletsArray.get(j).getBounds())) {
+					Bullet.sBulletsArray.remove(j);
+					break;
+				}
+			}
+		}
+	}
 
 	@Override
 	public void dispose(GLAutoDrawable arg0) {
