@@ -6,9 +6,9 @@ import com.jogamp.opengl.glu.GLU;
 public class Camera {
 	private float mAngleX;
 	private float mAngleY;
-	private float mShiftAngleY = 0.03f;
-	private float mShiftAngleX = 0.03f;
-	private float mShifRZ = 0.001f;
+	private float mShiftAngleY = 0.3f;
+	private float mShiftAngleX = 0.3f;
+	private float mShifRZ = 0.01f;
 	private float mRZ = -8;
 	
 	private float mStepZ = 0;
@@ -33,8 +33,8 @@ public class Camera {
 			mAngleX += mShiftAngleX;
 		}		
 		else if(InputHandler.sKeyPressedW) {			
-			mStepX = Player.shiftX * mSpeed;
-			mStepZ = -Player.shiftY * mSpeed;
+			mStepX = Player.sShiftX * mSpeed;
+			mStepZ = -Player.sShiftY * mSpeed;
 		}
 		
 		if (mAngleY < -89.0){mAngleY= -89.0f;}

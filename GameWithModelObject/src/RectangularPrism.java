@@ -9,11 +9,15 @@ import com.jogamp.opengl.util.texture.TextureCoords;
 
 import Utils.TextureUtils;
 
-public class RectangularPrism {
+public class RectangularPrism{
 	private Texture starsTex;
 	private Vector3f mSize;
 	RectangularPrism(GL2 gl) {
 		loadTextures(gl);
+	}
+
+	public RectangularPrism() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void setSize(Vector3f size) {

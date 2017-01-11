@@ -4,11 +4,6 @@ import javax.swing.JFrame;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.World;
-import org.dyn4j.geometry.Vector2;
-
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -18,11 +13,8 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-import OBJLoader.OBJModel;
-import Utils.TextureUtils;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -49,23 +41,29 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	protected GLCanvas canvas;
 	protected long lastTime;
 	private Vector<File> mTextures = new Vector<File>();
-	private Vector<Integer> mTexturesID = new Vector<Integer>();
-	RectangularPrism mGLBox;
-	private static final double Z_DIST = 7.0;      // for the camera position
-	private static final float MAX_SIZE = 4.0f;  // for a model's dimension
-	private GLU glu;
+	public static Vector<Integer> sTexturesID = new Vector<Integer>();
+	RectangularPrism mSkyBox;
+	private GLU mGlu;
 	protected long mLast;
-	private Player tankMajor;
-	private Enemy tankEnemy;
-	//private GLBall ball = new GLBall(0f, 0f, 4, 4); 
+	private Player mTankMajor;
+	private Enemy mTankEnemy;
+	static double elapsedTime;
 	private final static int FLOOR_LEN = 150;  // should be even
-	private int starsDList;	
-	private Camera mCamera = new Camera();
-	public static Vector<GLBullet> glball = new Vector<>();
 	
+	private Camera mCamera = new Camera();
+	private BlockUndestroyable mBlocksUndestroyable = new BlockUndestroyable();
+	private BlockDestroyable mBlocksDestroyable = new BlockDestroyable();
+
+	protected void update() {
+        long time = System.nanoTime();
+        long diff = time - this.mLast;
+        this.mLast = time;
+    	elapsedTime = diff / WorldConsts.NANO_TO_BASE.getValue();
+	}
 
 	public void start() {
 		this.lastTime = System.nanoTime();
+		System.out.println(lastTime);
 		Animator animator = new Animator(this.canvas);
 		animator.setRunAsFastAsPossible(true);
 		animator.start();	
@@ -75,7 +73,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		for(File name : mTextures) {
 			try{
 				Texture texture = TextureIO.newTexture(name,true);
-				mTexturesID.add(texture.getTextureObject(gl));
+				sTexturesID.add(texture.getTextureObject(gl));
 			}
 			catch(IOException e){
 				e.printStackTrace();
@@ -117,20 +115,18 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		
 		final GL2 gl = drawable.getGL().getGL2();
-		glu = new GLU();
-		mGLBox = new RectangularPrism(gl);
+		mGlu = new GLU();
+		mSkyBox = new RectangularPrism(gl);
 		initializeTexturesName();
 		initTexture(gl);
-		tankMajor = new Player(new Vector3f(0, 0, 0), gl, glu);
+		mTankMajor = new Player(new Vector3f(0, 0, 0), gl, mGlu);
 		float angle = 90f;
-		tankEnemy =  new Enemy(new Vector3f(11, 0, 0), gl, angle);
+		mTankEnemy =  new Enemy(new Vector3f(11, 0, 0), gl, angle);
 		gl.setSwapInterval(0);   
 
 		gl.glEnable(GL2.GL_DEPTH_TEST);		
 		gl.glShadeModel(GL2.GL_SMOOTH);		
 		addLight(gl);
-		// load the OBJ model
-		//tankEnemyModel = new OBJModel("tankEnemy", MAX_SIZE, gl, true);
 	} // end of init()
 	
 	private void addLight(GL2 gl) {// two white light sources
@@ -162,8 +158,7 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	
 	    gl.glMatrixMode(GL2.GL_PROJECTION);
 	    gl.glLoadIdentity();
-	    glu.gluPerspective(45.0, (float)width/(float)height, 1, 100); // 5, 100); 
-	    // fov, aspect ratio, near & far clipping planes
+	    mGlu.gluPerspective(45.0, (float)width/(float)height, 1, 100); 
 	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	} // end of reshape()
@@ -177,47 +172,37 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    // clear colour and depth buffers
 	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 	    gl.glLoadIdentity();
-	    glu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
-	    mGLBox.drawBackground(gl, mTexturesID);
-	    mCamera.update(glu, gl);
-	 //   mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK3.getValue()));
+	    final double Z_DIST = 7.0; // for the camera position
+	    mGlu.gluLookAt(0,0, Z_DIST, 0,0,0, 0, 1, 0);   // position camera
+	    update();
+	    mSkyBox.drawBackground(gl, sTexturesID);
+	    mCamera.update(mGlu, gl);
 	    
-	    mGLBox.drawFloor(gl, mTexturesID.get(PossitionID.BLOCK22.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
-	    tankEnemy.draw(gl);
-	   
-	    //mGLBox.drawBox(gl, 10);	   
-	    mGLBox.drawBox(gl, FLOOR_LEN);
+	    mBlocksUndestroyable.draw(gl);
+	    mBlocksDestroyable.draw(gl);
+	    mSkyBox.drawFloor(gl, sTexturesID.get(PossitionID.BLOCK22.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
+	    
+	    mTankEnemy.draw(gl);
+	    mSkyBox.drawBox(gl, FLOOR_LEN);
 	    
 	    // ball.render(gl, glu);
-	    for(int i = 0; i < glball.size(); i++) {
-	    	glball.get(i).render(gl, glu);
-	    	if(glball.get(i).getBounds().intersects(tankEnemy.getBounds())) {
-	    		//System.out.println(tankEnemy.getBounds());
-	    		//System.out.println(glball.get(i).getBounds());
-	    		glball.remove(i);// удаляем пулю
-	    		//System.out.println(tankEnemy.getBounds());
+	    for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
+	    	Bullet.sBulletsArray.get(i).render(gl, mGlu);
+	    	if(Bullet.sBulletsArray.get(i).getBounds().intersects(mTankEnemy.getBounds())) {
+	    		Bullet.sBulletsArray.remove(i);// удаляем пулю
 	    		break;
-	    		
 	    	}
-	    	if(glball.get(i).x > 75 || glball.get(i).x < -75 || glball.get(i).y > 75 || glball.get(i).y < -75) {
-	    		glball.remove(i);// удаляем пулю
+	    	if(Bullet.sBulletsArray.get(i).x > 75 || Bullet.sBulletsArray.get(i).x < -75 || Bullet.sBulletsArray.get(i).y > 75 || Bullet.sBulletsArray.get(i).y < -75) {
+	    		Bullet.sBulletsArray.remove(i);// удаляем пулю
     		}
-	    }
-	    //System.out.print("size: ");
-	    //System.out.println(glball.size());
+	    }	   
 	    
-	    tankMajor.draw(gl);
-	   
-	    if(tankMajor.getBounds().intersects(tankEnemy.getBounds())){
+	    mTankMajor.draw(gl);	   
+	    if(mTankMajor.getBounds().intersects(mTankEnemy.getBounds())){
 	    	
-	    	//System.out.println("intersects");
-	    	//System.out.println(tankMajor.getBounds());
-	 	   // System.out.println(tankEnemy.getBounds());
-	    }
-	   // System.out.println(  glball.size());
-	 
+	    }	 
 	    gl.glFlush();
-	}// end of display
+	}
 	
 	
 
