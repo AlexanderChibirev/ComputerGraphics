@@ -21,16 +21,16 @@ import java.io.File;
 import java.io.IOException;
 
 
-enum PossitionID {
+enum PossitionTextureID {
 	BACKGROUND(0),
-	BOX(1),
+	BLOCK_UNDESTROYABLES(1),
 	BLOCK1(2),
-	BLOCK2(3),
+	BLOCK_DESTROYABLES(3),
 	BLOCK3(4),
 	MOVING_PLATFORM(5), BLOCK22(6);
 	private final Integer value;
 	
-	PossitionID(Integer value) {
+	PossitionTextureID(Integer value) {
         this.value = value;
     }
 	public Integer getValue()   { return value; }
@@ -99,8 +99,34 @@ public class GameGLListener extends JFrame implements GLEventListener {
 		add(this.canvas);
 		setResizable(false);
 		pack();
+		initMap();
 	}
 	
+	private void initMap() {
+		int mSizeBlock = 3;
+		float x = -mSizeBlock * 5;
+		int sizeShift = 70;
+		float z = 0;
+		int typeBlock = 0;
+		for (int i = 0; i < Map.HEIGHT_MAP; i++) {
+			for (int j = 0; j < Map.WIDTH_MAP; j++)
+			{
+				if(Map.TileMap[i].charAt(j) == 'd' || Map.TileMap[i].charAt(j) == 'u'){
+					z = -i * mSizeBlock * 2;
+					x = j * mSizeBlock * 2;
+					if (Map.TileMap[i].charAt(j) == 'd') {
+						typeBlock = PossitionTextureID.BLOCK_DESTROYABLES.getValue();
+						mBlocksDestroyable.sBlockDestroyables.addElement(new BodyBound(x - sizeShift, z + sizeShift, mSizeBlock, mSizeBlock, typeBlock));
+					}
+					else if ((Map.TileMap[i].charAt(j) == 'u')) {
+						typeBlock = PossitionTextureID.BLOCK_UNDESTROYABLES.getValue();
+						BlockUndestroyable.sBlockUndestroyables.addElement(new BodyBound(x - sizeShift, z + sizeShift, mSizeBlock, mSizeBlock, typeBlock));
+					}
+				}				
+			}
+		}
+	}
+
 	private void initializeTexturesName() {
 		mTextures.add(new File("images/background.jpg"));
 		mTextures.add(new File("images/boxPlatform.jpg"));
@@ -180,12 +206,10 @@ public class GameGLListener extends JFrame implements GLEventListener {
 	    
 	    mBlocksUndestroyable.draw(gl);
 	    mBlocksDestroyable.draw(gl);
-	    mSkyBox.drawFloor(gl, sTexturesID.get(PossitionID.BLOCK22.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
+	    mSkyBox.drawFloor(gl, sTexturesID.get(PossitionTextureID.BLOCK22.getValue()), new Vector3f(FLOOR_LEN/2, 0.1f, FLOOR_LEN/2));
 	    
 	    mTankEnemy.draw(gl);
 	    mSkyBox.drawBox(gl, FLOOR_LEN);
-	    
-	    // ball.render(gl, glu);
 	    for(int i = 0; i < Bullet.sBulletsArray.size(); i++) {
 	    	Bullet.sBulletsArray.get(i).render(gl, mGlu);
 	    	if(Bullet.sBulletsArray.get(i).getBounds().intersects(mTankEnemy.getBounds())) {

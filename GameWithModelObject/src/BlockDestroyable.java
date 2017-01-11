@@ -5,34 +5,24 @@ import javax.vecmath.Vector3f;
 import com.jogamp.opengl.GL2;
 
 public class BlockDestroyable {
-
-	private float mSizeBlock = 4.0f;
-	private int mQantityBlock = 50;
+	private int mSizeBlock = 3;
 	float shiftForY = 0.1f;
-	public static Vector<RectangularPrism> sBlockDestroyable = new Vector<>();
-
+	public static RectangularPrism sBlockDestroyable;
+	public static Vector<BodyBound> sBlockDestroyables = new Vector<>();
+	float sizeShift = 70;
+	int mTypeBlock;
+	
 	BlockDestroyable() {
-		for(int i = 0; i < mQantityBlock; i++) {
-			sBlockDestroyable.add(new RectangularPrism());
-		}		
+		sBlockDestroyable = new RectangularPrism();
 	}
 	
-	
 	public void draw(GL2 gl) {
-		/*float x = -mSizeBlock * 19;
-		float z = 0;
-		float shiftForX = mSizeBlock * 2;
-		float shiftForZ = mSizeBlock * 2;
-		for(int i = 0; i < mQantityBlock; i++) {
-			if(i < 7) {		
-				x += shiftForX;
-			}
-			gl.glTranslated(x, mSizeBlock + shiftForY, z);
-			sBlockDestroyable.get(i).drawFloor(gl,
-					GameGLListener.sTexturesID.get(PossitionID.BOX.getValue()),
+		for(BodyBound block : BlockDestroyable.sBlockDestroyables) {
+			gl.glTranslated(block.x, mSizeBlock + shiftForY, block.y);
+			sBlockDestroyable.drawFloor(gl,
+					GameGLListener.sTexturesID.get(block.typeSprite),
 					new Vector3f(mSizeBlock, mSizeBlock, mSizeBlock));
-			
-			gl.glTranslated(-x, -mSizeBlock - shiftForY, -z);
-		}*/
-	}	
+			gl.glTranslated(-block.x, -mSizeBlock - shiftForY,  -block.y);
+		}
+	}
 }

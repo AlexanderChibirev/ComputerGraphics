@@ -135,7 +135,7 @@ public class RectangularPrism{
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glTexEnvf(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, GL2.GL_REPLACE); //importante
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); //importante
-		gl.glBindTexture(GL2.GL_TEXTURE_2D, texturesID.get(PossitionID.BACKGROUND.getValue()));	
+		gl.glBindTexture(GL2.GL_TEXTURE_2D, texturesID.get(PossitionTextureID.BACKGROUND.getValue()));	
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glTexCoord2f(0f,0f); gl.glVertex2f(0,0);
 			gl.glTexCoord2f(0f,1f); gl.glVertex2f(0,1f);
